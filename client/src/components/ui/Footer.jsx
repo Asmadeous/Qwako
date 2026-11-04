@@ -48,12 +48,12 @@ const Footer = () => {
             <strong className="font-medium">Hosting</strong>
             <p>
               <span className="cursor-pointer font-normal text-gray-700 decoration-1 underline-offset-1 hover:underline">
-                Qwako your home
+                Host with T&amp;G BnB
               </span>
             </p>
             <p>
               <span className="cursor-pointer font-normal text-gray-700 decoration-1 underline-offset-1 hover:underline">
-                QwakoCover for Hosts
+                T&amp;G Cover for Hosts
               </span>
             </p>
             <p>
@@ -73,7 +73,7 @@ const Footer = () => {
             </p>
           </div>
           <div className="flex flex-col gap-1">
-            <strong className="font-medium">Qwako</strong>
+            <strong className="font-medium">T&amp;G BnB</strong>
             <p>
               <span className="cursor-pointer font-normal text-gray-700 decoration-1 underline-offset-1 hover:underline">
                 Newsroom
@@ -96,7 +96,7 @@ const Footer = () => {
             </p>
             <p>
               <span className="cursor-pointer font-normal text-gray-700 decoration-1 underline-offset-1 hover:underline">
-                Qwako.org emergency stays
+                T&amp;G BnB emergency stays
               </span>
             </p>
           </div>
@@ -154,7 +154,7 @@ const Footer = () => {
           </div>
 
           <div className="flex w-full flex-col gap-2 px-1 font-normal text-gray-700 md:w-auto md:flex-row md:items-center md:gap-8">
-            <p className="text-sm">&copy; 2023 Qwako, Inc.</p>
+            <p className="text-sm">&copy; 2026 T&amp;G BnB</p>
             <div>
               <ul className=" flex gap-6 text-sm text-gray-700">
                 <li className="cursor-pointer text-gray-700 decoration-1 underline-offset-1 hover:underline md:list-disc">

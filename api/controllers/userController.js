@@ -117,7 +117,7 @@ exports.uploadPicture = async (req, res) => {
   const { path } = req.file
   try {
     let result = await cloudinary.uploader.upload(path, {
-      folder: 'Qwako/Users',
+      folder: 'TG-BnB/Users',
     });
     res.status(200).json(result.secure_url)
   } catch (error) {

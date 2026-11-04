@@ -1,8 +1,8 @@
-# Qwako
+# T&G BnB
 
 ## Overview
 
-This project is a full-stack web application called Qwako, built with the MERN stack (MongoDB, Express.js, React.js, Node.js). It provides core vacation-rental functionality, allowing users to search for accommodations, view details, make bookings, and manage their listings.
+This project is a full-stack web application called T&G BnB, built with the MERN stack (MongoDB, Express.js, React.js, Node.js). It provides core vacation-rental functionality, allowing users to search for accommodations, view details, make bookings, and manage their listings.
 
 ## Getting Started
 
@@ -72,27 +72,27 @@ This project is a full-stack web application called Qwako, built with the MERN s
 - **User Authentication:** Users can sign up, log in, and log out securely. Passwords are hashed for security.
 - **Google Login:** Users can sign up and log in using their gmail.
 
-  ![Qwako screenshot](client/public/assets/auth.png)
+  ![T&G BnB screenshot](client/public/assets/auth.png)
 
 - **Search Listings:** Users can search for accommodations.
 
-  ![Qwako screenshot](client/public/assets/search.png)
+  ![T&G BnB screenshot](client/public/assets/search.png)
 
 - **View Listings:** Users can view detailed information about each accommodation, including photos, descriptions, amenities.
 
-  ![Qwako screenshot](client/public/assets/view.png)
+  ![T&G BnB screenshot](client/public/assets/view.png)
 
 - **Make Bookings:** Authenticated users can book accommodations for specific dates.
 
-  ![Qwako screenshot](client/public/assets/book.png)
+  ![T&G BnB screenshot](client/public/assets/book.png)
 
 - **Manage Listings:** Hosts can create, edit, and delete their listings.
 
-  ![Qwako screenshot](client/public/assets/manage.png)
+  ![T&G BnB screenshot](client/public/assets/manage.png)
 
 - **Responsive Design:** The application is designed to be responsive and work seamlessly across different devices.
 
-  ![Qwako screenshot](client/public/assets/hero.png)
+  ![T&G BnB screenshot](client/public/assets/hero.png)
 
 ## Technologies Used
 

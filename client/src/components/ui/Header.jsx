@@ -47,22 +47,22 @@ export const Header = () => {
       >
         <a href="/" className="flex items-center gap-1">
           <svg
-            className="h-8 w-8 text-red-500 md:h-10 md:w-10"
+            className="h-8 w-8 text-blue-600 md:h-10 md:w-10"
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
             strokeWidth={2}
             strokeLinecap="round"
             strokeLinejoin="round"
-            aria-label="Qwako logo"
+            aria-label="T&G BnB logo"
           >
             <path d="M3 10.5 12 3l9 7.5" />
             <path d="M5 9.5V21h14V9.5" />
             <path d="M10 21v-6h4v6" />
           </svg>
 
-          <span className="hidden text-2xl font-bold text-red-500 md:block">
-            qwako
+          <span className="hidden text-2xl font-bold text-blue-600 md:block">
+            T&amp;G BnB
           </span>
         </a>
 

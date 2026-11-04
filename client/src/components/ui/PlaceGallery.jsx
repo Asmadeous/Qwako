@@ -45,7 +45,7 @@ const PlaceGallery = ({ place }) => {
         {/* column 1 */}
         <div className="col-span-2 overflow-hidden">
           {place.photos?.[0] && (
-            <div className="h-full w-full overflow-hidden bg-red-200">
+            <div className="h-full w-full overflow-hidden bg-blue-100">
               <img
                 onClick={() => setShowAllPhotos(true)}
                 className="h-full w-full cursor-pointer object-cover"
