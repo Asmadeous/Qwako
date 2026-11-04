@@ -12,20 +12,21 @@ const SearchBar = () => {
 
   const handleSearch = async (e) => {
     clearTimeout(searchTimeout);
-    setSearchText(e.target.value);
+    const text = e.target.value;
+    setSearchText(text);
+    const query = text.trim();
 
-    if (searchText.trimStart() !== '') {
-      setLoading(true);
-      setSearchTimeout(
-        setTimeout(async () => {
-          const { data } = await axiosInstance.get(
-            `/places/search/${searchText.trimStart()}`,
-          );
-          setPlaces(data);
-          setLoading(false);
-        }, 500),
-      );
-    }
+    setSearchTimeout(
+      setTimeout(async () => {
+        setLoading(true);
+        // An empty search box brings back every stay
+        const { data } = query
+          ? await axiosInstance.get(`/places/search/${encodeURIComponent(query)}`)
+          : await axiosInstance.get('/places');
+        setPlaces(query ? data : data.places);
+        setLoading(false);
+      }, 400),
+    );
   };
 
   return (
