@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { formatPrice } from '@/utils/currency';
 
 const PlaceCard = ({ place }) => {
   const { _id: placeId, photos, address, title, price } = place;
@@ -15,7 +16,7 @@ const PlaceCard = ({ place }) => {
         <h2 className="truncate font-bold">{address}</h2>
         <h3 className="truncate text-sm text-gray-500">{title}</h3>
         <div className="mt-1">
-          <span className="font-semibold">₹{price} </span>
+          <span className="font-semibold">{formatPrice(price, address)} </span>
           per night
         </div>
       </div>

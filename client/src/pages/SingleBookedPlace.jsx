@@ -7,6 +7,7 @@ import BookingDates from '../components/ui/BookingDates';
 import PlaceGallery from '../components/ui/PlaceGallery';
 import Spinner from '../components/ui/Spinner';
 import axiosInstance from '../utils/axios';
+import { formatPrice } from '@/utils/currency';
 
 const SingleBookedPlace = () => {
   const { id } = useParams();
@@ -60,7 +61,7 @@ const SingleBookedPlace = () => {
             <div className="mt-5 w-full rounded-2xl bg-primary p-6 text-white sm:mt-0 sm:w-auto">
               <div className="hidden md:block">Total price</div>
               <div className="flex justify-center text-3xl">
-                <span>₹{booking?.price}</span>
+                <span>{formatPrice(booking?.price, booking?.place?.address)}</span>
               </div>
             </div>
           </div>

@@ -219,7 +219,7 @@ const PlacesFormPage = () => {
             />
           </div>
           <div>
-            <h3 className="mt-2 -mb-1">Price per night</h3>
+            <h3 className="mt-2 -mb-1">Price per night (local currency)</h3>
             <input
               type="number"
               name="price"

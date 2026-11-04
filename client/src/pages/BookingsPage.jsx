@@ -6,6 +6,7 @@ import PlaceImg from '@/components/ui/PlaceImg';
 import BookingDates from '@/components/ui/BookingDates';
 import Spinner from '@/components/ui/Spinner';
 import axiosInstance from '@/utils/axios';
+import { formatPrice } from '@/utils/currency';
 
 const BookingsPage = () => {
   const [bookings, setBookings] = useState([]);
@@ -72,7 +73,7 @@ const BookingsPage = () => {
                         />
                       </svg>
                       <span className="text-xl md:text-2xl">
-                        Total price: ₹{booking.price}
+                        Total price: {formatPrice(booking.price, booking.place?.address)}
                       </span>
                     </div>
                   </div>

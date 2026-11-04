@@ -6,6 +6,7 @@ import { toast } from 'react-toastify';
 import { useAuth } from '../../../hooks';
 import axiosInstance from '@/utils/axios';
 import DatePickerWithRange from './DatePickerWithRange';
+import { formatPrice } from '@/utils/currency';
 
 const BookingWidget = ({ place }) => {
   const [dateRange, setDateRange] = useState({ from: null, to: null });
@@ -89,7 +90,7 @@ const BookingWidget = ({ place }) => {
   return (
     <div className="rounded-2xl bg-white p-4 shadow-xl">
       <div className="text-center text-xl">
-        Price: <span className="font-semibold">₹{place.price}</span> / per night
+        Price: <span className="font-semibold">{formatPrice(place.price, place.address)}</span> / per night
       </div>
       <div className="mt-4 rounded-2xl border">
         <div className="flex w-full ">
@@ -126,7 +127,7 @@ const BookingWidget = ({ place }) => {
       </div>
       <button onClick={handleBooking} className="primary mt-4">
         Book this place
-        {numberOfNights > 0 && <span> ₹{numberOfNights * place.price}</span>}
+        {numberOfNights > 0 && <span> {formatPrice(numberOfNights * place.price, place.address)}</span>}
       </button>
     </div>
   );
