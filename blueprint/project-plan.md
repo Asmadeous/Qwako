@@ -6,13 +6,14 @@
 
 ## 1. Problem - What problem are we solving?
 
-T&G BnB is a UK short-stay booking marketplace (nightly stays, Airbnb-style):
+T&G BnB is the direct-booking website for one client and his own UK
+properties (nightly stays, Airbnb-style booking experience). It is not a
+marketplace: there are no third-party hosts and no platform fees.
 
-- guests browse stays without an account, see the full price up front in
-  pounds sterling, and book confirmed dates in a few steps;
-- hosts list UK properties, control availability and pricing, and manage
-  reservations and payouts;
-- the T&G team moderates the marketplace from an admin dashboard.
+- guests browse the properties without an account, see the full price up front
+  in pounds sterling, and book confirmed dates in a few steps;
+- the owner (and any staff he adds) manages properties, availability, prices,
+  bookings, guests and payments from an admin dashboard.
 
 The current product is a prototype: a React (Vite) site with an Express +
 MongoDB API, 50 demo listings (mostly outside the UK, priced in local
@@ -30,7 +31,9 @@ replaces rather than patches:
 **Decisions:**
 
 - The backend is rebuilt in Ruby on Rails with PostgreSQL and UUID primary keys.
-- The product runs on the owner's own server; no third-party app hosting.
+- The product runs on the client's own server, deployed by the client's team.
+  This project delivers the code (with a Dockerfile and deployment notes); it
+  needs no server access.
 - RentNest (github.com/Sohag-Ali/RentNest_Frontend and RentNest_Backend) is used
   only as inspiration for scope and dashboard ideas; no code is copied from it.
   RentNest is a long-term-rental product (request -> approve -> pay); T&G BnB
@@ -41,9 +44,8 @@ replaces rather than patches:
 | Role | Who | Primary jobs |
 | --- | --- | --- |
 | Visitor | Anyone on the site, not signed in | Browse the home page, search stays, open listing pages, see prices and availability. Cannot book, save or message. |
-| Guest (customer) | Signed-in traveller; every account is a guest by default | Book stays, pay, manage trips, save wishlists, message hosts, review stays, manage profile and settings. |
-| Host | A guest who has turned on hosting (one account, two modes, as on Airbnb) | Create and manage listings, set availability and prices, accept or decline requests, message guests, get paid, reply to reviews. |
-| Admin | T&G staff | Moderate users, listings, bookings, payments and reviews; change platform settings; see business metrics. |
+| Guest (customer) | Signed-in traveller; every sign-up is a guest | Book stays, pay, manage trips, save wishlists, message the owner, review stays, manage profile and settings. |
+| Admin | The owner and his staff | Manage properties, calendar, prices, bookings, guests, payments, reviews and messages; see occupancy and revenue. |
 
 Market: United Kingdom (England, Scotland, Wales, Northern Ireland). Locale
 `en-GB`, currency GBP, time zone Europe/London, dates shown as `5 Nov 2026` /
