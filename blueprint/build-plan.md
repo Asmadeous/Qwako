@@ -5,65 +5,54 @@ spec, not here. Do not renumber completed items.
 
 **Pre-build (not features):** scaffold the Rails 8 API in `backend/` with
 PostgreSQL, UUID primary keys by default, `pgcrypto`/`citext`/`btree_gist`
-extensions, CORS, health check, and CI; then run `/onboard` and `/overview`.
+extensions, CORS, health check and CI; then run `/onboard` and `/overview`.
 
 ## Milestone 1 - Accounts
 
 - [ ] 1. **Email sign-up, sign-in and sign-out** - Rails 8 cookie sessions, current-user endpoint, React auth wired to Rails.
-- [ ] 2. **Email verification and password reset** - verification link, reset by email, rate-limited.
-- [ ] 3. **Profiles and modes** - edit profile and photo; every user is a guest, can turn on hosting; admin role.
+- [ ] 2. **Email verification and password reset** - emails sent through the client's SMTP server, rate-limited.
+- [ ] 3. **Profiles and roles** - edit profile and photo; guest and admin roles; admin accounts created by the owner.
 
-## Milestone 2 - Listings and discovery
+## Milestone 2 - Properties and discovery
 
-- [ ] 4. **UK listing catalogue** - listing, photo and amenity tables with UK address fields and GBP prices; UK demo listings; UK copy on the home page.
-- [ ] 5. **Public listing page on Rails** - gallery, details, amenities, rules, policy, host card, licence number; area only until booked.
-- [ ] 6. **Stays search on Rails** - destination, dates availability, guests, price, type, amenities, sort, pagination, total-price display, shareable URL.
-- [ ] 7. **Host listing wizard** - create, edit, submit for review, publish/unpublish, photo upload and ordering, compliance fields.
+- [ ] 4. **Property catalogue with seed data** - listing, photo and amenity tables with UK address fields and GBP prices; the 50 existing listings as seeds.
+- [ ] 5. **Public listing page on Rails** - gallery, details, amenities, rules, policy, licence number, total price for chosen dates; area only until booked.
+- [ ] 6. **Stays search on Rails** - destination, dates availability, guests, price, type, amenities, sort, pagination, shareable URL.
 
 ## Milestone 3 - Booking and payments
 
-- [ ] 8. **Availability calendar and booking rules** - host blocks dates; min/max nights, guests, check-in/out times; public calendar of free nights.
-- [ ] 9. **Sign-in-gated reservation with server quote** - all-in price breakdown from the server, return-to-listing after sign-in, double bookings blocked by the database.
-- [ ] 10. **Stripe payments** - card with 3-D Secure, Apple Pay and Google Pay; signed webhooks; receipts; expiring holds.
-- [ ] 11. **Instant Book and Request to Book** - confirm on payment, or authorise and let the host accept/decline within 24 hours.
-- [ ] 12. **Host payouts with Stripe Connect** - host onboarding, payout after check-in, T&G fee deducted.
-- [ ] 13. **Cancellations and refunds** - Flexible/Moderate/Strict policies, guest and host cancellation, refund preview and Stripe refunds.
+- [ ] 7. **Availability and booking rules** - blocked dates; min/max nights, guests, check-in/out times; public calendar of free nights.
+- [ ] 8. **Sign-in-gated reservation with server quote** - price from the server, return-to-listing after sign-in, double bookings blocked by the database.
+- [ ] 9. **Stripe payments** - card with 3-D Secure, Apple Pay and Google Pay; signed webhooks; receipts; expiring holds.
+- [ ] 10. **Instant Book and Request to Book** - confirm on payment, or authorise and let the owner accept/decline within 24 hours.
+- [ ] 11. **Cancellations and refunds** - Flexible/Moderate/Strict policies, guest and owner cancellation, refund preview and Stripe refunds.
 
 ## Milestone 4 - Customer dashboard
 
-- [ ] 14. **Dashboard shell and guest overview** - sidebar/bottom-bar layout, mode switch, next-trip card, stats, pending reviews, recently viewed.
-- [ ] 15. **Trips and trip detail** - upcoming/past/cancelled, status timeline, address and check-in info after confirmation, receipt, cancel, book again.
-- [ ] 16. **Wishlists** - heart on cards and listing pages, named lists, wishlist pages.
-- [ ] 17. **Messaging** - guest-host conversations per booking or enquiry, inbox, unread counts.
-- [ ] 18. **Reviews** - double-blind reviews after checkout, category ratings, host replies, ratings on cards and listing pages.
-- [ ] 19. **Notifications** - in-app notification centre and booking emails, with preferences.
-- [ ] 20. **Account settings and privacy** - password change, notification and marketing consent, payment history, download my data, delete account.
+- [ ] 12. **Dashboard shell and guest overview** - sidebar/bottom-bar layout, next-trip card, stats, stays to review, recently viewed.
+- [ ] 13. **Trips and trip detail** - upcoming/past/cancelled, status timeline, address and check-in info after confirmation, receipt, cancel, book again.
+- [ ] 14. **Wishlists** - heart on cards and listing pages, named lists, wishlist pages.
+- [ ] 15. **Messaging** - guest-owner conversations per booking or enquiry, inbox, unread counts.
+- [ ] 16. **Reviews** - reviews after checkout, category ratings, owner replies, ratings on cards and listing pages.
+- [ ] 17. **Notifications** - in-app notification centre and booking emails, with preferences.
+- [ ] 18. **Account settings and privacy** - password change, notification and marketing consent, payment history, download my data, delete account.
 
-## Milestone 5 - Launch on our server
+## Milestone 5 - Admin dashboard (owner)
 
-- [ ] 21. **Kamal deployment to our server** - Docker image serving API and React build, PostgreSQL accessory, volumes, HTTPS, backups, final data import, retire the Express API and MongoDB.
+- [ ] 19. **Admin overview** - today's arrivals/departures, pending requests, occupancy and revenue, trend charts.
+- [ ] 20. **Property management** - create/edit/publish properties, photos, prices, rules, check-in details.
+- [ ] 21. **Calendar** - month view across properties; block/unblock nights.
+- [ ] 22. **Bookings, guests and payments** - accept/decline, booking detail, cancel, refunds, guest list, payment list.
+- [ ] 23. **Admin messages and reviews** - guest inbox, review replies, hide abusive reviews.
+- [ ] 24. **Settings, staff accounts and audit log** - staff admins, policies, featured properties, log of admin actions.
 
-## Milestone 6 - Host dashboard
+## Milestone 6 - Launch readiness
 
-- [ ] 22. **Host today view and reservations** - today's arrivals/departures, pending requests, reservation list and detail.
-- [ ] 23. **Host calendar** - month view per listing with booked, blocked and free nights; block/unblock ranges.
-- [ ] 24. **Host earnings and payouts** - earnings by month and booking, Stripe payout status.
-
-## Milestone 7 - Admin dashboard
-
-- [ ] 25. **Admin overview** - KPIs, trend charts, items needing attention.
-- [ ] 26. **Admin users** - search, view, suspend/ban, change roles.
-- [ ] 27. **Admin listing moderation** - approval queue, unlist, feature on home page, London 90-night flags.
-- [ ] 28. **Admin bookings, payments and refunds** - search, detail, cancel on behalf, Stripe refunds.
-- [ ] 29. **Admin reviews and reports** - hide reviews, handle user reports.
-- [ ] 30. **Platform settings and audit log** - fees, VAT, policies, featured stays; log of every admin action.
-
-## Milestone 8 - Trust and polish
-
-- [ ] 31. **Legal pages, cookie consent and contact form** - About, Contact, FAQ, Terms, Privacy, Cookie policy, Cancellation policy, consent banner.
-- [ ] 32. **Google sign-in** - OmniAuth Google for guests and hosts.
-- [ ] 33. **Security and operations hardening** - rate limits review, error monitoring, backup restore test, abuse reporting checks.
+- [ ] 25. **Legal pages, cookie consent and contact form** - About, Contact, FAQ, Terms, Privacy, Cookie policy, Cancellation policy, consent banner.
+- [ ] 26. **Production packaging** - Dockerfile serving API and React build, `.env.example`, `DEPLOY.md`; remove the Express API and MongoDB.
+- [ ] 27. **Google sign-in** - OmniAuth Google for guests.
+- [ ] 28. **Security hardening** - rate limits review, error logging, backup and restore notes.
 
 ## Later (not in MVP)
 
-- Map search, iCal calendar sync, per-night price overrides and discounts, England short-term let registration integration, multi-language UI, mobile apps.
+- Map search, iCal sync, per-night price overrides and discounts, multi-language UI, mobile apps.
