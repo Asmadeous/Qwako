@@ -7,6 +7,13 @@ spec, not here. Do not renumber completed items.
 PostgreSQL, UUID primary keys by default, `pgcrypto`/`citext`/`btree_gist`
 extensions, CORS, health check and CI; then run `/onboard` and `/overview`.
 
+**Express port (2026-11-06, not a feature):** everything the Express + MongoDB
+prototype did now runs on Rails and the prototype is deleted. That port delivered
+basic slices of features 3, 4, 5, 6, 8 and 20 (profile edit and photo, guest and
+admin roles, seeded catalogue, listing page, keyword search, server-priced
+bookings with a database overlap constraint, admin listing create and edit with
+uploads). Each of those features still owns the rest of its scope.
+
 ## Milestone 1 - Accounts
 
 - [x] 1. **Email sign-up, sign-in and sign-out** - Rails 8 cookie sessions, current-user endpoint, React auth wired to Rails.
@@ -49,7 +56,7 @@ extensions, CORS, health check and CI; then run `/onboard` and `/overview`.
 ## Milestone 6 - Launch readiness
 
 - [ ] 25. **Legal pages, cookie consent and contact form** - About, Contact, FAQ, Terms, Privacy, Cookie policy, Cancellation policy, consent banner.
-- [ ] 26. **Production packaging** - Dockerfile serving API and React build, `.env.example`, `DEPLOY.md`; remove the Express API and MongoDB.
+- [ ] 26. **Production packaging** - Dockerfile serving API and React build, `.env.example`, `DEPLOY.md`.
 - [ ] 27. **Google sign-in** - OmniAuth Google for guests.
 - [ ] 28. **Security hardening** - rate limits review, error logging, backup and restore notes.
 

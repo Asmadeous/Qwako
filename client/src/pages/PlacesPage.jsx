@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
 
-import axiosInstance from '@/utils/axios';
+import { api } from '@/utils/axios';
+import { useAuth } from '../../hooks';
 
 import AccountNav from '@/components/ui/AccountNav';
 import InfoCard from '@/components/ui/InfoCard';
@@ -10,23 +11,23 @@ import Spinner from '@/components/ui/Spinner';
 const PlacesPage = () => {
   const [places, setPlaces] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const auth = useAuth();
+  const isAdmin = auth.user?.role === 'admin';
 
   useEffect(() => {
-    const getPlaces = async () => {
-      try {
-        const { data } = await axiosInstance.get('places/user-places');
-        setPlaces(data);
-        setLoading(false);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    getPlaces();
-  }, []);
+    if (!isAdmin) return;
+    api
+      .get('/admin/listings')
+      .then(({ data }) => setPlaces(data.listings))
+      .catch(() => setError('We could not load your stays. Please try again.'))
+      .finally(() => setLoading(false));
+  }, [isAdmin]);
 
-  if (loading) {
-    return <Spinner />;
-  }
+  if (auth.loading) return <Spinner />;
+  if (!auth.user) return <Navigate to="/login" />;
+  if (!isAdmin) return <Navigate to="/account" />;
+  if (loading) return <Spinner />;
 
   return (
     <div>
@@ -50,12 +51,14 @@ const PlacesPage = () => {
               d="M12 4.5v15m7.5-7.5h-15"
             />
           </svg>
-          Add new place
+          Add a stay
         </Link>
       </div>
       <div className="mx-4 mt-4">
-        {places.length > 0 &&
-          places.map((place) => <InfoCard place={place} key={place._id} />)}
+        {error && <p role="alert">{error}</p>}
+        {places.map((place) => (
+          <InfoCard place={place} key={place.id} />
+        ))}
       </div>
     </div>
   );

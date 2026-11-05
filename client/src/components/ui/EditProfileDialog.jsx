@@ -16,12 +16,15 @@ import { Loader2, PenSquare, Upload } from 'lucide-react';
 import { useAuth } from '../../../hooks';
 
 const EditProfileDialog = () => {
-  const { user, setUser, uploadPicture, updateUser } = useAuth();
+  const { user, updateProfile } = useAuth();
   const uploadRef = useRef(null);
-  const [picture, setPicture] = useState('');
+  const [picture, setPicture] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [errors, setErrors] = useState({});
+  const [formError, setFormError] = useState('');
   const [userData, setUserData] = useState({
     name: user.name,
+    current_password: '',
     password: '',
     confirm_password: '',
   });
@@ -32,7 +35,7 @@ const EditProfileDialog = () => {
 
   const handlePictureChange = (e) => {
     const file = e.target.files[0];
-    setPicture(file);
+    if (file) setPicture(file);
   };
 
   const handleUserData = (e) => {
@@ -40,46 +43,53 @@ const EditProfileDialog = () => {
     setUserData({ ...userData, [name]: value });
   };
 
-  const handleSaveChanges = async () => {
-    setLoading(true);
-    const { name, password, confirm_password } = userData;
+  const handleSaveChanges = async (e) => {
+    e?.preventDefault();
+    if (loading) return;
+    const { name, current_password, password, confirm_password } = userData;
+    setErrors({});
+    setFormError('');
 
-    // Validation
     if (name.trim() === '') {
-      setLoading(false);
-      return toast.error("Name Can't be empty");
-    } else if (password !== confirm_password) {
-      setLoading(false);
-      return toast.error("Passwords don't match");
+      setErrors({ name: "Name can't be blank" });
+      return;
+    }
+    if (password !== confirm_password) {
+      setErrors({ confirm_password: "Passwords don't match" });
+      return;
     }
 
-    try {
-      // first check if picture has been updated or not
-      let pictureUrl = '';
-      if (picture) {
-        // upload picture and save the image url
-        pictureUrl = await uploadPicture(picture);
-      }
-
-      const userDetails = {
-        name: userData.name,
-        password: userData.password,
-        picture: pictureUrl,
-      };
-
-      const res = await updateUser(userDetails);
-      if (res.success) {
-        setUser(res.user);
-        setLoading(false);
-        return toast.success('Updated successfully!');
-      }
-      setLoading(false);
-    } catch (error) {
-      console.log(error);
-      toast.error('Something went wrong!');
-      setLoading(false);
+    const formData = new FormData();
+    formData.append('name', name.trim());
+    if (picture) formData.append('avatar', picture);
+    if (password) {
+      formData.append('current_password', current_password);
+      formData.append('password', password);
     }
+
+    setLoading(true);
+    const res = await updateProfile(formData);
+    setLoading(false);
+    if (res.success) {
+      setPicture(null);
+      setUserData((current) => ({ ...current, current_password: '', password: '', confirm_password: '' }));
+      toast.success('Profile updated.');
+      return;
+    }
+    setErrors(res.fieldErrors || {});
+    setFormError(res.message);
   };
+
+  const errorFor = (field) =>
+    errors[field] && (
+      <p id={`${field}-error`} className="col-span-3 col-start-2 text-sm text-red-700">
+        {errors[field]}
+      </p>
+    );
+  const invalid = (field) => ({
+    'aria-invalid': errors[field] ? 'true' : undefined,
+    'aria-describedby': errors[field] ? `${field}-error` : undefined,
+  });
 
   return (
     <Dialog>
@@ -98,6 +108,8 @@ const EditProfileDialog = () => {
             >
               <input
                 type="file"
+                accept="image/jpeg,image/png,image/webp"
+                aria-label="Profile photo"
                 className="hidden"
                 ref={uploadRef}
                 onChange={handlePictureChange}
@@ -112,14 +124,20 @@ const EditProfileDialog = () => {
               </Avatar>
             ) : (
               <Avatar className="transition-all ease-in-out hover:z-0 hover:hidden ">
-                <AvatarImage src={user.picture} />
+                <AvatarImage src={user.avatar_url} />
               </Avatar>
             )}
           </div>
         </div>
 
         {/* Update form */}
-        <div className="grid gap-4 py-4">
+        {formError && (
+          <p role="alert" className="text-sm text-red-700">
+            {formError}
+          </p>
+        )}
+        {errorFor('avatar')}
+        <form id="edit-profile-form" onSubmit={handleSaveChanges} className="grid gap-4 py-4">
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="name" className="text-right">
               Name
@@ -129,8 +147,27 @@ const EditProfileDialog = () => {
               name="name"
               value={userData.name}
               className="col-span-3"
+              autoComplete="name"
               onChange={handleUserData}
+              {...invalid('name')}
             />
+            {errorFor('name')}
+          </div>
+          <div className="grid grid-cols-4 items-center gap-4">
+            <Label htmlFor="current_password" className="text-right">
+              Current Password
+            </Label>
+            <Input
+              id="current_password"
+              name="current_password"
+              value={userData.current_password}
+              className="col-span-3"
+              type="password"
+              autoComplete="current-password"
+              onChange={handleUserData}
+              {...invalid('current_password')}
+            />
+            {errorFor('current_password')}
           </div>
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="password" className="text-right">
@@ -142,11 +179,14 @@ const EditProfileDialog = () => {
               value={userData.password}
               className="col-span-3"
               type="password"
+              autoComplete="new-password"
               onChange={handleUserData}
+              {...invalid('password')}
             />
+            {errorFor('password')}
           </div>
           <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="confirm_Password" className="text-right">
+            <Label htmlFor="confirm_password" className="text-right">
               Confirm Password
             </Label>
             <Input
@@ -155,16 +195,19 @@ const EditProfileDialog = () => {
               value={userData.confirm_password}
               className="col-span-3"
               type="password"
+              autoComplete="new-password"
               onChange={handleUserData}
+              {...invalid('confirm_password')}
             />
+            {errorFor('confirm_password')}
           </div>
-        </div>
+        </form>
         <DialogFooter>
           <Button
             disabled={loading}
             type="submit"
+            form="edit-profile-form"
             className="w-full"
-            onClick={handleSaveChanges}
           >
             {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
             Save changes

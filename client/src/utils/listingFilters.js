@@ -1,4 +1,3 @@
-import { getCountry, toUSD } from './currency';
 
 const REGION_OF = {
   Kenya: 'Kenya',
@@ -37,12 +36,13 @@ export const CATEGORIES = [
   { id: 'city', label: 'City stays', words: ['city', 'heart of', 'market', 'tram', 'crossing', 'convention'] },
 ];
 
+// Nightly price bands in pence.
 export const BUDGETS = [
   { id: 'any', label: 'Any price', min: 0, max: Infinity },
-  { id: 'lt100', label: 'Under $100', min: 0, max: 100 },
-  { id: '100-250', label: '$100 – $250', min: 100, max: 250 },
-  { id: '250-500', label: '$250 – $500', min: 250, max: 500 },
-  { id: 'gt500', label: '$500+', min: 500, max: Infinity },
+  { id: 'lt100', label: 'Under £100', min: 0, max: 10000 },
+  { id: '100-200', label: '£100 to £200', min: 10000, max: 20000 },
+  { id: '200-400', label: '£200 to £400', min: 20000, max: 40000 },
+  { id: 'gt400', label: '£400+', min: 40000, max: Infinity },
 ];
 
 export const AMENITIES = [
@@ -50,6 +50,7 @@ export const AMENITIES = [
   { id: 'parking', label: 'Free parking' },
   { id: 'tv', label: 'TV' },
   { id: 'pets', label: 'Pets allowed' },
+  { id: 'entrance', label: 'Private entrance' },
 ];
 
 export const SORTS = [
@@ -69,7 +70,7 @@ export const DEFAULT_FILTERS = {
   sort: 'recommended',
 };
 
-const regionOf = (place) => REGION_OF[getCountry(place.address)] || 'Other';
+const regionOf = (place) => REGION_OF[place.country] || 'Other';
 
 const hasWord = (text, word) => new RegExp(`\\b${word}`, 'i').test(text);
 
@@ -81,26 +82,26 @@ export const matchesCategory = (place, categoryId) => {
 };
 
 export const countriesIn = (places, region) =>
-  [...new Set(places.filter((p) => region === 'all' || regionOf(p) === region).map((p) => getCountry(p.address)))].sort();
+  [...new Set(places.filter((p) => region === 'all' || regionOf(p) === region).map((p) => p.country))].sort();
 
 export const applyFilters = (places, f) => {
   const budget = BUDGETS.find((b) => b.id === f.budget) || BUDGETS[0];
   const list = places.filter((p) => {
-    const usd = toUSD(p.price, p.address);
+    const price = p.nightly_price_pence;
     return (
       (f.category === 'all' || matchesCategory(p, f.category)) &&
       (f.region === 'all' || regionOf(p) === f.region) &&
-      (f.country === 'all' || getCountry(p.address) === f.country) &&
-      (p.maxGuests || 0) >= f.guests &&
-      usd >= budget.min &&
-      usd < budget.max &&
-      f.amenities.every((a) => (p.perks || []).includes(a))
+      (f.country === 'all' || p.country === f.country) &&
+      p.max_guests >= f.guests &&
+      price >= budget.min &&
+      price < budget.max &&
+      f.amenities.every((a) => (p.amenities || []).includes(a))
     );
   });
-  const byUSD = (p) => toUSD(p.price, p.address);
-  if (f.sort === 'price-asc') list.sort((a, b) => byUSD(a) - byUSD(b));
-  if (f.sort === 'price-desc') list.sort((a, b) => byUSD(b) - byUSD(a));
-  if (f.sort === 'guests-desc') list.sort((a, b) => (b.maxGuests || 0) - (a.maxGuests || 0));
+  const byPrice = (p) => p.nightly_price_pence;
+  if (f.sort === 'price-asc') list.sort((a, b) => byPrice(a) - byPrice(b));
+  if (f.sort === 'price-desc') list.sort((a, b) => byPrice(b) - byPrice(a));
+  if (f.sort === 'guests-desc') list.sort((a, b) => b.max_guests - a.max_guests);
   return list;
 };
 

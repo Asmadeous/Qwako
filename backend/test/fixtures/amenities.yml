@@ -1,0 +1,7 @@
+wifi:
+  key: wifi
+  name: Wi-Fi
+
+parking:
+  key: parking
+  name: Free parking

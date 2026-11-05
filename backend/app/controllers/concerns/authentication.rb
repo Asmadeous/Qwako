@@ -29,6 +29,8 @@ module Authentication
     end
 
     def start_new_session_for(user)
+      # Signing in again in the same browser replaces, not stacks, its session.
+      resume_session&.destroy
       user.sessions.create!(user_agent: request.user_agent, ip_address: request.remote_ip).tap do |session|
         Current.session = session
         cookies.signed.permanent[:session_id] = {

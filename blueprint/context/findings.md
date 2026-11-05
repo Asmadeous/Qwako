@@ -7,7 +7,7 @@
 > finding is `open` or `fixed`, then archives resolved findings with the work
 > and resets this file.
 
-### F-01 [P2] open - Sign-in and sign-up accept cross-site form posts (login CSRF)
+### F-01 [P2] fixed - Sign-in and sign-up accept cross-site form posts (login CSRF)
 
 **File:** backend/app/controllers/api/v1/sessions_controller.rb:11
 **Found:** 2026-11-06 by /audit independent (scope: current; lens: security)
@@ -29,9 +29,9 @@ alternative is to reject a present `Origin` header that is not same-origin or on
 the CORS allowlist. Add one request test that posts form-encoded credentials and
 expects rejection. No current requirement would be lost because the client
 always sends JSON.
-**Resolution:**
+**Resolution:** Fixed 2026-11-06. `ApplicationController#verify_request_origin` rejects non-GET requests whose `Origin` is neither same-origin nor on the CORS allowlist (403 `forbidden_origin`). Test: "cross-site form posts cannot sign in or sign up".
 
-### F-02 [P3] open - A non-object `user` param raises NoMethodError (500) instead of the error JSON
+### F-02 [P3] fixed - A non-object `user` param raises NoMethodError (500) instead of the error JSON
 
 **File:** backend/app/controllers/api/v1/registrations_controller.rb:20
 **Found:** 2026-11-06 by /audit independent (scope: current; lens: quality)
@@ -45,9 +45,9 @@ server-generated id and ignored both fields.
 which returns 400 for a wrong shape. Alternatively, guard with
 `is_a?(ActionController::Parameters)` and fall through to the 422 path. Add a
 request test for a string `user`.
-**Resolution:**
+**Resolution:** Fixed 2026-11-06. Registrations permit `user` only when it is a parameters object, so other shapes fall through to the 422 path. Test: "sign-up with a non-object user param is a validation failure, not a 500".
 
-### F-03 [P3] open - The unique-index race rescue is untested
+### F-03 [P3] fixed - The unique-index race rescue is untested
 
 **File:** backend/app/controllers/api/v1/registrations_controller.rb:25
 **Found:** 2026-11-06 by /audit independent (scope: current; lens: tests)
@@ -59,9 +59,9 @@ unsaved user) would go unnoticed.
 **Suggested fix:** Add a request test that stubs `User#save` to raise
 `ActiveRecord::RecordNotUnique`. Assert a 422 `validation_failed` response with
 `details.email` and no new `Session` row.
-**Resolution:**
+**Resolution:** Fixed 2026-11-06. Test: "a sign-up that loses the unique-index race still gets the 422" (asserts `details.email` and no new session).
 
-### F-04 [P3] open - A new sign-in or sign-up leaves the previous session row valid
+### F-04 [P3] fixed - A new sign-in or sign-up leaves the previous session row valid
 
 **File:** backend/app/controllers/concerns/authentication.rb:31
 **Found:** 2026-11-06 by /audit independent (scope: current; lens: security)
@@ -74,9 +74,9 @@ This matches the Rails generator default, so it is hygiene rather than a defect.
 **Suggested fix:** In `start_new_session_for`, call `resume_session&.destroy`
 before creating the new row. Track expiry and cleanup with the session-lifetime
 decision in open question 3.
-**Resolution:**
+**Resolution:** Fixed 2026-11-06. `start_new_session_for` destroys the resumed session first. Test: "signing in again in the same browser replaces the old session". Session expiry stays open with spec question 3.
 
-### F-05 [P3] open - Dead legacy profile-edit code still reads auth from localStorage
+### F-05 [P3] fixed - Dead legacy profile-edit code still reads auth from localStorage
 
 **File:** client/hooks/index.js:88
 **Found:** 2026-11-06 by /audit independent (scope: current; lens: quality)
@@ -90,4 +90,4 @@ would crash if the dialog were re-enabled before feature 3.
 value, remove the `getItemFromLocalStorage` import, and delete or park
 `EditProfileDialog.jsx` until feature 3 rebuilds profile editing on Rails.
 Requirement lost: None, because the control is already hidden.
-**Resolution:**
+**Resolution:** Fixed 2026-11-06. `updateUser` and `uploadPicture` are gone; `EditProfileDialog` now saves through `updateProfile` (`PATCH /api/v1/profile`) and reads no localStorage.

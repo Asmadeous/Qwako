@@ -9,3 +9,9 @@ grace:
   email: grace@example.com
   name: Grace Hopper
   password_digest: <%= password_digest %>
+
+owner:
+  email: owner@example.com
+  name: Owner
+  role: admin
+  password_digest: <%= password_digest %>

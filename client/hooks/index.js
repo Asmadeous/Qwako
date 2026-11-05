@@ -3,8 +3,8 @@ import { useState, useEffect, useContext } from 'react';
 import { UserContext } from '@/providers/UserProvider';
 import { PlaceContext } from '@/providers/PlaceProvider';
 
-import { getItemFromLocalStorage, removeItemFromLocalStorage } from '@/utils';
-import axiosInstance, { api } from '@/utils/axios';
+import { removeItemFromLocalStorage } from '@/utils';
+import { api } from '@/utils/axios';
 
 // USER
 export const useAuth = () => {
@@ -72,32 +72,16 @@ export const useProvideAuth = () => {
         }
     }
 
-    const uploadPicture = async (picture) => {
+    // Accepts FormData so an avatar file can ride along with the name.
+    const updateProfile = async (formData) => {
         try {
-            const formData = new FormData()
-            formData.append('picture', picture)
-            const { data } = await axiosInstance.post('/user/upload-picture', formData, {
-                headers: { 'Content-Type': 'multipart/form-data' }
-            })
-            return data
+            const { data } = await api.patch('/profile', formData)
+            setUser(data.user)
+            return { success: true, message: 'Profile updated.' }
         } catch (error) {
-            console.log(error)
+            return authFailure(error)
         }
     }
-
-    const updateUser = async (userDetails) => {
-        const { name, password, picture } = userDetails;
-        const email = JSON.parse(getItemFromLocalStorage('user')).email
-        try {
-            const { data } = await axiosInstance.put('/user/update-user', {
-                name, password, email, picture
-            })
-            return data;
-        } catch (error) {
-            console.log(error)
-        }
-    }
-
 
     return {
         user,
@@ -106,8 +90,7 @@ export const useProvideAuth = () => {
         login,
         logout,
         loading,
-        uploadPicture,
-        updateUser
+        updateProfile
     }
 }
 
@@ -120,21 +103,20 @@ export const usePlaces = () => {
 export const useProvidePlaces = () => {
     const [places, setPlaces] = useState([]);
     const [loading, setLoading] = useState(true);
-
-    const getPlaces = async () => {
-        const { data } = await axiosInstance.get('/places');
-        setPlaces(data.places);
-        setLoading(false);
-    };
+    const [error, setError] = useState('');
 
     useEffect(() => {
-        getPlaces();
+        api.get('/listings')
+            .then(({ data }) => setPlaces(data.listings))
+            .catch(() => setError('We could not load stays. Please try again.'))
+            .finally(() => setLoading(false));
     }, [])
 
     return {
         places,
         setPlaces,
         loading,
-        setLoading
+        setLoading,
+        error
     }
 }

@@ -1,7 +1,7 @@
 require "test_helper"
 
 class Api::V1::AuthTest < ActionDispatch::IntegrationTest
-  USER_KEYS = %w[id email name].freeze
+  USER_KEYS = %w[id email name role avatar_url].freeze
 
   def sign_up(name: "Sam Taylor", email: "sam@example.com", password: "password123")
     post api_v1_registrations_path, params: { user: { name:, email:, password: } }, as: :json
@@ -14,12 +14,6 @@ class Api::V1::AuthTest < ActionDispatch::IntegrationTest
   def current_user_json
     get api_v1_session_path, as: :json
     response.parsed_body["user"]
-  end
-
-  def assert_error(status, code)
-    assert_response status
-    assert_equal code, response.parsed_body.dig("error", "code")
-    assert response.parsed_body.dig("error", "message").present?
   end
 
   test "sign-up creates a guest, signs them in and returns only public fields" do
@@ -134,5 +128,59 @@ class Api::V1::AuthTest < ActionDispatch::IntegrationTest
     assert_response :created
     sign_up(email: "user10@example.com")
     assert_error :too_many_requests, "rate_limited"
+  end
+
+  test "sign-up with a non-object user param is a validation failure, not a 500" do
+    post api_v1_registrations_path, params: { user: "x" }, as: :json
+    assert_error :unprocessable_content, "validation_failed"
+  end
+
+  test "a sign-up that loses the unique-index race still gets the 422" do
+    original_new = User.method(:new)
+    User.define_singleton_method(:new) do |*args, **kwargs, &block|
+      original_new.call(*args, **kwargs, &block).tap do |user|
+        user.define_singleton_method(:save) { |*| raise ActiveRecord::RecordNotUnique, "duplicate" }
+      end
+    end
+
+    assert_no_difference [ "User.count", "Session.count" ] do
+      sign_up
+    end
+    assert_error :unprocessable_content, "validation_failed"
+    assert_equal [ "Email is already registered" ], response.parsed_body.dig("error", "details", "email")
+  ensure
+    User.singleton_class.remove_method(:new)
+  end
+
+  test "signing in again in the same browser replaces the old session" do
+    sign_in
+    old_cookie = cookies["session_id"]
+
+    assert_no_difference "Session.count" do
+      sign_in
+    end
+    cookies["session_id"] = old_cookie
+    assert_nil current_user_json
+  end
+
+  test "cross-site form posts cannot sign in or sign up" do
+    post api_v1_session_path, params: { email: "ada@example.com", password: "password123" },
+      headers: { "Origin" => "https://evil.example" }
+    assert_error :forbidden, "forbidden_origin"
+    assert_nil response.headers["Set-Cookie"]
+
+    post api_v1_registrations_path, params: { user: { name: "X", email: "x@example.com", password: "password123" } },
+      headers: { "Origin" => "https://evil.example" }
+    assert_error :forbidden, "forbidden_origin"
+  end
+
+  test "the dev client origin and same-origin requests are allowed" do
+    post api_v1_session_path, params: { email: "ada@example.com", password: "password123" },
+      headers: { "Origin" => "http://localhost:5173" }, as: :json
+    assert_response :ok
+
+    post api_v1_session_path, params: { email: "ada@example.com", password: "password123" },
+      headers: { "Origin" => "http://www.example.com" }, as: :json
+    assert_response :ok
   end
 end

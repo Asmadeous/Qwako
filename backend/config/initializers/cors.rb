@@ -1,13 +1,22 @@
-# In production Rails serves the React build on the same origin, so CORS is
-# only needed when the Vite dev server (or another listed origin) calls the API.
-# CORS_ORIGINS is a comma-separated list; it defaults to the Vite dev server.
-Rails.application.config.middleware.insert_before 0, Rack::Cors do
-  allow do
-    origins(*ENV.fetch("CORS_ORIGINS", "http://localhost:5173").split(",").map(&:strip))
+# Origins allowed to call the API with credentials in addition to the site's
+# own origin. Production serves the client from Rails, so it needs none;
+# development defaults to the Vite dev server. CORS_ORIGINS is comma-separated.
+module CorsOrigins
+  def self.allowed
+    @allowed ||= ENV.fetch("CORS_ORIGINS") { Rails.env.production? ? "" : "http://localhost:5173" }
+      .split(",").map(&:strip).reject(&:empty?).freeze
+  end
+end
 
-    resource "/api/*",
-      headers: :any,
-      methods: %i[get post put patch delete options head],
-      credentials: true
+if CorsOrigins.allowed.any?
+  Rails.application.config.middleware.insert_before 0, Rack::Cors do
+    allow do
+      origins(*CorsOrigins.allowed)
+
+      resource "/api/*",
+        headers: :any,
+        methods: %i[get post put patch delete options head],
+        credentials: true
+    end
   end
 end

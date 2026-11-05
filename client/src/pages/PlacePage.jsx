@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
-import axiosInstance from '@/utils/axios';
+import { api } from '@/utils/axios';
 
 import Spinner from '@/components/ui/Spinner';
 import AddressLink from '@/components/ui/AddressLink';
@@ -13,6 +13,7 @@ const PlacePage = () => {
   const { id } = useParams();
   const [place, setPlace] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [notFound, setNotFound] = useState(false);
 
   useEffect(() => {
     if (!id) {
@@ -22,9 +23,14 @@ const PlacePage = () => {
     setLoading(true);
 
     const getPlace = async () => {
-      const { data } = await axiosInstance.get(`/places/${id}`);
-      setPlace(data.place);
-      setLoading(false);
+      try {
+        const { data } = await api.get(`/listings/${id}`);
+        setPlace(data.listing);
+      } catch {
+        setNotFound(true);
+      } finally {
+        setLoading(false);
+      }
     };
     getPlace();
   }, [id]);
@@ -33,8 +39,16 @@ const PlacePage = () => {
     return <Spinner />;
   }
 
+  if (notFound) {
+    return (
+      <p role="alert" className="mx-auto max-w-xl px-4 pt-32 text-center text-lg">
+        We couldn't find that stay.
+      </p>
+    );
+  }
+
   if (!place) {
-    return;
+    return null;
   }
 
   return (
@@ -50,8 +64,8 @@ const PlacePage = () => {
             <h2 className="text-2xl font-semibold">Description</h2>
             {place.description}
           </div>
-          Max number of guests: {place.maxGuests}
-          <PerksWidget perks={place?.perks} />
+          Max number of guests: {place.max_guests}
+          <PerksWidget perks={place.amenities} />
         </div>
         <div>
           <BookingWidget place={place} />
@@ -59,10 +73,10 @@ const PlacePage = () => {
       </div>
       <div className="-mx-8 border-t bg-white px-8 py-8">
         <div>
-          <h2 className="mt-4 text-2xl font-semibold">Extra Info</h2>
+          <h2 className="mt-4 text-2xl font-semibold">House rules</h2>
         </div>
         <div className="mb-4 mt-2 text-sm leading-5 text-gray-700">
-          {place.extraInfo}
+          {place.house_rules}
         </div>
       </div>
     </div>

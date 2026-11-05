@@ -17,7 +17,8 @@ module Api
 
       private
         def registration_params
-          params.fetch(:user, {}).permit(:name, :email, :password)
+          raw = params[:user]
+          raw.is_a?(ActionController::Parameters) ? raw.permit(:name, :email, :password) : {}
         end
 
         # The uniqueness validation can lose a race with a concurrent sign-up;

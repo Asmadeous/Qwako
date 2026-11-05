@@ -90,14 +90,12 @@ export const Header = () => {
           <div className="z-10 h-[35px] w-[35px] overflow-hidden rounded-full">
             {user ? (
               <Avatar>
-                {user?.picture ? (
-                  <AvatarImage src={user.picture} className="h-full w-full" />
-                ) : (
-                  <AvatarImage
-                    src="https://res.cloudinary.com/rahul4019/image/upload/v1695133265/pngwing.com_zi4cre.png"
-                    className="h-full w-full"
-                  />
+                {user.avatar_url && (
+                  <AvatarImage src={user.avatar_url} alt="" className="h-full w-full object-cover" />
                 )}
+                <AvatarFallback className="flex h-full w-full items-center justify-center bg-gray-500 text-sm font-semibold text-white">
+                  {user.name.slice(0, 1).toUpperCase()}
+                </AvatarFallback>
               </Avatar>
             ) : (
               <svg

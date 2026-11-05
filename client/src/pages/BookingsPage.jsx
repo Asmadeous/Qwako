@@ -5,21 +5,22 @@ import AccountNav from '@/components/ui/AccountNav';
 import PlaceImg from '@/components/ui/PlaceImg';
 import BookingDates from '@/components/ui/BookingDates';
 import Spinner from '@/components/ui/Spinner';
-import axiosInstance from '@/utils/axios';
+import { api } from '@/utils/axios';
 import { formatPrice } from '@/utils/currency';
 
 const BookingsPage = () => {
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
   useEffect(() => {
     const getBookings = async () => {
       try {
-        const { data } = await axiosInstance.get('/bookings');
-        setBookings(data.booking);
-        setLoading(false);
-      } catch (error) {
-        console.log('Error: ', error);
+        const { data } = await api.get('/bookings');
+        setBookings(data.bookings);
+      } catch {
+        setError('We could not load your bookings. Please try again.');
+      } finally {
         setLoading(false);
       }
     };
@@ -27,6 +28,14 @@ const BookingsPage = () => {
   }, []);
 
   if (loading) return <Spinner />;
+  if (error) {
+    return (
+      <div className="flex flex-col items-center">
+        <AccountNav />
+        <p role="alert">{error}</p>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col items-center">
@@ -35,20 +44,20 @@ const BookingsPage = () => {
         {bookings?.length > 0 ? (
           bookings.map((booking) => (
             <Link
-              to={`/account/bookings/${booking._id}`}
+              to={`/account/bookings/${booking.id}`}
               className="mx-4 my-8 flex h-28 gap-4 overflow-hidden rounded-2xl bg-gray-200 md:h-40 lg:mx-0"
-              key={booking._id}
+              key={booking.id}
             >
               <div className="w-2/6 md:w-1/6">
-                {booking?.place?.photos[0] && (
+                {booking.listing.photos[0] && (
                   <PlaceImg
-                    place={booking?.place}
+                    place={booking.listing}
                     className={'h-full w-full object-cover'}
                   />
                 )}
               </div>
               <div className="grow py-3 pr-3">
-                <h2 className="md:text-2xl">{booking?.place?.title}</h2>
+                <h2 className="md:text-2xl">{booking.listing.title}</h2>
                 <div className="md:text-xl">
                   <div className="flex gap-2 border-t "></div>
                   <div className="md:text-xl">
@@ -73,7 +82,7 @@ const BookingsPage = () => {
                         />
                       </svg>
                       <span className="text-xl md:text-2xl">
-                        Total price: {formatPrice(booking.price, booking.place?.address)}
+                        Total price: {formatPrice(booking.total_pence)}
                       </span>
                     </div>
                   </div>
@@ -90,7 +99,7 @@ const BookingsPage = () => {
                 No trips booked... yet!
               </h3>
               <p>
-                Time to dust off you bags and start planning your next adventure
+                Time to dust off your bags and start planning your next adventure
               </p>
               <Link to="/" className="my-4">
                 <div className="flex w-40 justify-center rounded-lg border border-black p-3 text-lg font-semibold hover:bg-gray-50">

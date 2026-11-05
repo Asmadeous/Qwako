@@ -1,0 +1,19 @@
+cottage_one:
+  listing: cottage
+  url: https://images.example.com/cottage-1.jpg
+  position: 0
+
+cottage_two:
+  listing: cottage
+  url: https://images.example.com/cottage-2.jpg
+  position: 1
+
+loft_one:
+  listing: loft
+  url: https://images.example.com/loft-1.jpg
+  position: 0
+
+hidden_one:
+  listing: hidden
+  url: https://images.example.com/barn.jpg
+  position: 0

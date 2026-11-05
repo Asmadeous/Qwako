@@ -1,135 +1,183 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Navigate } from 'react-router-dom';
-import { differenceInDays } from 'date-fns';
+import { differenceInCalendarDays, format } from 'date-fns';
 import { toast } from 'react-toastify';
 
 import { useAuth } from '../../../hooks';
-import axiosInstance from '@/utils/axios';
+import { api, errorMessageFrom, fieldErrorsFrom } from '@/utils/axios';
 import DatePickerWithRange from './DatePickerWithRange';
 import { formatPrice } from '@/utils/currency';
 
-const BookingWidget = ({ place }) => {
-  const [dateRange, setDateRange] = useState({ from: null, to: null });
-  const [bookingData, setBookingData] = useState({
-    noOfGuests: 1,
-    name: '',
-    phone: '',
-  });
-  const [redirect, setRedirect] = useState('');
-  const { user } = useAuth();
+const toISODate = (date) => format(date, 'yyyy-MM-dd');
 
-  const { noOfGuests, name, phone } = bookingData;
-  const { _id: id, price } = place;
+const BookingWidget = ({ place }) => {
+  const { user } = useAuth();
+  const [dateRange, setDateRange] = useState({ from: null, to: null });
+  const [form, setForm] = useState({ guests_count: 1, contact_name: '', contact_phone: '' });
+  const [errors, setErrors] = useState({});
+  const [formError, setFormError] = useState('');
+  const [submitting, setSubmitting] = useState(false);
+  const [redirect, setRedirect] = useState('');
+  const inFlight = useRef(false);
 
   useEffect(() => {
-    if (user) {
-      setBookingData({ ...bookingData, name: user.name });
-    }
+    if (user) setForm((current) => ({ ...current, contact_name: current.contact_name || user.name }));
   }, [user]);
 
-  const numberOfNights =
-    dateRange.from && dateRange.to
-      ? differenceInDays(
-          new Date(dateRange.to).setHours(0, 0, 0, 0),
-          new Date(dateRange.from).setHours(0, 0, 0, 0),
-        )
-      : 0;
+  const nights =
+    dateRange.from && dateRange.to ? differenceInCalendarDays(dateRange.to, dateRange.from) : 0;
+  const total = nights > 0 ? nights * place.nightly_price_pence + place.cleaning_charge_pence : 0;
 
-  // handle booking form
-  const handleBookingData = (e) => {
-    setBookingData({
-      ...bookingData,
-      [e.target.name]: e.target.value,
-    });
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setForm((current) => ({ ...current, [name]: value }));
   };
 
-  const handleBooking = async () => {
-    // User must be signed in to book place
-    if (!user) {
-      return setRedirect(`/login`);
+  const handleBooking = async (e) => {
+    e.preventDefault();
+    if (!user) return setRedirect('/login');
+    if (inFlight.current) return;
+    if (nights < 1) {
+      setFormError('Choose a check-in and check-out date.');
+      return;
     }
 
-    // BOOKING DATA VALIDATION
-    if (numberOfNights < 1) {
-      return toast.error('Please select valid dates');
-    } else if (noOfGuests < 1) {
-      return toast.error("No. of guests can't be less than 1");
-    } else if (noOfGuests > place.maxGuests) {
-      return toast.error(`Allowed max. no. of guests: ${place.maxGuests}`);
-    } else if (name.trim() === '') {
-      return toast.error("Name can't be empty");
-    } else if (phone.trim() === '') {
-      return toast.error("Phone can't be empty");
-    }
-
+    inFlight.current = true;
+    setSubmitting(true);
+    setErrors({});
+    setFormError('');
     try {
-      const response = await axiosInstance.post('/bookings', {
-        checkIn: dateRange.from,
-        checkOut: dateRange.to,
-        noOfGuests,
-        name,
-        phone,
-        place: id,
-        price: numberOfNights * price,
+      const { data } = await api.post('/bookings', {
+        booking: {
+          listing_id: place.id,
+          check_in: toISODate(dateRange.from),
+          check_out: toISODate(dateRange.to),
+          guests_count: Number(form.guests_count),
+          contact_name: form.contact_name,
+          contact_phone: form.contact_phone,
+        },
       });
-
-      const bookingId = response.data.booking._id;
-
-      setRedirect(`/account/bookings/${bookingId}`);
-      toast('Congratulations! Enjoy your trip.');
+      toast.success('Booked. Enjoy your stay!');
+      setRedirect(`/account/bookings/${data.booking.id}`);
     } catch (error) {
-      toast.error('Something went wrong!');
-      console.log('Error: ', error);
+      setErrors(fieldErrorsFrom(error));
+      setFormError(errorMessageFrom(error));
+    } finally {
+      inFlight.current = false;
+      setSubmitting(false);
     }
   };
 
-  if (redirect) {
-    return <Navigate to={redirect} />;
-  }
+  if (redirect) return <Navigate to={redirect} />;
+
+  const fieldError = (field) =>
+    errors[field] && (
+      <p id={`booking-${field}-error`} className="text-sm text-red-700">
+        {errors[field]}
+      </p>
+    );
+  const dateErrors = [errors.base, errors.check_in, errors.check_out, errors.listing].filter(Boolean);
 
   return (
-    <div className="rounded-2xl bg-white p-4 shadow-xl">
+    <form onSubmit={handleBooking} className="rounded-2xl bg-white p-4 shadow-xl">
       <div className="text-center text-xl">
-        Price: <span className="font-semibold">{formatPrice(place.price, place.address)}</span> / per night
+        <span className="font-semibold">{formatPrice(place.nightly_price_pence)}</span> per night
       </div>
+      {place.cleaning_charge_pence > 0 && (
+        <p className="text-center text-sm text-gray-600">
+          plus a {formatPrice(place.cleaning_charge_pence)} cleaning charge per stay
+        </p>
+      )}
+
+      {formError && (
+        <div role="alert" className="mt-3 rounded-[10px] border border-red-700 p-3 text-sm text-red-700">
+          {formError}
+          {dateErrors.map((message) => (
+            <p key={message}>{message}</p>
+          ))}
+        </div>
+      )}
+
       <div className="mt-4 rounded-2xl border">
-        <div className="flex w-full ">
+        <div className="flex w-full">
           <DatePickerWithRange setDateRange={setDateRange} />
         </div>
         <div className="border-t py-3 px-4">
-          <label>Number of guests: </label>
+          <label htmlFor="booking-guests_count">Guests (up to {place.max_guests})</label>
           <input
+            id="booking-guests_count"
             type="number"
-            name="noOfGuests"
-            placeholder={`Max. guests: ${place.maxGuests}`}
+            name="guests_count"
             min={1}
-            max={place.maxGuests}
-            value={noOfGuests}
-            onChange={handleBookingData}
+            max={place.max_guests}
+            required
+            value={form.guests_count}
+            onChange={handleChange}
+            aria-invalid={errors.guests_count ? 'true' : undefined}
+            aria-describedby={errors.guests_count ? 'booking-guests_count-error' : undefined}
           />
+          {fieldError('guests_count')}
         </div>
         <div className="border-t py-3 px-4">
-          <label>Your full name: </label>
+          <label htmlFor="booking-contact_name">Your full name</label>
           <input
+            id="booking-contact_name"
             type="text"
-            name="name"
-            value={name}
-            onChange={handleBookingData}
+            name="contact_name"
+            autoComplete="name"
+            required
+            value={form.contact_name}
+            onChange={handleChange}
+            aria-invalid={errors.contact_name ? 'true' : undefined}
+            aria-describedby={errors.contact_name ? 'booking-contact_name-error' : undefined}
           />
-          <label>Phone number: </label>
+          {fieldError('contact_name')}
+          <label htmlFor="booking-contact_phone">Phone number</label>
           <input
+            id="booking-contact_phone"
             type="tel"
-            name="phone"
-            value={phone}
-            onChange={handleBookingData}
+            name="contact_phone"
+            autoComplete="tel"
+            placeholder="+44 7700 900123"
+            required
+            value={form.contact_phone}
+            onChange={handleChange}
+            aria-invalid={errors.contact_phone ? 'true' : undefined}
+            aria-describedby={errors.contact_phone ? 'booking-contact_phone-error' : undefined}
           />
+          {fieldError('contact_phone')}
         </div>
       </div>
-      <button onClick={handleBooking} className="primary mt-4">
-        Book this place
-        {numberOfNights > 0 && <span> {formatPrice(numberOfNights * place.price, place.address)}</span>}
+
+      {nights > 0 && (
+        <dl className="mt-4 space-y-1 text-sm">
+          <div className="flex justify-between">
+            <dt>
+              {formatPrice(place.nightly_price_pence)} x {nights} {nights === 1 ? 'night' : 'nights'}
+            </dt>
+            <dd>{formatPrice(nights * place.nightly_price_pence)}</dd>
+          </div>
+          {place.cleaning_charge_pence > 0 && (
+            <div className="flex justify-between">
+              <dt>Cleaning charge</dt>
+              <dd>{formatPrice(place.cleaning_charge_pence)}</dd>
+            </div>
+          )}
+          <div className="flex justify-between border-t pt-1 font-semibold">
+            <dt>Total</dt>
+            <dd>{formatPrice(total)}</dd>
+          </div>
+        </dl>
+      )}
+
+      <button
+        className="primary mt-4 min-h-[44px] disabled:cursor-not-allowed disabled:opacity-70"
+        disabled={submitting}
+        aria-busy={submitting}
+      >
+        {submitting ? 'Booking...' : user ? 'Book this stay' : 'Sign in to book'}
       </button>
-    </div>
+    </form>
   );
 };
 

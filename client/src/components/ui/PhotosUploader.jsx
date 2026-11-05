@@ -1,34 +1,40 @@
 import React, { useState } from 'react';
+import { toast } from 'react-toastify';
 
 import Image from './Image';
-import axiosInstance from '../../utils/axios';
+import { api, errorMessageFrom } from '../../utils/axios';
 
 const PhotosUploader = ({ addedPhotos, setAddedPhotos }) => {
   const [photoLink, setphotoLink] = useState('');
+  const [uploading, setUploading] = useState(false);
 
-  const addPhotoByLink = async (e) => {
+  // Linked photos are stored as given; the server accepts https links only.
+  const addPhotoByLink = (e) => {
     e.preventDefault();
-    const { data: filename } = await axiosInstance.post('/upload-by-link', {
-      link: photoLink,
-    });
-    setAddedPhotos((prev) => {
-      return [...prev, filename];
-    });
+    const link = photoLink.trim();
+    if (!link.startsWith('https://')) {
+      toast.error('Photo links must start with https://');
+      return;
+    }
+    setAddedPhotos((prev) => (prev.includes(link) ? prev : [...prev, link]));
     setphotoLink('');
   };
 
   const uploadPhoto = async (e) => {
-    const files = e.target.files;
-    const data = new FormData(); // creating new form data
-    for (let i = 0; i < files.length; i++) {
-      data.append('photos', files[i]); // adding all the photos to data one by one
+    const files = [...e.target.files];
+    e.target.value = '';
+    if (files.length === 0) return;
+    const data = new FormData();
+    files.forEach((file) => data.append('photos[]', file));
+    setUploading(true);
+    try {
+      const { data: result } = await api.post('/admin/uploads', data);
+      setAddedPhotos((prev) => [...prev, ...result.urls]);
+    } catch (error) {
+      toast.error(errorMessageFrom(error));
+    } finally {
+      setUploading(false);
     }
-    const { data: filenames } = await axiosInstance.post('/upload', data, {
-      headers: { 'Content-type': 'multipart/form-data' },
-    });
-    setAddedPhotos((prev) => {
-      return [...prev, ...filenames];
-    });
   };
 
   const removePhoto = (filename) => {
@@ -50,8 +56,9 @@ const PhotosUploader = ({ addedPhotos, setAddedPhotos }) => {
         <input
           value={photoLink}
           onChange={(e) => setphotoLink(e.target.value)}
-          type="text"
-          placeholder="Add using a link ...jpg"
+          type="url"
+          aria-label="Photo link"
+          placeholder="Add using a link https://...jpg"
         />
         <button
           className="rounded-2xl bg-gray-200 px-4"
@@ -70,6 +77,8 @@ const PhotosUploader = ({ addedPhotos, setAddedPhotos }) => {
                 alt=""
               />
               <button
+                type="button"
+                aria-label="Remove photo"
                 onClick={() => removePhoto(link)}
                 className="absolute bottom-1 right-1 cursor-pointer rounded-full bg-black bg-opacity-50 p-1 text-white hover:bg-opacity-70"
               >
@@ -89,6 +98,8 @@ const PhotosUploader = ({ addedPhotos, setAddedPhotos }) => {
                 </svg>
               </button>
               <button
+                type="button"
+                aria-label={link === addedPhotos[0] ? 'Cover photo' : 'Make cover photo'}
                 onClick={(e) => selectAsMainPhoto(e, link)}
                 className="absolute bottom-1 left-1 cursor-pointer rounded-full bg-black bg-opacity-50 p-1 text-white hover:bg-opacity-70"
               >
@@ -130,7 +141,9 @@ const PhotosUploader = ({ addedPhotos, setAddedPhotos }) => {
           <input
             type="file"
             multiple
-            className="hidden"
+            accept="image/jpeg,image/png,image/webp"
+            className="sr-only"
+            disabled={uploading}
             onChange={uploadPhoto}
           />
           <svg
@@ -147,7 +160,7 @@ const PhotosUploader = ({ addedPhotos, setAddedPhotos }) => {
               d="M12 16.5V9.75m0 0l3 3m-3-3l-3 3M6.75 19.5a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.233-2.33 3 3 0 013.758 3.848A3.752 3.752 0 0118 19.5H6.75z"
             />
           </svg>
-          Upload
+          {uploading ? 'Uploading...' : 'Upload'}
         </label>
       </div>
     </>

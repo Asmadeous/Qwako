@@ -1,6 +1,6 @@
 # T&G BnB - Project Overview
 
-<!-- blueprint:source-hash 33cd933eabbf4ac15cf4a63b9ecd24aebf31ee8d7dc3baaffd7d6492c086db40 -->
+<!-- blueprint:source-hash 03ad2ca8f2d6635a706755cfde28cb145347b36c399d2838a5cb754b0c123dec -->
 
 > Direct-booking website for one owner's UK holiday lets: nightly stays with an
 > Airbnb-style booking flow, plus guest and owner dashboards. Not a marketplace.
@@ -91,7 +91,7 @@ Milestone 5 - Admin dashboard
 Milestone 6 - Launch readiness
 
 25. **Legal pages, cookie consent, contact form**.
-26. **Production packaging** - Dockerfile (API + React build), `.env.example`, `DEPLOY.md`; remove Express API and MongoDB.
+26. **Production packaging** - Dockerfile (API + React build), `.env.example`, `DEPLOY.md`.
 27. **Google sign-in** - OmniAuth Google for guests.
 28. **Security hardening** - rate-limit review, error logging, backup and restore notes.
 
@@ -192,7 +192,7 @@ working contract; each feature spec locks the ones it introduces.
 - **React 18 + Vite + Tailwind + Radix/shadcn** (`client/`) - built to static files served by Rails; TanStack Query, React Hook Form + Zod for new work.
 - **Tests** - Minitest (backend), Vitest and Playwright planned for client.
 - **CI** - GitHub Actions (`.github/workflows/backend.yml`).
-- Legacy `api/` (Express + MongoDB) is removed in feature 26.
+- The Express + MongoDB prototype was removed on 2026-11-06; Rails serves all data.
 
 ## Monetization
 

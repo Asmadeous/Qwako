@@ -1,6 +1,7 @@
 ENV["RAILS_ENV"] ||= "test"
 require_relative "../config/environment"
 require "rails/test_help"
+require_relative "test_helpers"
 
 module ActiveSupport
   class TestCase
@@ -16,6 +17,8 @@ end
 
 module ActionDispatch
   class IntegrationTest
+    include ApiTestHelpers
+
     # Rate-limit counters live in Rails.cache; start each test from zero.
     setup { Rails.cache.clear }
   end

@@ -129,8 +129,8 @@ const Perks = ({ selected, handleFormData }) => {
       <label className="flex cursor-pointer items-center gap-2 rounded-2xl border p-4">
         <input
           type="checkbox"
-          checked={selected.includes('enterence')}
-          name="enterence"
+          checked={selected.includes('entrance')}
+          name="entrance"
           onChange={handleFormData}
         />
         <svg
@@ -148,7 +148,7 @@ const Perks = ({ selected, handleFormData }) => {
           />
         </svg>
 
-        <span>Private Enterence</span>
+        <span>Private entrance</span>
       </label>
     </div>
   );

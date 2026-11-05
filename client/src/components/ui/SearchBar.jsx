@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import axiosInstance from '@/utils/axios';
+import { api } from '@/utils/axios';
 import { usePlaces } from '../../../hooks';
 
 const SearchBar = () => {
@@ -20,11 +20,12 @@ const SearchBar = () => {
       setTimeout(async () => {
         setLoading(true);
         // An empty search box brings back every stay
-        const { data } = query
-          ? await axiosInstance.get(`/places/search/${encodeURIComponent(query)}`)
-          : await axiosInstance.get('/places');
-        setPlaces(query ? data : data.places);
-        setLoading(false);
+        try {
+          const { data } = await api.get('/listings', { params: query ? { q: query } : {} });
+          setPlaces(data.listings);
+        } finally {
+          setLoading(false);
+        }
       }, 400),
     );
   };

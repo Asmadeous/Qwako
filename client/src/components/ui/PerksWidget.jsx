@@ -121,9 +121,9 @@ const PerksWidget = ({ perks }) => {
             />
           </svg>
           <span
-            className={`${perks?.includes('enterence') ? '' : 'line-through'}`}
+            className={`${perks?.includes('entrance') ? '' : 'line-through'}`}
           >
-            Private enterence
+            Private entrance
           </span>
         </div>
       </div>

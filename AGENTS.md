@@ -19,11 +19,9 @@ from an admin dashboard. Not a marketplace.
 
 Layout:
 
-- `backend/` - Rails 8.1 API (Ruby 4.0, PostgreSQL), the new backend being built
-  feature by feature. JSON under `/api/v1`.
+- `backend/` - Rails 8.1 API (Ruby 4.0, PostgreSQL), the only backend. JSON
+  under `/api/v1`; uploaded files through Active Storage (`/rails/...`).
 - `client/` - React 18 + Vite + Tailwind site (JavaScript, shadcn-style UI).
-- `api/` - legacy Express + MongoDB prototype API. Do not extend it; it is
-  removed in build-plan feature 26 once Rails covers everything.
 
 This project is built with the **AI Blueprint**, a workflow layer, not an
 app skeleton. To start a new project, scaffold the app first in an empty folder
@@ -98,6 +96,9 @@ Backend (`backend/`):
 - Setup: `bin/setup --skip-server` (installs gems, prepares databases)
 - Dev server: `bin/rails server` (http://localhost:3000, health check `GET /up`)
 - Migrate: `bin/rails db:migrate`
+- Seed: `bin/rails db:seed` (amenities, the 50 listings, and an admin from
+  `SEED_ADMIN_EMAIL`/`SEED_ADMIN_PASSWORD`; dev default `admin@tgbnb.test` /
+  `admin-dev-password`; no admin is seeded in production without both vars)
 - Test: `bin/rails test` (Minitest)
 - Lint: `bin/rubocop`
 - Security scans: `bin/brakeman --no-pager` and `bin/bundler-audit`
@@ -111,13 +112,9 @@ Client (`client/`):
 - Preview build: `yarn preview`
 - No lint or test script yet; Vitest is planned.
 
-The Vite dev server proxies `/api/v1` to Rails (`RAILS_API_URL`, default
-http://localhost:3000) and the rest of `/api` to the legacy API, so the client
-calls Rails same-origin. `VITE_API_URL` overrides the Rails host if needed.
-
-Legacy API (`api/`): `yarn start` (http://localhost:4000). Auth is on Rails;
-listings, bookings and uploads still use this API (`VITE_BASE_URL`) until their
-features are rebuilt.
+The Vite dev server proxies `/api/v1` and `/rails` (Active Storage files) to
+Rails (`RAILS_API_URL`, default http://localhost:3000), so the client calls Rails
+same-origin. `VITE_API_URL` overrides the Rails host if needed.
 
 Backend CI runs from `.github/workflows/backend.yml` (brakeman, bundler-audit,
 rubocop, tests) on changes under `backend/`. There is no combined Verify command.

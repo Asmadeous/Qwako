@@ -15,12 +15,11 @@ import PlacePage from './pages/PlacePage';
 import SingleBookedPlace from './pages/SingleBookedPlace';
 import { UserProvider } from './providers/UserProvider';
 import { PlaceProvider } from './providers/PlaceProvider';
-import { GoogleOAuthProvider } from '@react-oauth/google';
 import NotFoundPage from './pages/NotFoundPage';
 
 function App() {
   return (
-    <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
+    <>
       <UserProvider>
         <PlaceProvider>
           <Routes>
@@ -45,7 +44,7 @@ function App() {
           <ToastContainer autoClose={2000} transition={Slide} />
         </PlaceProvider>
       </UserProvider>
-    </GoogleOAuthProvider>
+    </>
   );
 }
 

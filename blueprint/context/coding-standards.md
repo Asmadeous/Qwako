@@ -1,7 +1,7 @@
 # Coding Standards
 
 > Tuned by `/onboard` for this repo: a Rails 8 API in `backend/` and a React +
-> Vite client in `client/`. The legacy Express API in `api/` is frozen.
+> Vite client in `client/`.
 
 ## Backend (Rails, `backend/`)
 
@@ -44,9 +44,9 @@
 - Vite build; import from `src` with the `@/` alias.
 - Pages in `src/pages/`, shared components in `src/components/ui/`, context
   providers in `src/providers/`, helpers in `src/utils/`.
-- HTTP through the shared instances in `src/utils/axios.js`: `api` for Rails
-  (`/api/v1`) and the default export for the legacy Express API. Do not create
-  ad-hoc axios clients. Never store auth data in localStorage.
+- HTTP through the one shared instance `api` in `src/utils/axios.js` (Rails
+  `/api/v1`, cookies included). Use its `fieldErrorsFrom`/`errorMessageFrom`
+  helpers for error JSON. Do not create ad-hoc axios clients. Never store auth data in localStorage.
 - Planned for new data and form code (introduce with the first feature that
   needs it, not before): TanStack Query for server data, React Hook Form + Zod
   for forms.

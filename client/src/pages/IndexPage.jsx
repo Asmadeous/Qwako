@@ -7,13 +7,21 @@ import Filters from '@/components/ui/Filters';
 import { DEFAULT_FILTERS, applyFilters } from '@/utils/listingFilters';
 
 const IndexPage = () => {
-  const { places, loading } = usePlaces();
+  const { places, loading, error } = usePlaces();
   const [filters, setFilters] = useState(DEFAULT_FILTERS);
 
   const results = useMemo(() => applyFilters(places, filters), [places, filters]);
 
   if (loading) {
     return <Spinner />;
+  }
+
+  if (error) {
+    return (
+      <p role="alert" className="mx-auto max-w-xl px-4 py-20 text-center text-lg">
+        {error}
+      </p>
+    );
   }
 
   return (
@@ -28,7 +36,7 @@ const IndexPage = () => {
       {results.length > 0 ? (
         <div className="grid grid-cols-1 justify-items-center px-4 pt-6 pb-32 md:grid-cols-2 md:gap-0 lg:grid-cols-3 lg:gap-2 xl:grid-cols-4 xl:gap-10">
           {results.map((place) => (
-            <PlaceCard place={place} key={place._id} />
+            <PlaceCard place={place} key={place.id} />
           ))}
         </div>
       ) : (

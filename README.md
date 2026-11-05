@@ -1,107 +1,57 @@
 # T&G BnB
 
-## Overview
+The direct-booking website for one owner's UK holiday lets. Guests browse stays
+and book nights; the owner manages properties and bookings.
 
-This project is a full-stack web application called T&G BnB, built with the MERN stack (MongoDB, Express.js, React.js, Node.js). It provides core vacation-rental functionality, allowing users to search for accommodations, view details, make bookings, and manage their listings.
+- `backend/` - Rails 8.1 API (Ruby 4.0, PostgreSQL), JSON under `/api/v1`,
+  cookie sessions, Active Storage for photos.
+- `client/` - React 18 + Vite + Tailwind site.
 
-## Getting Started
+## Getting started
 
-1. **Clone the Repository:**
+Requirements: Ruby 4.0, PostgreSQL, Node 20+ and Yarn.
 
-   ```bash
-   git clone https://github.com/rahul4019/airbnb-clone.git qwako
+```bash
+cd backend
+bin/setup --skip-server   # gems, databases, migrations
+bin/rails db:seed         # amenities, 50 listings, a dev admin
+bin/rails server          # http://localhost:3000
+```
 
-   ```
+```bash
+cd client
+yarn install
+yarn dev                  # http://localhost:5173
+```
 
-2. **Install dependencies:**
+The Vite dev server proxies `/api/v1` and `/rails` to Rails, so the client talks
+to the API same-origin. Set `RAILS_API_URL` if Rails runs elsewhere.
 
-   Navigate to client directory and install frontend dependencies using yarn
+In development the seed creates the admin `admin@tgbnb.test` with password
+`admin-dev-password`. Override them with `SEED_ADMIN_EMAIL` and
+`SEED_ADMIN_PASSWORD`; production seeds no admin unless both are set.
 
-   ```
-   yarn install
-   ```
+## Checks
 
-   Similary navigate to api folder and install backend dependencies
+Run these from `backend/`:
 
-   ```
-   yarn install
-   ```
+```bash
+bin/rails test
+bin/rubocop
+bin/brakeman --no-pager
+bin/bundler-audit
+```
 
-3. **ENV variables:**
+Build the client with `yarn build` from `client/`.
 
-   - create .env file in the client folder and add these variables
+## Features today
 
-     #### VITE_BASE_URL= http://localhost:4000
+- Email sign-up, sign-in and sign-out with Rails cookie sessions.
+- Search and filter stays, and view a listing page with photos, amenities and
+  house rules.
+- Book nights with a price calculated by the server. The database refuses
+  overlapping bookings. See your bookings.
+- Edit your profile, photo and password.
+- Admins create and edit listings and upload photos.
 
-     #### VITE_GOOGLE_CLIENT_ID= your google client id
-
-   - create .env file in the api folder and add these variables
-
-     #### PORT= 4000
-
-     #### DB_URL= your db url
-
-     #### JWT_SECRET= your secret (string)
-
-     #### JWT_EXPIRY= 20d
-
-     #### COOKIE_TIME= 7
-
-     #### SESSION_SECRET= your secret session (string)
-
-     #### CLOUDINARY_NAME= your secret session
-
-     #### CLOUDINARY_API_KEY= your cloudinary key
-
-     #### CLOUDINARY_API_SECRET= your cloudinary api secret
-
-     #### CLIENT_URL= http://localhost:5173
-
-4. **Run project:**
-   - Open terminal, navigate to client directory and run below command to start frontend
-   ```
-       yarn run dev
-   ```
-   - Open another terminal, navigate to api directory and run this command to start backend server
-   ```
-       yarn start
-   ```
-
-## Features
-
-- **User Authentication:** Users can sign up, log in, and log out securely. Passwords are hashed for security.
-- **Google Login:** Users can sign up and log in using their gmail.
-
-  ![T&G BnB screenshot](client/public/assets/auth.png)
-
-- **Search Listings:** Users can search for accommodations.
-
-  ![T&G BnB screenshot](client/public/assets/search.png)
-
-- **View Listings:** Users can view detailed information about each accommodation, including photos, descriptions, amenities.
-
-  ![T&G BnB screenshot](client/public/assets/view.png)
-
-- **Make Bookings:** Authenticated users can book accommodations for specific dates.
-
-  ![T&G BnB screenshot](client/public/assets/book.png)
-
-- **Manage Listings:** Hosts can create, edit, and delete their listings.
-
-  ![T&G BnB screenshot](client/public/assets/manage.png)
-
-- **Responsive Design:** The application is designed to be responsive and work seamlessly across different devices.
-
-  ![T&G BnB screenshot](client/public/assets/hero.png)
-
-## Technologies Used
-
-- **MongoDB:** NoSQL database for storing user data, listings.
-- **Express.js:** Web application framework for building the backend server.
-- **React.js:** JavaScript library for building the user interface.
-- **Node.js:** JavaScript runtime environment for executing server-side code.
-- **Tailwind CSS:** A utility-first CSS framework
-- **Shadcn:** UI library for styling based on Tailwind CSS
-- **JWT:** JSON Web Tokens for secure user authentication.
-- **Cloudinary:** Cloud-based image management for storing and serving images.
-- **Google Cloud:** For gmail based authentication
+The roadmap lives in `blueprint/build-plan.md`.

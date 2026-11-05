@@ -207,7 +207,7 @@ development.
 | Tests | Rails Minitest + Vitest + Playwright for key flows | |
 | CI | GitHub Actions | Lint, tests, build. |
 
-The Express API in `api/` and MongoDB are removed once Rails covers everything.
+The Express API and MongoDB were removed on 2026-11-06; Rails serves everything.
 
 ## 6. Monetize - How will this make money?
 

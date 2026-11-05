@@ -30,7 +30,7 @@ const Featured = () => {
       <div className="sticky top-0 h-[100svh] overflow-hidden">
         {stays.map((s, i) => (
           <img
-            key={s._id}
+            key={s.id}
             src={s.photos?.[0]?.replace(/w=\d+/, 'w=2400')}
             alt={s.title}
             className="absolute inset-0 h-full w-full object-cover transition-all duration-1000 ease-out"
@@ -46,7 +46,7 @@ const Featured = () => {
         <div className="absolute right-5 top-1/2 flex -translate-y-1/2 flex-col items-center gap-3 md:right-8">
           {stays.map((s, i) => (
             <span
-              key={s._id}
+              key={s.id}
               className={`block rounded-full border border-white transition-all ${
                 i === active ? 'h-2.5 w-2.5 bg-white' : 'h-1.5 w-1.5 bg-transparent opacity-60'
               }`}
@@ -61,12 +61,12 @@ const Featured = () => {
                 <span className="flex items-center gap-2 font-grotesk text-[9px] tracking-[0.3em] text-white/70">
                   <span className="h-px w-5 bg-white/70" /> FEATURED STAY
                 </span>
-                <Link to={`/place/${stays[active]._id}`} className="mt-2 block font-grotesk text-3xl tracking-tight hover:underline md:text-5xl">
+                <Link to={`/place/${stays[active].id}`} className="mt-2 block font-grotesk text-3xl tracking-tight hover:underline md:text-5xl">
                   {stays[active].title}
                 </Link>
                 <span className="mt-2 block font-grotesk text-[10px] tracking-[0.24em] text-white/80">
                   {stays[active].address.toUpperCase()} ·{' '}
-                  {formatPrice(stays[active].price, stays[active].address)} / NIGHT
+                  {formatPrice(stays[active].nightly_price_pence)} / NIGHT
                 </span>
               </div>
               <div className="text-right">
@@ -82,7 +82,7 @@ const Featured = () => {
             <div className="relative mt-5 h-px bg-white/30">
               <div className="absolute inset-y-0 left-0 bg-white" style={{ width: `${p * 100}%` }} />
               {stays.map((s, i) => (
-                <span key={s._id} className="absolute top-[-3px] h-[7px] w-px bg-white/50" style={{ left: `${(i / n) * 100}%` }} />
+                <span key={s.id} className="absolute top-[-3px] h-[7px] w-px bg-white/50" style={{ left: `${(i / n) * 100}%` }} />
               ))}
               <span className="absolute top-[-4px] h-[9px] w-[9px] -translate-x-1/2 rounded-full bg-white" style={{ left: `${p * 100}%` }} />
             </div>

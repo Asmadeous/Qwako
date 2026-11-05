@@ -10,6 +10,7 @@ import PlacesPage from './PlacesPage';
 import { useAuth } from '../../hooks';
 import { LogOut, Mail, Text } from 'lucide-react';
 import Spinner from '@/components/ui/Spinner';
+import EditProfileDialog from '@/components/ui/EditProfileDialog';
 
 const ProfilePage = () => {
   const auth = useAuth();
@@ -51,13 +52,10 @@ const ProfilePage = () => {
           {/* avatar */}
           <div className="flex h-40 w-40 justify-center rounded-full bg-gray-200 p-4  sm:h-72 sm:w-72 md:h-96 md:w-96">
             <Avatar>
-              {user.picture ? (
-                <AvatarImage src={user.picture} />
-              ) : (
-                <AvatarImage src="https://res.cloudinary.com/rahul4019/image/upload/v1695133265/pngwing.com_zi4cre.png" className="object-cover"/>
-              )}
-
-              <AvatarFallback>{user.name.slice([0], [1])}</AvatarFallback>
+              {user.avatar_url && <AvatarImage src={user.avatar_url} alt="" />}
+              <AvatarFallback className="text-6xl sm:text-8xl">
+                {user.name.slice(0, 1).toUpperCase()}
+              </AvatarFallback>
             </Avatar>
           </div>
 
@@ -83,6 +81,8 @@ const ProfilePage = () => {
 
             {/* Action buttons */}
             <div className="flex w-full justify-around sm:justify-end sm:gap-5 md:gap-10">
+              <EditProfileDialog />
+
               <Button variant="secondary" onClick={handleLogout}>
                 <LogOut className="mr-2 h-4 w-4" />
                 Sign out

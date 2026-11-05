@@ -1,0 +1,7 @@
+cottage_wifi:
+  listing: cottage
+  amenity: wifi
+
+cottage_parking:
+  listing: cottage
+  amenity: parking
