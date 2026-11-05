@@ -5,3 +5,23 @@ node_modules
 qwako-home.png
 client/dist
 .vercel
+
+# Rails backend
+backend/config/master.key
+backend/config/credentials/*.key
+backend/.env*
+backend/log/*
+!backend/log/.keep
+backend/tmp/*
+!backend/tmp/.keep
+backend/storage/*
+!backend/storage/.keep
+backend/public/assets
+backend/.bundle
+backend/vendor/bundle
+
+# Editors and OS
+.DS_Store
+.idea/
+.vscode/
+*.swp
