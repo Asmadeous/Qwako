@@ -23,7 +23,7 @@ export const Header = () => {
     window.addEventListener('scroll', handleScroll);
 
     // hide searchbar based on url
-    if (location.pathname === '/') {
+    if (location.pathname === '/stays') {
       setShowSearchBar(true);
     } else {
       setShowSearchBar(false);

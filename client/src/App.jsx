@@ -5,6 +5,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 import Layout from './components/ui/Layout';
 import IndexPage from './pages/IndexPage';
+import HomePage from './pages/home/HomePage';
 import RegisterPage from './pages/RegisterPage';
 import LoginPage from './pages/LoginPage';
 import ProfilePage from './pages/ProfilePage';
@@ -33,8 +34,9 @@ function App() {
       <UserProvider>
         <PlaceProvider>
           <Routes>
-            <Route path="/" element={<Layout />}>
-              <Route index element={<IndexPage />} />
+            <Route path="/" element={<HomePage />} />
+            <Route element={<Layout />}>
+              <Route path="/stays" element={<IndexPage />} />
               <Route path="/login" element={<LoginPage />} />
               <Route path="/register" element={<RegisterPage />} />
               <Route path="/account" element={<ProfilePage />} />

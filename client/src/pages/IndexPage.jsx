@@ -47,7 +47,7 @@ const IndexPage = () => {
               Clear filters
             </button>
           ) : (
-            <a href="/" className="mt-6 rounded-full bg-primary px-6 py-2 text-white">
+            <a href="/stays" className="mt-6 rounded-full bg-primary px-6 py-2 text-white">
               Show all stays
             </a>
           )}
