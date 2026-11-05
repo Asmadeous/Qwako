@@ -1,86 +1,75 @@
 # Coding Standards
 
-> Your conventions. Edit these once to match your stack. The defaults below
-> assume Next.js + TypeScript + Tailwind + Prisma; change or trim anything that
-> doesn't fit your project.
->
-> Run `/onboard` after installing the Blueprint. It tunes this file to the real
-> project stack, along with `AGENTS.md`, `CLAUDE.md` when present,
-> `ai-interaction.md`, `.gitignore`, and README placement. Review the result
-> before `/overview`.
+> Tuned by `/onboard` for this repo: a Rails 8 API in `backend/` and a React +
+> Vite client in `client/`. The legacy Express API in `api/` is frozen.
 
-## TypeScript
+## Backend (Rails, `backend/`)
 
-- Strict mode enabled
-- No `any` types - use proper typing or `unknown`
-- Define interfaces for all props, API responses, and data models
-- Use type inference where obvious, explicit types where helpful
+- Rails 8.1 in API mode, Ruby 4.0, PostgreSQL. Follow Rails conventions over
+  custom structure.
+- JSON REST endpoints under `/api/v1` (`Api::V1::` controllers in
+  `app/controllers/api/v1/`).
+- > TODO: settle the shared JSON error shape and pagination format in the first
+  > feature that returns them, then record them here.
+- Every table uses UUID primary and foreign keys (the generator default is set in
+  `config/application.rb`). Use `t.references ..., type: :uuid`.
+- Money is integer pence (`*_pence` columns), never floats or decimals.
+- Emails are `citext`. Booking overlap is prevented by a PostgreSQL exclusion
+  constraint, not by application checks alone.
+- Schema changes only through migrations (`bin/rails g migration`), never by
+  editing `db/schema.rb`. Run `bin/rails db:migrate` and commit the updated
+  schema with the migration.
+- Strong parameters for all writes. Validate in models; enforce critical
+  invariants (uniqueness, foreign keys, not-null, exclusions) in the database too.
+- Authorization with Pundit policies on every endpoint once roles exist. Scope
+  user-owned queries by the signed-in user (`Current.user`), never by a
+  client-supplied id. Prices, totals and availability are computed on the server.
+- Auth uses Rails 8 authentication (has_secure_password + database sessions) with
+  signed httpOnly, Secure, SameSite=Lax cookies.
+- Background work through Active Job on Solid Queue; email through Action Mailer.
+- Time zone is Europe/London (`config.time_zone = "London"`). Dates are `Date`,
+  instants are `Time.zone` values.
+- Style: rubocop-rails-omakase (`bin/rubocop`). Brakeman and bundler-audit must
+  stay clean.
 
-## React
+## Client (React, `client/`)
 
-- Functional components only (no class components)
-- Use hooks for state and side effects
-- Keep components focused - one job per component
-- Extract reusable logic into custom hooks
-
-## Next.js
-
-- Server components by default
-- Only use `'use client'` when needed (interactivity, hooks, browser APIs)
-- Use Server Actions for form submissions and simple mutations
-- Use API routes when you need:
-  - Webhooks (Clerk, GitHub, etc.)
-  - File uploads with progress tracking
-  - Long-running operations
-  - Specific HTTP status codes or headers
-  - Endpoints for future mobile/CLI clients
-  - Third-party integrations
-- Otherwise, fetch data directly in server components
-- Dynamic routes for item/collection pages
-
-## File Organization
-
-- Components: `src/components/[feature]/ComponentName.tsx`
-- Pages: `src/app/[route]/page.tsx`
-- Server Actions: `src/actions/[feature].ts`
-- Types: `src/types/[feature].ts`
-- Lib/Utils: `src/lib/[utility].ts`
+- React 18 function components and hooks, JavaScript (`.jsx`), no TypeScript.
+- Vite build; import from `src` with the `@/` alias.
+- Pages in `src/pages/`, shared components in `src/components/ui/`, context
+  providers in `src/providers/`, helpers in `src/utils/`.
+- HTTP through the shared axios instance in `src/utils/axios.js`
+  (`withCredentials: true`); do not create ad-hoc axios clients.
+- Planned for new data and form code (introduce with the first feature that
+  needs it, not before): TanStack Query for server data, React Hook Form + Zod
+  for forms.
+- Prettier with `singleQuote` and the Tailwind class-sorting plugin.
 
 ## Naming
 
-- Components: PascalCase (`ItemCard.tsx`)
-- Files: Match component name or kebab-case
-- Functions: camelCase
-- Constants: SCREAMING_SNAKE_CASE
-- Types/Interfaces: PascalCase (no prefix)
+- Ruby: snake_case methods and files, CamelCase classes, SCREAMING_SNAKE_CASE
+  constants.
+- React: PascalCase component files (`PlaceCard.jsx`), camelCase functions and
+  helpers.
 
 ## Styling
 
-- Tailwind CSS for all styling
-- Tailwind v4: CSS-first config (`@theme` in `globals.css`), no `tailwind.config.js`
-- Use shadcn/ui components where applicable
-- No inline styles
-- Dark mode first, light mode as option
-
-## Database
-
-- Use Prisma ORM for all database operations
-- Always use `prisma migrate dev` for schema changes (not `db push`)
-- Run `prisma migrate status` before committing to verify migrations are in sync
-- Production deployments must run `prisma migrate deploy` before the app starts
-
-## Data Fetching
-
-- Server components fetch directly with Prisma
-- Client components use Server Actions
-- Validate all inputs with Zod
-- Scope every user-owned query by the authenticated Clerk user id (`clerkUserId`); never trust a client-supplied user id
+- Tailwind CSS v3 with `tailwind.config.cjs`; shadcn-style components in
+  `src/components/ui/`.
+- Public pages: sand `#EDE6D6`, ink `#2A2725`, Instrument Serif headings
+  (`font-serif`), Familjen Grotesk body (`font-grotesk`), blue `#2563EB` for
+  actions.
+- Mobile first: every page works at 360px; 44px touch targets; visible labels;
+  WCAG 2.2 AA.
+- UK English and formats: GBP (`£`), `en-GB` dates, UK postcodes.
+- No inline styles except for values computed at runtime.
 
 ## Error Handling
 
-- Use try/catch in Server Actions
-- Return `{ success, data, error }` pattern from actions
-- Display user-friendly error messages via toast
+- API errors return a consistent JSON body with an appropriate HTTP status;
+  never leak stack traces or internal messages.
+- Client shows a user-friendly message (toast or inline field error) and keeps
+  the user's input.
 
 ## Testing
 
@@ -121,13 +110,15 @@ of the switch; the skills and `ai-interaction.md` only point back here.
   `/implement` writes the test with the step, and if a step surfaces logic the spec
   didn't foresee, add a focused test then.
 - An empty suite should fail, not pass, so "no tests ran" never looks like "passed".
-- Test files live next to source files (for example `feature.test.ts`).
+- Client test files, once Vitest exists, live next to source files.
 - Run them via the project's test command (see Commands in `AGENTS.md`), not a
   hardcoded tool name.
 
-Stack binding (swap for yours): a TypeScript app uses Vitest, `vi.mock()` for
-external dependencies (Prisma, Clerk, etc.), and `vi.useFakeTimers()` for
-time-dependent logic; a Python app would use pytest; a Go app `go test`.
+Stack binding: the backend uses Minitest (`bin/rails test`) with fixtures in
+`test/fixtures/`, and `travel_to` for time-dependent logic. Model, policy and
+service tests cover pricing, availability and permission rules; request tests
+cover endpoint contracts. The client has no runner yet; Vitest is the planned
+choice. Ruby test files live under `backend/test/` mirroring `app/`.
 
 ## Browser Verification
 

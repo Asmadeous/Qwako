@@ -13,7 +13,17 @@ for optional tool settings.
 
 ## What this is
 
-A description of your project and the problem it solves.
+T&G BnB is the direct-booking website for one owner's UK holiday lets: guests
+browse and book nights, and the owner manages properties, bookings and payments
+from an admin dashboard. Not a marketplace.
+
+Layout:
+
+- `backend/` - Rails 8.1 API (Ruby 4.0, PostgreSQL), the new backend being built
+  feature by feature. JSON under `/api/v1`.
+- `client/` - React 18 + Vite + Tailwind site (JavaScript, shadcn-style UI).
+- `api/` - legacy Express + MongoDB prototype API. Do not extend it; it is
+  removed in build-plan feature 26 once Rails covers everything.
 
 This project is built with the **AI Blueprint**, a workflow layer, not an
 app skeleton. To start a new project, scaffold the app first in an empty folder
@@ -81,17 +91,34 @@ Skills: `adopt`, `audit`, `blueprint-doctor`, `blueprint-status`, `brief`,
 
 ## Commands
 
-<!-- blueprint:onboarding-required -->
-For a standard Next.js project. Change or remove if you're using something else.
+Run each from the folder named.
 
-- Dev server: `npm run dev` (http://localhost:3000)
-- Build: `npm run build`
-- Production server: `npm run start`
-- Lint: `npm run lint`
+Backend (`backend/`):
 
-Testing is opt-in. If this project does not already have a unit test runner, run
-`/tests` or `$tests` to add one and update this section with the real test
-commands.
+- Setup: `bin/setup --skip-server` (installs gems, prepares databases)
+- Dev server: `bin/rails server` (http://localhost:3000, health check `GET /up`)
+- Migrate: `bin/rails db:migrate`
+- Test: `bin/rails test` (Minitest)
+- Lint: `bin/rubocop`
+- Security scans: `bin/brakeman --no-pager` and `bin/bundler-audit`
+- Background jobs (when needed outside Puma): `bin/jobs`
+
+Client (`client/`):
+
+- Install: `yarn install`
+- Dev server: `yarn dev` (http://localhost:5173)
+- Build: `yarn build`
+- Preview build: `yarn preview`
+- No lint or test script yet; Vitest is planned.
+
+Legacy API (`api/`): `yarn start` (http://localhost:4000). Until feature 1 wires
+the client to Rails, the client still talks to this API via `VITE_BASE_URL`.
+
+Backend CI runs from `.github/workflows/backend.yml` (brakeman, bundler-audit,
+rubocop, tests) on changes under `backend/`. There is no combined Verify command.
+
+The backend `Test` command is the test gate for backend logic. The client has no
+test runner yet; run `/tests` to add Vitest when client logic needs it.
 
 Browser testing is also opt-in. Run `/tests browser` or `$tests browser` to add
 or normalize a browser harness and document its exact command as `Browser
