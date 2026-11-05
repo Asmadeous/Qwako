@@ -9,8 +9,14 @@
   custom structure.
 - JSON REST endpoints under `/api/v1` (`Api::V1::` controllers in
   `app/controllers/api/v1/`).
-- > TODO: settle the shared JSON error shape and pagination format in the first
-  > feature that returns them, then record them here.
+- Errors use `render_error` in `ApplicationController`:
+  `{ "error": { "code", "message", "details"? } }`, where `details` maps field
+  names to full messages for `validation_failed` (422). Render records with an
+  explicit attribute allowlist (for example `user_json`), never `to_json` on a
+  model.
+- Auth: `Current.user` from the signed `session_id` cookie. Controllers require
+  sign-in by default; opt out with `allow_unauthenticated_access`.
+- > TODO: settle pagination format in the first feature that returns a list.
 - Every table uses UUID primary and foreign keys (the generator default is set in
   `config/application.rb`). Use `t.references ..., type: :uuid`.
 - Money is integer pence (`*_pence` columns), never floats or decimals.
@@ -38,8 +44,9 @@
 - Vite build; import from `src` with the `@/` alias.
 - Pages in `src/pages/`, shared components in `src/components/ui/`, context
   providers in `src/providers/`, helpers in `src/utils/`.
-- HTTP through the shared axios instance in `src/utils/axios.js`
-  (`withCredentials: true`); do not create ad-hoc axios clients.
+- HTTP through the shared instances in `src/utils/axios.js`: `api` for Rails
+  (`/api/v1`) and the default export for the legacy Express API. Do not create
+  ad-hoc axios clients. Never store auth data in localStorage.
 - Planned for new data and form code (introduce with the first feature that
   needs it, not before): TanStack Query for server data, React Hook Form + Zod
   for forms.

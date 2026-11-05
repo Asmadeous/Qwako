@@ -8,8 +8,8 @@ import { Button } from '@/components/ui/button';
 
 import PlacesPage from './PlacesPage';
 import { useAuth } from '../../hooks';
-import { LogOut, Mail, PenSquare, Text } from 'lucide-react';
-import EditProfileDialog from '@/components/ui/EditProfileDialog';
+import { LogOut, Mail, Text } from 'lucide-react';
+import Spinner from '@/components/ui/Spinner';
 
 const ProfilePage = () => {
   const auth = useAuth();
@@ -30,6 +30,10 @@ const ProfilePage = () => {
       toast.error(response.message);
     }
   };
+
+  if (auth.loading) {
+    return <Spinner />;
+  }
 
   if (!user && !redirect) {
     return <Navigate to={'/login'} />;
@@ -79,12 +83,9 @@ const ProfilePage = () => {
 
             {/* Action buttons */}
             <div className="flex w-full justify-around sm:justify-end sm:gap-5 md:gap-10">
-              {/* <Button varient="secondary">Edit profile</Button> */}
-              <EditProfileDialog />
-
               <Button variant="secondary" onClick={handleLogout}>
                 <LogOut className="mr-2 h-4 w-4" />
-                Logout
+                Sign out
               </Button>
             </div>
           </div>

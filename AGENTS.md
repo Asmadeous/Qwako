@@ -111,8 +111,13 @@ Client (`client/`):
 - Preview build: `yarn preview`
 - No lint or test script yet; Vitest is planned.
 
-Legacy API (`api/`): `yarn start` (http://localhost:4000). Until feature 1 wires
-the client to Rails, the client still talks to this API via `VITE_BASE_URL`.
+The Vite dev server proxies `/api/v1` to Rails (`RAILS_API_URL`, default
+http://localhost:3000) and the rest of `/api` to the legacy API, so the client
+calls Rails same-origin. `VITE_API_URL` overrides the Rails host if needed.
+
+Legacy API (`api/`): `yarn start` (http://localhost:4000). Auth is on Rails;
+listings, bookings and uploads still use this API (`VITE_BASE_URL`) until their
+features are rebuilt.
 
 Backend CI runs from `.github/workflows/backend.yml` (brakeman, bundler-audit,
 rubocop, tests) on changes under `backend/`. There is no combined Verify command.

@@ -41,6 +41,9 @@ module Backend
     # Skip views, helpers and assets when generating a new resource.
     config.api_only = true
 
+    # Auth uses a signed session_id cookie; API mode leaves cookies out by default.
+    config.middleware.use ActionDispatch::Cookies
+
     # Every table uses UUID primary keys (gen_random_uuid() from pgcrypto).
     config.generators do |g|
       g.orm :active_record, primary_key_type: :uuid

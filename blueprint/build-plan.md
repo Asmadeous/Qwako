@@ -9,7 +9,7 @@ extensions, CORS, health check and CI; then run `/onboard` and `/overview`.
 
 ## Milestone 1 - Accounts
 
-- [ ] 1. **Email sign-up, sign-in and sign-out** - Rails 8 cookie sessions, current-user endpoint, React auth wired to Rails.
+- [x] 1. **Email sign-up, sign-in and sign-out** - Rails 8 cookie sessions, current-user endpoint, React auth wired to Rails.
 - [ ] 2. **Email verification and password reset** - emails sent through the client's SMTP server, rate-limited.
 - [ ] 3. **Profiles and roles** - edit profile and photo; guest and admin roles; admin accounts created by the owner.
 

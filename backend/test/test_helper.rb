@@ -13,3 +13,10 @@ module ActiveSupport
     # Add more helper methods to be used by all tests here...
   end
 end
+
+module ActionDispatch
+  class IntegrationTest
+    # Rate-limit counters live in Rails.cache; start each test from zero.
+    setup { Rails.cache.clear }
+  end
+end
