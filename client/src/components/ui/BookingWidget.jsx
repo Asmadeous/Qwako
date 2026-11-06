@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import { differenceInCalendarDays, format } from 'date-fns';
 import { toast } from 'react-toastify';
@@ -13,16 +13,12 @@ const toISODate = (date) => format(date, 'yyyy-MM-dd');
 const BookingWidget = ({ place }) => {
   const { user } = useAuth();
   const [dateRange, setDateRange] = useState({ from: null, to: null });
-  const [form, setForm] = useState({ guests_count: 1, contact_name: '', contact_phone: '' });
+  const [form, setForm] = useState({ guests_count: 1 });
   const [errors, setErrors] = useState({});
   const [formError, setFormError] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [redirect, setRedirect] = useState('');
   const inFlight = useRef(false);
-
-  useEffect(() => {
-    if (user) setForm((current) => ({ ...current, contact_name: current.contact_name || user.name }));
-  }, [user]);
 
   const nights =
     dateRange.from && dateRange.to ? differenceInCalendarDays(dateRange.to, dateRange.from) : 0;
@@ -53,8 +49,6 @@ const BookingWidget = ({ place }) => {
           check_in: toISODate(dateRange.from),
           check_out: toISODate(dateRange.to),
           guests_count: Number(form.guests_count),
-          contact_name: form.contact_name,
-          contact_phone: form.contact_phone,
         },
       });
       toast.success('Booked. Enjoy your stay!');
@@ -117,35 +111,6 @@ const BookingWidget = ({ place }) => {
             aria-describedby={errors.guests_count ? 'booking-guests_count-error' : undefined}
           />
           {fieldError('guests_count')}
-        </div>
-        <div className="border-t py-3 px-4">
-          <label htmlFor="booking-contact_name">Your full name</label>
-          <input
-            id="booking-contact_name"
-            type="text"
-            name="contact_name"
-            autoComplete="name"
-            required
-            value={form.contact_name}
-            onChange={handleChange}
-            aria-invalid={errors.contact_name ? 'true' : undefined}
-            aria-describedby={errors.contact_name ? 'booking-contact_name-error' : undefined}
-          />
-          {fieldError('contact_name')}
-          <label htmlFor="booking-contact_phone">Phone number</label>
-          <input
-            id="booking-contact_phone"
-            type="tel"
-            name="contact_phone"
-            autoComplete="tel"
-            placeholder="+44 7700 900123"
-            required
-            value={form.contact_phone}
-            onChange={handleChange}
-            aria-invalid={errors.contact_phone ? 'true' : undefined}
-            aria-describedby={errors.contact_phone ? 'booking-contact_phone-error' : undefined}
-          />
-          {fieldError('contact_phone')}
         </div>
       </div>
 

@@ -13,7 +13,7 @@ module JsonRenderers
 
     def booking_json(booking)
       booking.slice(
-        :id, :status, :check_in, :check_out, :nights, :guests_count, :contact_name, :contact_phone,
+        :id, :status, :check_in, :check_out, :nights, :guests_count,
         :nightly_price_pence, :cleaning_charge_pence, :total_pence, :created_at
       ).merge(listing: listing_json(booking.listing))
     end

@@ -28,7 +28,7 @@ module Api
           raw = params[:booking]
           return {} unless raw.is_a?(ActionController::Parameters)
 
-          raw.permit(:listing_id, :check_in, :check_out, :guests_count, :contact_name, :contact_phone)
+          raw.permit(:listing_id, :check_in, :check_out, :guests_count)
         end
 
         # The exclusion constraint wins any race the overlap validation misses.

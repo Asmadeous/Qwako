@@ -4,8 +4,6 @@ grace_cottage:
   check_in: <%= Date.current + 10 %>
   check_out: <%= Date.current + 13 %>
   guests_count: 2
-  contact_name: Grace Hopper
-  contact_phone: "+44 7700 900123"
   nights: 3
   nightly_price_pence: 21000
   cleaning_charge_pence: 3000

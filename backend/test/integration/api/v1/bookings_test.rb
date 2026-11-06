@@ -3,8 +3,7 @@ require "test_helper"
 class Api::V1::BookingsTest < ActionDispatch::IntegrationTest
   def book(listing: listings(:cottage), check_in: Date.current + 20, check_out: Date.current + 23, **extra)
     post api_v1_bookings_path, params: { booking: {
-      listing_id: listing.id, check_in:, check_out:, guests_count: 2,
-      contact_name: "Ada Lovelace", contact_phone: "+44 7700 900456"
+      listing_id: listing.id, check_in:, check_out:, guests_count: 2
     }.merge(extra) }, as: :json
   end
 
@@ -40,9 +39,9 @@ class Api::V1::BookingsTest < ActionDispatch::IntegrationTest
 
   test "rule violations report field errors" do
     sign_in_as users(:ada)
-    book(guests_count: 9, check_in: Date.current - 1, check_out: Date.current + 1, contact_phone: "call me")
+    book(guests_count: 9, check_in: Date.current - 1, check_out: Date.current + 1)
     assert_error :unprocessable_content, "validation_failed"
-    assert_equal %w[check_in contact_phone guests_count], response.parsed_body.dig("error", "details").keys.sort
+    assert_equal %w[check_in guests_count], response.parsed_body.dig("error", "details").keys.sort
 
     book(check_in: Date.current + 5, check_out: Date.current + 5)
     assert response.parsed_body.dig("error", "details", "check_out").present?

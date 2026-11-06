@@ -1,7 +1,6 @@
 class Booking < ApplicationRecord
   ACTIVE_STATUSES = %w[pending_payment requested confirmed].freeze
   MAX_NIGHTS = 30
-  PHONE_FORMAT = /\A\+?[0-9 ()-]{7,20}\z/
 
   belongs_to :listing
   belongs_to :guest, class_name: "User"
@@ -9,14 +8,10 @@ class Booking < ApplicationRecord
   enum :status, %w[pending_payment requested confirmed declined expired cancelled_by_guest
                    cancelled_by_owner completed].index_by(&:itself), default: "confirmed", validate: true
 
-  normalizes :contact_name, :contact_phone, with: ->(value) { value.strip }
-
   before_validation :price_from_listing, on: :create
 
   validates :check_in, :check_out, presence: true
   validates :guests_count, numericality: { only_integer: true, greater_than: 0 }
-  validates :contact_name, presence: true, length: { maximum: 100 }
-  validates :contact_phone, presence: true, format: { with: PHONE_FORMAT, allow_blank: true, message: "is not a valid phone number" }
   validate :dates_are_bookable, :guests_fit, :listing_is_bookable, :nights_are_free, on: :create
 
   scope :active, -> { where(status: ACTIVE_STATUSES) }

@@ -13,8 +13,9 @@ import {
 
 export default function DatePickerWithRange({ className, setDateRange }) {
   const [date, setDate] = React.useState({
+    // One night by default; guests pick their own dates.
     from: new Date(),
-    to: addDays(Date.now(), 5),
+    to: addDays(new Date(), 1),
   });
 
   const today = new Date();
@@ -24,7 +25,7 @@ export default function DatePickerWithRange({ className, setDateRange }) {
   React.useEffect(() => {
     //  if user hasn't selected a date range (instead selected a single date)
     if (!date) {
-      setDate({ from: new Date(), to: new Date() });
+      setDate({ from: new Date(), to: addDays(new Date(), 1) });
     } else {
       setDateRange(date);
     }
