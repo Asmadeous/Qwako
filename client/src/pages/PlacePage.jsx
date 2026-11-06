@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 
 import { api } from '@/utils/axios';
 
@@ -41,9 +41,19 @@ const PlacePage = () => {
 
   if (notFound) {
     return (
-      <p role="alert" className="mx-auto max-w-xl px-4 pt-32 text-center text-lg">
-        We couldn't find that stay.
-      </p>
+      <section role="alert" className="mx-auto max-w-xl px-4 pt-40 pb-24 text-center">
+        <span className="font-grotesk text-[10px] tracking-[0.24em] text-ink/60">STAY NOT FOUND</span>
+        <h1 className="mt-4 font-serif text-5xl leading-none md:text-6xl">This stay is no longer listed.</h1>
+        <p className="mt-4 font-grotesk text-sm text-ink/70">
+          The link may be old, or the stay has been taken off the site.
+        </p>
+        <Link
+          to="/stays"
+          className="mt-8 inline-block border-b border-ink pb-0.5 font-grotesk text-xs tracking-[0.12em]"
+        >
+          BROWSE ALL STAYS <span className="ml-2">→</span>
+        </Link>
+      </section>
     );
   }
 
