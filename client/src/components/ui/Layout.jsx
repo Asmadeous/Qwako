@@ -1,14 +1,27 @@
-import React from 'react';
-import { Outlet } from 'react-router-dom';
+import { useEffect } from 'react';
+import { Outlet, useLocation } from 'react-router-dom';
 
 import { Header } from './Header';
 import SiteFooter from '@/pages/home/SiteFooter';
 
 const Layout = () => {
+  const { pathname } = useLocation();
+
+  // Each new page starts at the top; in-page anchors (/#featured) still scroll to their section.
+  useEffect(() => {
+    if (!window.location.hash) window.scrollTo(0, 0);
+  }, [pathname]);
+
   return (
     <div className="bg-sand text-ink">
+      <a
+        href="#main"
+        className="sr-only z-50 rounded-full bg-ink px-4 py-2 text-sm text-sand focus:not-sr-only focus:fixed focus:left-4 focus:top-4"
+      >
+        Skip to content
+      </a>
       <Header />
-      <main className="mx-auto flex min-h-screen max-w-screen-xl flex-col px-1 md:px-4">
+      <main id="main" className="mx-auto flex min-h-dvh max-w-screen-xl flex-col px-1 md:px-4">
         <Outlet />
       </main>
       <SiteFooter />

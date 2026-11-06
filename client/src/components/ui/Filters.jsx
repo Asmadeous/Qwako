@@ -1,4 +1,5 @@
-import React from 'react';
+import { useState } from 'react';
+import { Search, SlidersHorizontal } from 'lucide-react';
 
 import {
   AMENITIES,
@@ -9,22 +10,22 @@ import {
   SORTS,
   activeFilterCount,
   countiesIn,
+  moreFilterCount,
 } from '@/utils/listingFilters';
 
-const selectClass =
-  'h-10 rounded-full border border-gray-300 bg-paper px-4 text-sm text-gray-800 shadow-sm hover:border-gray-400 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20';
+const control =
+  'h-11 rounded-full border border-ink/25 bg-paper px-4 text-sm text-ink transition-colors hover:border-ink/50 focus:border-ink focus:outline-none';
 
-const pillClass = (active) =>
-  `h-10 whitespace-nowrap rounded-full border px-4 text-sm transition ${
-    active
-      ? 'border-primary bg-primary text-white'
-      : 'border-gray-300 bg-paper text-gray-800 hover:border-gray-400'
+const chip = (active) =>
+  `h-10 shrink-0 whitespace-nowrap rounded-full border px-4 text-sm transition-colors active:scale-[0.98] ${
+    active ? 'border-ink bg-ink text-sand' : 'border-ink/25 bg-transparent text-ink hover:border-ink/60'
   }`;
 
 const Filters = ({ places, filters, setFilters, resultCount }) => {
+  const [showMore, setShowMore] = useState(false);
   const set = (patch) => setFilters((f) => ({ ...f, ...patch }));
   const counties = countiesIn(places, filters.region);
-  const active = activeFilterCount(filters);
+  const moreCount = moreFilterCount(filters);
 
   const toggleAmenity = (id) =>
     set({
@@ -34,100 +35,52 @@ const Filters = ({ places, filters, setFilters, resultCount }) => {
     });
 
   return (
-    <div className="mx-auto w-full max-w-screen-xl px-4 pt-24 md:pt-28">
-      {/* Category chips */}
-      <div className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-3 [scrollbar-width:none]">
-        <button
-          className={pillClass(filters.category === 'all')}
-          onClick={() => set({ category: 'all' })}
-        >
-          All stays
-        </button>
-        {CATEGORIES.map((c) => (
-          <button
-            key={c.id}
-            className={pillClass(filters.category === c.id)}
-            onClick={() => set({ category: filters.category === c.id ? 'all' : c.id })}
-          >
-            {c.label}
-          </button>
-        ))}
-      </div>
+    <section aria-label="Search and filter stays" className="space-y-4">
+      <div className="grid gap-3 md:grid-cols-[minmax(0,1fr)_auto_auto_auto_auto]">
+        <label className="relative block">
+          <span className="sr-only">Search by name or place</span>
+          <Search aria-hidden className="pointer-events-none absolute left-4 top-1/2 size-4 -translate-y-1/2 text-ink/50" />
+          <input
+            type="search"
+            value={filters.query}
+            onChange={(e) => set({ query: e.target.value })}
+            placeholder="Search by name, town or county"
+            className="!my-0 h-11 !rounded-full !pl-10"
+          />
+        </label>
 
-      {/* Dropdowns and amenity toggles */}
-      <div className="flex flex-wrap items-center gap-2 border-t border-gray-200 pt-3">
-        <select
-          aria-label="Nation"
-          className={selectClass}
-          value={filters.region}
-          onChange={(e) => set({ region: e.target.value, county: 'all' })}
-        >
-          <option value="all">Anywhere in the UK</option>
-          {REGIONS.map((r) => (
-            <option key={r} value={r}>
-              {r}
-            </option>
-          ))}
-        </select>
-
-        {counties.length > 1 && (
+        <div className="-mx-4 flex gap-2 overflow-x-auto px-4 [scrollbar-width:none] md:contents">
           <select
-            aria-label="County"
-            className={selectClass}
-            value={filters.county}
-            onChange={(e) => set({ county: e.target.value })}
+            aria-label="Nation"
+            className={control}
+            value={filters.region}
+            onChange={(e) => set({ region: e.target.value, county: 'all' })}
           >
-            <option value="all">All counties</option>
-            {counties.map((c) => (
-              <option key={c} value={c}>
-                {c}
+            <option value="all">All of the UK</option>
+            {REGIONS.map((r) => (
+              <option key={r} value={r}>
+                {r}
               </option>
             ))}
           </select>
-        )}
 
-        <select
-          aria-label="Guests"
-          className={selectClass}
-          value={filters.guests}
-          onChange={(e) => set({ guests: Number(e.target.value) })}
-        >
-          <option value={0}>Any guests</option>
-          {[2, 4, 6, 8].map((n) => (
-            <option key={n} value={n}>
-              {n}+ guests
-            </option>
-          ))}
-        </select>
-
-        <select
-          aria-label="Budget per night"
-          className={selectClass}
-          value={filters.budget}
-          onChange={(e) => set({ budget: e.target.value })}
-        >
-          {BUDGETS.map((b) => (
-            <option key={b.id} value={b.id}>
-              {b.id === 'any' ? 'Any price' : `${b.label} / night`}
-            </option>
-          ))}
-        </select>
-
-        {AMENITIES.map((a) => (
-          <button
-            key={a.id}
-            className={pillClass(filters.amenities.includes(a.id))}
-            onClick={() => toggleAmenity(a.id)}
-            aria-pressed={filters.amenities.includes(a.id)}
+          <select
+            aria-label="Guests"
+            className={control}
+            value={filters.guests}
+            onChange={(e) => set({ guests: Number(e.target.value) })}
           >
-            {a.label}
-          </button>
-        ))}
+            <option value={0}>Any guests</option>
+            {[2, 4, 6, 8].map((n) => (
+              <option key={n} value={n}>
+                {n}+ guests
+              </option>
+            ))}
+          </select>
 
-        <div className="ml-auto flex items-center gap-2">
           <select
             aria-label="Sort by"
-            className={selectClass}
+            className={control}
             value={filters.sort}
             onChange={(e) => set({ sort: e.target.value })}
           >
@@ -137,24 +90,105 @@ const Filters = ({ places, filters, setFilters, resultCount }) => {
               </option>
             ))}
           </select>
+
+          <button
+            type="button"
+            className={`${control} flex shrink-0 items-center gap-2 ${showMore ? 'border-ink' : ''}`}
+            aria-expanded={showMore}
+            aria-controls="more-filters"
+            onClick={() => setShowMore((open) => !open)}
+          >
+            <SlidersHorizontal aria-hidden className="size-4" />
+            More filters
+            {moreCount > 0 && (
+              <span className="tabular grid size-5 place-items-center rounded-full bg-ink text-[11px] text-sand">
+                {moreCount}
+              </span>
+            )}
+          </button>
         </div>
       </div>
 
-      <div className="flex items-center justify-between pt-4 text-sm text-gray-600">
-        <span>
-          <strong className="text-gray-900">{resultCount}</strong>{' '}
-          {resultCount === 1 ? 'stay' : 'stays'}
-        </span>
-        {active > 0 && (
+      {showMore && (
+        <div id="more-filters" className="grid gap-5 rounded-2xl border border-ink/15 bg-paper p-5 md:grid-cols-[auto_auto_1fr]">
+          {counties.length > 1 && (
+            <label className="grid gap-1.5 text-sm font-medium">
+              County
+              <select
+                className={control}
+                value={filters.county}
+                onChange={(e) => set({ county: e.target.value })}
+              >
+                <option value="all">Any county</option>
+                {counties.map((c) => (
+                  <option key={c} value={c}>
+                    {c}
+                  </option>
+                ))}
+              </select>
+            </label>
+          )}
+          <label className="grid gap-1.5 text-sm font-medium">
+            Price per night
+            <select className={control} value={filters.budget} onChange={(e) => set({ budget: e.target.value })}>
+              {BUDGETS.map((b) => (
+                <option key={b.id} value={b.id}>
+                  {b.label}
+                </option>
+              ))}
+            </select>
+          </label>
+          <fieldset className="grid gap-1.5">
+            <legend className="mb-1.5 text-sm font-medium">Must have</legend>
+            <div className="flex flex-wrap gap-2">
+              {AMENITIES.map((a) => (
+                <button
+                  key={a.id}
+                  type="button"
+                  className={chip(filters.amenities.includes(a.id))}
+                  onClick={() => toggleAmenity(a.id)}
+                  aria-pressed={filters.amenities.includes(a.id)}
+                >
+                  {a.label}
+                </button>
+              ))}
+            </div>
+          </fieldset>
+        </div>
+      )}
+
+      <div className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none]" role="group" aria-label="Type of stay">
+        <button type="button" className={chip(filters.category === 'all')} aria-pressed={filters.category === 'all'} onClick={() => set({ category: 'all' })}>
+          All stays
+        </button>
+        {CATEGORIES.map((c) => (
           <button
-            className="bg-transparent font-medium text-primary underline-offset-2 hover:underline"
+            key={c.id}
+            type="button"
+            className={chip(filters.category === c.id)}
+            aria-pressed={filters.category === c.id}
+            onClick={() => set({ category: filters.category === c.id ? 'all' : c.id })}
+          >
+            {c.label}
+          </button>
+        ))}
+      </div>
+
+      <div className="flex items-center justify-between border-t border-ink/15 pt-4 text-sm">
+        <p aria-live="polite" className="tabular text-ink/70">
+          {resultCount} {resultCount === 1 ? 'stay' : 'stays'}
+        </p>
+        {activeFilterCount(filters) > 0 && (
+          <button
+            type="button"
+            className="underline decoration-ink/40 underline-offset-4 hover:decoration-ink"
             onClick={() => setFilters(DEFAULT_FILTERS)}
           >
-            Clear filters ({active})
+            Clear all
           </button>
         )}
       </div>
-    </div>
+    </section>
   );
 };
 

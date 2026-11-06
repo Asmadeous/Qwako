@@ -15,7 +15,7 @@ import './home.css';
 
 const HomePage = () => {
   useEffect(() => {
-    document.title = 'T&G BnB — Stays, Considered.';
+    document.title = 'T&G BnB | UK holiday lets';
     return () => {
       document.title = 'T&G BnB';
     };

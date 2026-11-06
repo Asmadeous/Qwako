@@ -1,153 +1,87 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
+import * as Dialog from '@radix-ui/react-dialog';
+import { LayoutGrid, X } from 'lucide-react';
+
+const Photo = ({ src, alt, className = '', onOpen }) => (
+  <button
+    type="button"
+    onClick={onOpen}
+    className={`group relative block overflow-hidden bg-gray-200 ${className}`}
+    aria-label={`${alt}. Show all photos`}
+  >
+    <img
+      src={src}
+      alt=""
+      className="size-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.02] motion-reduce:transition-none"
+    />
+  </button>
+);
 
 const PlaceGallery = ({ place }) => {
-  const [showAllPhotos, setShowAllPhotos] = useState(false);
+  const [open, setOpen] = useState(false);
+  const photos = place.photos ?? [];
+  const alt = (i) => `${place.title}, photo ${i + 1} of ${photos.length}`;
 
-  if (showAllPhotos) {
-    return (
-      <div className="fixed inset-0 z-20 overflow-auto bg-paper text-white">
-        <div className="grid gap-4 bg-paper px-2 py-20 md:p-8">
-          <div>
-            <button
-              className="fixed right-2 top-8 flex gap-1 rounded-2xl bg-paper py-2 px-4 text-ink shadow-sm shadow-gray-500 md:right-12"
-              onClick={() => setShowAllPhotos(false)}
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                fill="currentColor"
-                className="h-6 w-6"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M5.47 5.47a.75.75 0 011.06 0L12 10.94l5.47-5.47a.75.75 0 111.06 1.06L13.06 12l5.47 5.47a.75.75 0 11-1.06 1.06L12 13.06l-5.47 5.47a.75.75 0 01-1.06-1.06L10.94 12 5.47 6.53a.75.75 0 010-1.06z"
-                  clipRule="evenodd"
-                />
-              </svg>
-              Close photos
-            </button>
-          </div>
-          {place?.photos?.length > 0 &&
-            place.photos.map((photo, index) => (
-              <div key={index} className="max-w-full">
-                {/* <Image src={photo} /> */}
-                <img src={photo} alt="" />
-              </div>
-            ))}
-        </div>
-      </div>
-    );
+  if (photos.length === 0) {
+    return <div className="aspect-[16/9] rounded-2xl bg-gray-200" aria-hidden />;
   }
+
   return (
-    <div className="relative">
-      {/* Medium devices */}
-      <div className="hidden h-[400px] max-h-[450px] grid-cols-4 gap-2 overflow-hidden rounded-[12px] md:grid">
-        {/* column 1 */}
-        <div className="col-span-2 overflow-hidden">
-          {place.photos?.[0] && (
-            <div className="h-full w-full overflow-hidden bg-gray-100">
-              <img
-                onClick={() => setShowAllPhotos(true)}
-                className="h-full w-full cursor-pointer object-cover"
-                src={place.photos[0]}
-                alt=""
-              />
-            </div>
-          )}
-        </div>
-        {/* column 2 */}
-        <div className="col-span-1 overflow-hidden">
-          {/* row grid inside column 2 */}
-          <div className="grid h-full grid-rows-2 gap-2">
-            {place.photos?.[1] && (
-              // row 1
-              <div className="bg-gray-200">
-                <img
-                  onClick={() => setShowAllPhotos(true)}
-                  className="h-full w-full cursor-pointer object-cover"
-                  src={place.photos[1]}
-                  alt=""
-                />
-              </div>
-            )}
-
-            {place.photos?.[2] && (
-              // row 2
-              <div className="bg-gray-200">
-                <img
-                  onClick={() => setShowAllPhotos(true)}
-                  className="h-full w-full cursor-pointer object-cover"
-                  src={place.photos[2]}
-                  alt=""
-                />
-              </div>
-            )}
-          </div>
-        </div>
-        {/* column 3 */}
-        <div className="col-span-1 overflow-hidden">
-          {/* row grid inside column 3 */}
-          <div className="grid h-full grid-rows-2 gap-2">
-            {place.photos?.[3] && (
-              // row 1
-              <div className="h-full bg-gray-200">
-                <img
-                  onClick={() => setShowAllPhotos(true)}
-                  className="h-full w-full cursor-pointer object-cover"
-                  src={place.photos[3]}
-                  alt=""
-                />
-              </div>
-            )}
-
-            {place.photos?.[4] && (
-              // row 2
-              <div className="h-full bg-gray-200">
-                <img
-                  onClick={() => setShowAllPhotos(true)}
-                  className="h-full w-full cursor-pointer object-cover"
-                  src={place.photos[4]}
-                  alt=""
-                />
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
-
-      {/* Mobile devices */}
-      <div className="flex overflow-hidden rounded-[12px] md:hidden">
-        {place.photos?.[0] && (
-          <div className="h-full">
-            <img
-              onClick={() => setShowAllPhotos(true)}
-              className="h-full cursor-pointer object-cover"
-              src={place.photos[0]}
-              alt=""
+    <Dialog.Root open={open} onOpenChange={setOpen}>
+      <div className="relative">
+        {/* Phones: swipe through every photo. */}
+        <div className="-mx-4 flex snap-x snap-mandatory gap-2 overflow-x-auto px-4 [scrollbar-width:none] md:hidden">
+          {photos.map((src, i) => (
+            <Photo
+              key={src}
+              src={src}
+              alt={alt(i)}
+              onOpen={() => setOpen(true)}
+              className={`aspect-[4/3] shrink-0 snap-center rounded-2xl ${photos.length > 1 ? 'w-[88%]' : 'w-full'}`}
             />
-          </div>
+          ))}
+        </div>
+
+        {/* Larger screens: one lead photo, up to two beside it. */}
+        <div
+          className={`hidden h-[min(62dvh,540px)] gap-2 overflow-hidden rounded-2xl md:grid ${
+            photos.length >= 3 ? 'grid-cols-[2fr_1fr] grid-rows-2' : photos.length === 2 ? 'grid-cols-2' : ''
+          }`}
+        >
+          <Photo src={photos[0]} alt={alt(0)} onOpen={() => setOpen(true)} className={photos.length >= 3 ? 'row-span-2' : ''} />
+          {photos.slice(1, 3).map((src, i) => (
+            <Photo key={src} src={src} alt={alt(i + 1)} onOpen={() => setOpen(true)} />
+          ))}
+        </div>
+
+        {photos.length > 1 && (
+          <Dialog.Trigger className="absolute bottom-3 right-3 hidden h-10 items-center gap-2 rounded-full border border-ink/15 bg-paper px-4 text-sm text-ink shadow-sm transition-colors hover:bg-sand md:flex">
+            <LayoutGrid aria-hidden strokeWidth={1.5} className="size-4" />
+            <span className="tabular">Show all {photos.length} photos</span>
+          </Dialog.Trigger>
         )}
       </div>
 
-      <button
-        className="absolute bottom-2 right-2 flex gap-1 rounded-xl bg-paper py-2 px-4 shadow-md shadow-gray-500 "
-        onClick={() => setShowAllPhotos(true)}
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 24 24"
-          fill="currentColor"
-          className="h-6 w-6"
-        >
-          <path
-            fillRule="evenodd"
-            d="M1.5 6a2.25 2.25 0 012.25-2.25h16.5A2.25 2.25 0 0122.5 6v12a2.25 2.25 0 01-2.25 2.25H3.75A2.25 2.25 0 011.5 18V6zM3 16.06V18c0 .414.336.75.75.75h16.5A.75.75 0 0021 18v-1.94l-2.69-2.689a1.5 1.5 0 00-2.12 0l-.88.879.97.97a.75.75 0 11-1.06 1.06l-5.16-5.159a1.5 1.5 0 00-2.12 0L3 16.061zm10.125-7.81a1.125 1.125 0 112.25 0 1.125 1.125 0 01-2.25 0z"
-            clipRule="evenodd"
-          />
-        </svg>
-        Show all photos
-      </button>
-    </div>
+      <Dialog.Portal>
+        <Dialog.Content className="fixed inset-0 z-50 overflow-y-auto bg-paper focus:outline-none">
+          <div className="sticky top-0 z-10 flex items-center justify-between gap-4 border-b border-ink/10 bg-paper/95 px-4 py-3 md:px-8">
+            <Dialog.Title className="truncate font-serif text-2xl">{place.title}</Dialog.Title>
+            <Dialog.Description className="sr-only">All photos of this stay</Dialog.Description>
+            <Dialog.Close
+              aria-label="Close photos"
+              className="grid size-11 shrink-0 place-items-center rounded-full border border-ink/15 transition-colors hover:bg-sand"
+            >
+              <X aria-hidden className="size-5" />
+            </Dialog.Close>
+          </div>
+          <div className="mx-auto grid max-w-4xl gap-3 px-4 py-6 md:px-8">
+            {photos.map((src, i) => (
+              <img key={src} src={src} alt={alt(i)} loading="lazy" className="w-full rounded-2xl bg-gray-200" />
+            ))}
+          </div>
+        </Dialog.Content>
+      </Dialog.Portal>
+    </Dialog.Root>
   );
 };
 

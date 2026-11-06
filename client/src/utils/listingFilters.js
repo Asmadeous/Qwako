@@ -39,6 +39,7 @@ export const SORTS = [
 ];
 
 export const DEFAULT_FILTERS = {
+  query: '',
   category: 'all',
   region: 'all',
   county: 'all',
@@ -70,9 +71,11 @@ export const countiesIn = (places, region) =>
 
 export const applyFilters = (places, f) => {
   const budget = BUDGETS.find((b) => b.id === f.budget) || BUDGETS[0];
+  const query = f.query.trim().toLowerCase();
   const list = places.filter((p) => {
     const price = p.nightly_price_pence;
     return (
+      (!query || `${p.title} ${p.address}`.toLowerCase().includes(query)) &&
       (f.category === 'all' || matchesCategory(p, f.category)) &&
       (f.region === 'all' || regionOf(p) === f.region) &&
       (f.county === 'all' || countyOf(p) === f.county) &&
@@ -90,5 +93,8 @@ export const applyFilters = (places, f) => {
 };
 
 export const activeFilterCount = (f) =>
-  (f.category !== 'all') + (f.region !== 'all') + (f.county !== 'all') +
+  (f.query.trim() !== '') + (f.category !== 'all') + (f.region !== 'all') + (f.county !== 'all') +
   (f.guests > 0) + (f.budget !== 'any') + f.amenities.length;
+
+// Filters that live behind the "More filters" toggle.
+export const moreFilterCount = (f) => (f.county !== 'all') + (f.budget !== 'any') + f.amenities.length;

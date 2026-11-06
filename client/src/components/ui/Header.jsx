@@ -1,17 +1,15 @@
 import { useEffect, useState } from 'react';
-import { Link, NavLink, useLocation } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 import { Avatar, AvatarImage, AvatarFallback } from '@radix-ui/react-avatar';
 
 import { useAuth } from '../../../hooks';
-import SearchBar from './SearchBar';
 
 const navClass = ({ isActive }) =>
-  `font-grotesk text-[11px] tracking-[0.18em] hover:underline ${isActive ? 'underline underline-offset-4' : ''}`;
+  `whitespace-nowrap font-grotesk text-[11px] tracking-[0.18em] hover:underline ${isActive ? 'underline underline-offset-4' : ''}`;
 
 // Same wordmark, type and palette as the home page navigation.
 export const Header = () => {
   const { user } = useAuth();
-  const { pathname } = useLocation();
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
@@ -23,16 +21,14 @@ export const Header = () => {
 
   return (
     <header
-      className={`fixed inset-x-0 top-0 z-20 bg-sand/95 text-ink backdrop-blur transition-[border-color] ${
+      className={`fixed inset-x-0 top-0 z-30 bg-sand/95 text-ink backdrop-blur transition-[border-color] ${
         scrolled ? 'border-b border-ink/20' : 'border-b border-transparent'
       }`}
     >
       <div className="mx-auto flex max-w-screen-xl items-center justify-between gap-4 px-5 py-4 md:px-8">
-        <Link to="/" className="font-grotesk text-sm font-medium tracking-tight">
+        <Link to="/" className="whitespace-nowrap font-grotesk text-sm font-medium tracking-tight">
           T&amp;G / BNB
         </Link>
-
-        {pathname === '/stays' && <SearchBar />}
 
         <nav className="flex items-center gap-5 md:gap-7" aria-label="Main">
           <NavLink to="/stays" className={navClass}>

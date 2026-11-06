@@ -1,18 +1,9 @@
-import React from 'react';
-import { TailSpin } from 'react-loader-spinner';
-
-const Spinner = () => {
-  return (
-    <div className="absolute inset-1/2 flex flex-col items-center justify-center">
-      <TailSpin
-        height={100}
-        width={200}
-        color="#2563EB"
-        radius="1"
-        visible={true}
-      />
-    </div>
-  );
-};
+// Page-level loading indicator in the site's ink colour.
+const Spinner = ({ label = 'Loading' }) => (
+  <div role="status" className="flex min-h-[60dvh] w-full items-center justify-center">
+    <span className="size-8 animate-spin rounded-full border-2 border-ink/20 border-t-ink motion-reduce:animate-none" />
+    <span className="sr-only">{label}</span>
+  </div>
+);
 
 export default Spinner;

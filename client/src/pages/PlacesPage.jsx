@@ -32,7 +32,7 @@ const PlacesPage = () => {
   return (
     <div>
       <AccountNav />
-      <div className="mx-4 flex items-center justify-between md:mx-0">
+      <div className="mx-4 flex items-center justify-between">
         <span className="font-grotesk text-sm text-ink/70">
           {places.length} {places.length === 1 ? 'stay' : 'stays'}
         </span>
@@ -43,7 +43,7 @@ const PlacesPage = () => {
           + ADD A STAY
         </Link>
       </div>
-      <div className="mx-4 mt-4 grid gap-3 md:mx-0">
+      <div className="mx-4 mt-4 grid gap-3">
         {error && <p role="alert">{error}</p>}
         {places.map((place) => (
           <InfoCard place={place} key={place.id} />

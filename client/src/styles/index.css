@@ -45,6 +45,28 @@
   body {
     @apply bg-background font-grotesk text-foreground antialiased;
   }
+
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  /* One visible focus ring for keyboard users, everywhere. */
+  :focus-visible {
+    outline: 2px solid #2a2725;
+    outline-offset: 2px;
+  }
+}
+
+@layer utilities {
+  .tabular {
+    font-variant-numeric: tabular-nums;
+  }
 }
 
 input[type='text'],
@@ -52,6 +74,8 @@ input[type='password'],
 input[type='email'],
 input[type='number'],
 input[type='tel'],
+input[type='url'],
+input[type='search'],
 textarea {
   @apply my-2 w-full rounded-xl border border-ink/25 bg-paper py-2 px-3 text-ink placeholder:text-ink/40 focus:border-ink focus:outline-none focus:ring-2 focus:ring-ink/15;
 }
@@ -64,10 +88,6 @@ textarea {
   height: 140px;
 }
 
-button {
-  @apply bg-gray-300;
-}
-
 button.primary {
   @apply w-full rounded-full bg-ink p-3 font-grotesk text-sm font-medium tracking-[0.08em] text-sand hover:bg-ink/90 disabled:opacity-60;
 }
@@ -78,4 +98,25 @@ button.social {
 
 .card {
   @apply h-[410px] w-[327px] sm:h-[500px] sm:w-[435px] md:h-[400px] md:w-[350px] lg:h-[400px] lg:w-[330px] xl:h-[350px] xl:w-[300px];
+}
+
+/* Toasts in the site's type and colours. */
+.Toastify {
+  --toastify-font-family: 'Familjen Grotesk', system-ui, sans-serif;
+  --toastify-color-light: #f7f3ea;
+  --toastify-text-color-light: #2a2725;
+  --toastify-color-info: #2a2725;
+  --toastify-color-success: #2a2725;
+  --toastify-color-error: #b91c1c;
+  --toastify-color-progress-light: #2a2725;
+  --toastify-color-progress-info: #2a2725;
+  --toastify-color-progress-success: #2a2725;
+  --toastify-color-progress-error: #b91c1c;
+}
+
+.Toastify__toast {
+  border: 1px solid rgb(42 39 37 / 0.15);
+  border-radius: 1rem;
+  box-shadow: 0 4px 16px rgb(42 39 37 / 0.08);
+  font-size: 0.9375rem;
 }

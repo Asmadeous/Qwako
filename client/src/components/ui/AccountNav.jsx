@@ -24,7 +24,7 @@ const AccountNav = () => {
   ];
 
   return (
-    <div className="mt-24 mb-10 w-full px-4 md:px-0">
+    <div className="mt-24 mb-10 w-full px-4">
       <div className="flex items-end justify-between border-b border-ink/20 pb-6">
         <div>
           <span className="font-grotesk text-[10px] tracking-[0.24em] text-ink/60">

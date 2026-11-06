@@ -3,14 +3,16 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 import { usePlaces } from '../../hooks';
-import Spinner from '@/components/ui/Spinner';
-import PlaceCard from '@/components/ui/PlaceCard';
+import PlaceCard, { PlaceCardSkeleton } from '@/components/ui/PlaceCard';
 import Filters from '@/components/ui/Filters';
 import { DEFAULT_FILTERS, applyFilters } from '@/utils/listingFilters';
 
 const IndexPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const { places, loading, error } = usePlaces();
+  const [filters, setFilters] = useState(DEFAULT_FILTERS);
+  const results = useMemo(() => applyFilters(places, filters), [places, filters]);
 
   // Shown once when an old listing link redirected here.
   useEffect(() => {
@@ -20,61 +22,51 @@ const IndexPage = () => {
     navigate(location.pathname + location.search, { replace: true, state: null });
   }, [location, navigate]);
 
-  const { places, loading, error } = usePlaces();
-  const [filters, setFilters] = useState(DEFAULT_FILTERS);
-
-  const results = useMemo(() => applyFilters(places, filters), [places, filters]);
-
-  if (loading) {
-    return <Spinner />;
-  }
-
-  if (error) {
-    return (
-      <p role="alert" className="mx-auto max-w-xl px-4 py-20 text-center text-lg">
-        {error}
-      </p>
-    );
-  }
-
   return (
-    <>
-      <Filters
-        places={places}
-        filters={filters}
-        setFilters={setFilters}
-        resultCount={results.length}
-      />
+    <div className="px-4 pt-28 pb-24 md:px-4">
+      <header className="mb-8 max-w-2xl">
+        <h1 className="font-serif text-5xl leading-none md:text-7xl">Stays</h1>
+        <p className="mt-3 text-ink/70">
+          Holiday lets across England, Scotland, Wales and Northern Ireland, booked directly with the owner.
+        </p>
+      </header>
 
-      {results.length > 0 ? (
-        <div className="grid grid-cols-1 justify-items-center px-4 pt-6 pb-32 md:grid-cols-2 md:gap-0 lg:grid-cols-3 lg:gap-2 xl:grid-cols-4 xl:gap-10">
-          {results.map((place) => (
-            <PlaceCard place={place} key={place.id} />
-          ))}
-        </div>
+      {error ? (
+        <p role="alert" className="py-16 text-ink/80">
+          {error}
+        </p>
       ) : (
-        <div className="mx-auto flex max-w-xl flex-col items-center px-4 py-20 text-center">
-          <h1 className="text-2xl font-semibold">No stays match</h1>
-          <p className="mt-2 text-gray-600">
-            {places.length > 0
-              ? 'Try removing a filter or widening your budget.'
-              : "Sorry, we couldn't find the place you're looking for."}
-          </p>
-          {places.length > 0 ? (
-            <button
-              className="mt-6 rounded-full bg-primary px-6 py-2 text-white"
-              onClick={() => setFilters(DEFAULT_FILTERS)}
-            >
-              Clear filters
-            </button>
+        <>
+          <Filters places={places} filters={filters} setFilters={setFilters} resultCount={results.length} />
+
+          {loading ? (
+            <div className="mt-8 grid gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+              {Array.from({ length: 8 }, (_, i) => (
+                <PlaceCardSkeleton key={i} />
+              ))}
+            </div>
+          ) : results.length > 0 ? (
+            <div className="mt-8 grid gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+              {results.map((place) => (
+                <PlaceCard place={place} key={place.id} />
+              ))}
+            </div>
           ) : (
-            <a href="/stays" className="mt-6 rounded-full bg-primary px-6 py-2 text-white">
-              Show all stays
-            </a>
+            <div className="mt-8 rounded-2xl border border-ink/15 px-6 py-14 text-center">
+              <h2 className="font-serif text-4xl">No stays match those filters.</h2>
+              <p className="mt-2 text-ink/70">Remove a filter or widen your price range to see more.</p>
+              <button
+                type="button"
+                className="mt-6 h-11 rounded-full bg-ink px-6 text-sm font-medium text-sand transition-colors hover:bg-ink/90 active:scale-[0.98]"
+                onClick={() => setFilters(DEFAULT_FILTERS)}
+              >
+                Clear filters
+              </button>
+            </div>
           )}
-        </div>
+        </>
       )}
-    </>
+    </div>
   );
 };
 

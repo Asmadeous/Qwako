@@ -1,81 +1,49 @@
-import * as React from 'react';
-import { addDays, format } from 'date-fns';
-import { Calendar as CalendarIcon } from 'lucide-react';
+import { useState } from 'react';
+import { format, startOfToday } from 'date-fns';
+import { CalendarDays } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
-import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 
-export default function DatePickerWithRange({ className, setDateRange }) {
-  const [date, setDate] = React.useState({
-    // One night by default; guests pick their own dates.
-    from: new Date(),
-    to: addDays(new Date(), 1),
-  });
+const day = (date) => format(date, 'EEE d MMM yyyy');
 
-  const today = new Date();
-  const yesterday = new Date();
-  yesterday.setDate(today.getDate() - 1);
+// Controlled range picker: the booking form owns the dates.
+export default function DatePickerWithRange({ id, value, onChange, className, invalid }) {
+  const [open, setOpen] = useState(false);
 
-  React.useEffect(() => {
-    //  if user hasn't selected a date range (instead selected a single date)
-    if (!date) {
-      setDate({ from: new Date(), to: addDays(new Date(), 1) });
-    } else {
-      setDateRange(date);
-    }
-  }, [date]);
+  let label = 'Choose your dates';
+  if (value?.from && value?.to) label = `${day(value.from)} to ${day(value.to)}`;
+  else if (value?.from) label = `${day(value.from)}, now pick check-out`;
 
   return (
-    <div className={cn('grid gap-2', className)}>
-      <Popover>
-        <PopoverTrigger
-          asChild
-          className="border-none text-ink hover:bg-transparent"
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild>
+        <button
+          id={id}
+          type="button"
+          aria-invalid={invalid ? 'true' : undefined}
+          className={cn(
+            'flex min-h-11 w-full items-center gap-2 rounded-xl border border-ink/25 bg-paper px-3 py-2 text-left text-sm text-ink transition-colors hover:border-ink/50 aria-[invalid=true]:border-red-700',
+            className,
+          )}
         >
-          <Button
-            id="date"
-            variant={'outline'}
-            className={cn(
-              'w-[300px] justify-start text-left font-normal',
-              !date && 'text-muted-foreground',
-            )}
-          >
-            <CalendarIcon className="mr-2 h-4 w-4" />
-            {date?.from ? (
-              date.to ? (
-                <>
-                  {format(date.from, 'LLL dd, y')} -{'>'}{' '}
-                  {format(date.to, 'LLL dd, y')}
-                </>
-              ) : (
-                format(date.from, 'LLL dd, y')
-              )
-            ) : (
-              <span className="text-base font-semibold">Pick a date</span>
-            )}
-          </Button>
-        </PopoverTrigger>
-        <PopoverContent className="w-auto p-0" align="start">
-          <Calendar
-            initialFocus
-            mode="range"
-            defaultMonth={date?.from}
-            selected={date}
-            // onSelect={setDate}
-            onSelect={setDate}
-            numberOfMonths={1}
-            disabled={(date) =>
-              date < new Date().setDate(new Date().getDate() - 1)
-            }
-          />
-        </PopoverContent>
-      </Popover>
-    </div>
+          <CalendarDays aria-hidden className="size-4 shrink-0 text-ink/60" />
+          <span className="tabular">{label}</span>
+        </button>
+      </PopoverTrigger>
+      <PopoverContent className="w-auto rounded-2xl border-ink/15 bg-paper p-0" align="start">
+        <Calendar
+          initialFocus
+          mode="range"
+          defaultMonth={value?.from}
+          selected={value}
+          onSelect={(range) => onChange(range ?? { from: undefined, to: undefined })}
+          numberOfMonths={1}
+          weekStartsOn={1}
+          disabled={{ before: startOfToday() }}
+        />
+      </PopoverContent>
+    </Popover>
   );
 }

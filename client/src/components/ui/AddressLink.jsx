@@ -1,40 +1,21 @@
-import React from 'react';
+import { MapPin } from 'lucide-react';
 
-const AddressLink = ({ placeAddress, className = null }) => {
-  if (!className) {
-    className = 'my-3 block';
-  }
+import { cn } from '@/lib/utils';
 
-  className += ' flex gap-1 font-semibold underline';
-  return (
-    <a
-      className={className}
-      href={`https://maps.google.com/?q=${placeAddress}`}
-      target="blank"
-    >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 24 24"
-        strokeWidth={1.5}
-        stroke="currentColor"
-        className="h-6 w-6"
-      >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"
-        />
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"
-        />
-      </svg>
-
-      {placeAddress}
-    </a>
-  );
-};
+const AddressLink = ({ placeAddress, className }) => (
+  <a
+    className={cn(
+      'inline-flex items-center gap-1.5 text-ink/75 underline decoration-ink/25 underline-offset-4 transition-colors hover:text-ink hover:decoration-ink',
+      className,
+    )}
+    href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(placeAddress)}`}
+    target="_blank"
+    rel="noopener noreferrer"
+  >
+    <MapPin aria-hidden strokeWidth={1.5} className="size-4 shrink-0" />
+    {placeAddress}
+    <span className="sr-only"> (opens map in a new tab)</span>
+  </a>
+);
 
 export default AddressLink;

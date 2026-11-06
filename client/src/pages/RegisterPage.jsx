@@ -60,12 +60,13 @@ const RegisterPage = () => {
   if (auth.user) return <Navigate to="/account" />;
 
   return (
-    <div className="mt-4 flex grow items-center justify-around p-4 md:p-0">
-      <div className="mb-40 w-full max-w-md">
-        <h1 className="mb-4 text-center text-4xl">Sign up</h1>
-        <form className="mx-auto max-w-md" onSubmit={handleSubmit}>
+    <div className="flex grow justify-center px-4 pt-32 pb-24 md:pt-40">
+      <div className="w-full max-w-md">
+        <h1 className="font-serif text-5xl leading-none md:text-6xl">Create an account</h1>
+        <p className="mt-3 mb-8 text-ink/70">Book stays directly with the owner. It takes a minute.</p>
+        <form onSubmit={handleSubmit}>
           {formError && (
-            <p role="alert" className="mb-3 rounded-[10px] border border-red-700 p-3 text-sm text-red-700">
+            <p role="alert" className="mb-4 rounded-xl border border-red-700/40 bg-red-50 p-3 text-sm text-red-800">
               {formError}
             </p>
           )}
@@ -109,20 +110,20 @@ const RegisterPage = () => {
             onChange={handleChange}
           />
           <button
-            className="primary my-2 min-h-[44px] disabled:cursor-not-allowed disabled:opacity-70"
+            className="primary mt-4 mb-0 min-h-12"
             disabled={submitting}
             aria-busy={submitting}
           >
-            {submitting ? 'Creating account...' : 'Sign up'}
+            {submitting ? 'Creating account...' : 'Create account'}
           </button>
         </form>
 
-        <div className="py-2 text-center text-gray-600">
+        <p className="mt-6 border-t border-ink/15 pt-6 text-ink/70">
           Already have an account?{' '}
-          <Link className="text-ink underline" to="/login">
+          <Link className="text-ink underline decoration-ink/40 underline-offset-4 hover:decoration-ink" to="/login">
             Sign in
           </Link>
-        </div>
+        </p>
       </div>
     </div>
   );

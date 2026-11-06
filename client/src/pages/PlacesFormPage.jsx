@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Navigate, useParams } from 'react-router-dom';
+import { Link, Navigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 import { api, errorMessageFrom, fieldErrorsFrom } from '@/utils/axios';
@@ -110,14 +110,6 @@ const PlacesFormPage = () => {
   if (redirect) return <Navigate to="/account/places" />;
   if (loading) return <Spinner />;
 
-  const heading = (htmlFor, title, hint) => (
-    <>
-      <label htmlFor={htmlFor} className="mt-8 block font-serif text-3xl">
-        {title}
-      </label>
-      {hint && <p className="font-grotesk text-sm text-ink/60">{hint}</p>}
-    </>
-  );
   const fieldError = (field) =>
     errors[field] && (
       <p id={`listing-${field}-error`} className="text-sm text-red-700">
@@ -128,74 +120,88 @@ const PlacesFormPage = () => {
     'aria-invalid': errors[field] ? 'true' : undefined,
     'aria-describedby': errors[field] ? `listing-${field}-error` : undefined,
   });
+  const field = (htmlFor, label, input, { hint, error = htmlFor } = {}) => (
+    <div className="grid content-start gap-1.5">
+      <label htmlFor={`listing-${htmlFor}`} className="text-sm font-medium">
+        {label}
+      </label>
+      {hint && <p className="text-sm text-ink/60">{hint}</p>}
+      {input}
+      {fieldError(error)}
+    </div>
+  );
+  const section = (title, hint, children) => (
+    <section className="grid gap-6 border-t border-ink/15 py-10 md:grid-cols-[minmax(0,240px)_1fr] md:gap-12">
+      <div>
+        <h2 className="font-serif text-3xl leading-tight">{title}</h2>
+        {hint && <p className="mt-1 text-sm text-ink/60">{hint}</p>}
+      </div>
+      <div className="grid gap-6">{children}</div>
+    </section>
+  );
 
   return (
-    <div className="p-4">
+    <div>
       <AccountNav />
-      <form onSubmit={save} className="mx-4 max-w-4xl md:mx-0">
+      <form onSubmit={save} className="mx-4 max-w-5xl [&_input]:!my-0 [&_textarea]:!my-0">
         {formError && (
-          <p role="alert" className="rounded-[10px] border border-red-700 p-3 text-sm text-red-700">
+          <p role="alert" className="mb-6 rounded-xl border border-red-700/40 bg-red-50 p-3 text-sm text-red-800">
             {formError}
           </p>
         )}
 
-        {heading('listing-title', 'Title', 'Short and clear, as shown on the listing card.')}
-        <input id="listing-title" type="text" name="title" required maxLength={120} value={form.title} onChange={handleChange} {...invalid('title')} />
-        {fieldError('title')}
+        {section('The basics', 'What guests see first on the stays page.', <>
+          {field('title', 'Name', <input id="listing-title" type="text" name="title" required maxLength={120} value={form.title} onChange={handleChange} {...invalid('title')} />, { hint: 'Short and clear, for example "Porthmeor Beach Cottage".' })}
+          {field('address', 'Area', <input id="listing-address" type="text" name="address" required maxLength={200} value={form.address} onChange={handleChange} {...invalid('address')} />, { hint: 'Town, county, nation. For example "St Ives, Cornwall, England".' })}
+        </>)}
 
-        {heading('listing-address', 'Area', 'Town, county and nation, for example "St Ives, Cornwall, England". The last part is the nation.')}
-        <input id="listing-address" type="text" name="address" required maxLength={200} value={form.address} onChange={handleChange} {...invalid('address')} />
-        {fieldError('address')}
+        {section('Photos', 'The first photo is the cover. Up to 30.', <>
+          <PhotosUploader addedPhotos={photos} setAddedPhotos={setPhotos} />
+          {fieldError('photos')}
+        </>)}
 
-        <h2 className="mt-8 font-serif text-3xl">Photos</h2>
-        <p className="text-sm text-gray-500">The starred photo is the cover. At most 30.</p>
-        <PhotosUploader addedPhotos={photos} setAddedPhotos={setPhotos} />
-        {fieldError('photos')}
+        {section('Description', 'Tell guests what the stay is like and what is nearby.', <>
+          {field('description', 'About this stay', <textarea id="listing-description" name="description" rows={6} value={form.description} onChange={handleChange} {...invalid('description')} />)}
+          {field('house_rules', 'House rules', <textarea id="listing-house_rules" name="house_rules" rows={4} value={form.house_rules} onChange={handleChange} {...invalid('house_rules')} />, { hint: 'Check-in and check-out times, smoking, parties, pets.' })}
+        </>)}
 
-        {heading('listing-description', 'Description')}
-        <textarea id="listing-description" name="description" value={form.description} onChange={handleChange} {...invalid('description')} />
-        {fieldError('description')}
+        {section('Amenities', 'Only ticked items are shown on the listing.', (
+          <fieldset>
+            <legend className="sr-only">Amenities</legend>
+            <Perks selected={form.amenities} handleFormData={handleChange} />
+          </fieldset>
+        ))}
 
-        <h2 className="mt-8 font-serif text-3xl">Amenities</h2>
-        <Perks selected={form.amenities} handleFormData={handleChange} />
-
-        {heading('listing-house_rules', 'House rules', 'Check-in and check-out times, smoking, parties, pets.')}
-        <textarea id="listing-house_rules" name="house_rules" value={form.house_rules} onChange={handleChange} {...invalid('house_rules')} />
-        {fieldError('house_rules')}
-
-        <div className="mt-4 grid gap-4 sm:grid-cols-2 md:grid-cols-4">
-          <div>
-            <label htmlFor="listing-max_guests">Max guests</label>
-            <input id="listing-max_guests" type="number" name="max_guests" min={1} max={16} required value={form.max_guests} onChange={handleChange} {...invalid('max_guests')} />
-            {fieldError('max_guests')}
+        {section('Price and guests', 'Prices are in pounds. Guests pay the nightly price plus one cleaning charge.', (
+          <div className="grid gap-6 sm:grid-cols-2">
+            {field('price_pounds', 'Price per night (£)', <input id="listing-price_pounds" type="number" name="price_pounds" min={1} step="0.01" required value={form.price_pounds} onChange={handleChange} {...invalid('nightly_price_pence')} className="tabular" />, { error: 'nightly_price_pence' })}
+            {field('cleaning_pounds', 'Cleaning charge per stay (£)', <input id="listing-cleaning_pounds" type="number" name="cleaning_pounds" min={0} step="0.01" value={form.cleaning_pounds} onChange={handleChange} {...invalid('cleaning_charge_pence')} className="tabular" />, { error: 'cleaning_charge_pence' })}
+            {field('max_guests', 'Sleeps up to', <input id="listing-max_guests" type="number" name="max_guests" min={1} max={16} required value={form.max_guests} onChange={handleChange} {...invalid('max_guests')} className="tabular" />)}
+            {field('status', 'Visibility', (
+              <select id="listing-status" name="status" value={form.status} onChange={handleChange} className="h-11 w-full rounded-xl border border-ink/25 bg-paper px-3 text-ink focus:border-ink focus:outline-none">
+                <option value="published">Published, bookable by guests</option>
+                <option value="unlisted">Unlisted, hidden from the stays page</option>
+                <option value="draft">Draft, not bookable</option>
+              </select>
+            ))}
           </div>
-          <div>
-            <label htmlFor="listing-price_pounds">Price per night (£)</label>
-            <input id="listing-price_pounds" type="number" name="price_pounds" min={1} step="0.01" required value={form.price_pounds} onChange={handleChange} {...invalid('nightly_price_pence')} aria-describedby={errors.nightly_price_pence ? 'listing-nightly_price_pence-error' : undefined} />
-            {fieldError('nightly_price_pence')}
-          </div>
-          <div>
-            <label htmlFor="listing-cleaning_pounds">Cleaning charge per stay (£)</label>
-            <input id="listing-cleaning_pounds" type="number" name="cleaning_pounds" min={0} step="0.01" value={form.cleaning_pounds} onChange={handleChange} aria-describedby={errors.cleaning_charge_pence ? 'listing-cleaning_charge_pence-error' : undefined} />
-            {fieldError('cleaning_charge_pence')}
-          </div>
-          <div>
-            <label htmlFor="listing-status">Visibility</label>
-            <select id="listing-status" name="status" value={form.status} onChange={handleChange} className="my-2 w-full rounded-xl border border-ink/25 py-2 px-3">
-              <option value="published">Published</option>
-              <option value="unlisted">Unlisted</option>
-              <option value="draft">Draft</option>
-            </select>
-          </div>
+        ))}
+
+        <div className="sticky bottom-0 z-20 flex items-center gap-3 border-t border-ink/15 bg-sand pt-4 pb-[max(1rem,env(safe-area-inset-bottom))]">
+          <button
+            className="h-12 rounded-full bg-ink px-8 text-sm font-medium text-sand transition-colors hover:bg-ink/90 active:scale-[0.98] disabled:opacity-60"
+            disabled={saving}
+            aria-busy={saving}
+          >
+            {saving ? 'Saving...' : 'Save stay'}
+          </button>
+          <Link
+            to="/account/places"
+            className="inline-flex h-12 items-center rounded-full px-5 text-sm text-ink/75 transition-colors hover:text-ink"
+          >
+            Cancel
+          </Link>
         </div>
-
-        <button
-          className="mx-auto my-10 flex min-h-[44px] rounded-full bg-ink py-3 px-20 font-grotesk text-sm font-medium tracking-[0.12em] text-sand disabled:opacity-70"
-          disabled={saving}
-          aria-busy={saving}
-        >
-          {saving ? 'SAVING...' : 'SAVE STAY'}
-        </button>
       </form>
     </div>
   );

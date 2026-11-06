@@ -48,7 +48,7 @@ const ProfilePage = () => {
     <div>
       <AccountNav />
       {subpage === 'profile' && (
-        <section className="mx-4 grid gap-10 rounded-3xl border border-ink/20 p-6 md:mx-0 md:grid-cols-[auto_1fr] md:p-10">
+        <section className="mx-4 grid gap-10 rounded-3xl border border-ink/20 p-6 md:grid-cols-[auto_1fr] md:p-10">
           <Avatar className="h-40 w-40 md:h-56 md:w-56">
             {user.avatar_url && <AvatarImage src={user.avatar_url} alt="" className="object-cover" />}
             <AvatarFallback className="bg-ink font-serif text-7xl text-sand md:text-8xl">

@@ -32,7 +32,7 @@ const BookingsPage = () => {
     return (
       <div>
         <AccountNav />
-        <p role="alert" className="mx-4 md:mx-0">{error}</p>
+        <p role="alert" className="mx-4">{error}</p>
       </div>
     );
   }
@@ -40,15 +40,15 @@ const BookingsPage = () => {
   return (
     <div>
       <AccountNav />
-      <div className="mx-4 grid gap-4 md:mx-0">
+      <div className="mx-4 grid gap-4">
         {bookings.length > 0 ? (
           bookings.map((booking) => (
             <Link
               to={`/account/bookings/${booking.id}`}
-              className="group flex gap-5 overflow-hidden rounded-3xl border border-ink/20 p-3 transition-colors hover:bg-paper"
+              className="group flex gap-5 overflow-hidden rounded-2xl border border-ink/20 p-3 transition-colors hover:bg-paper"
               key={booking.id}
             >
-              <div className="h-28 w-32 shrink-0 overflow-hidden rounded-2xl md:h-36 md:w-52">
+              <div className="h-28 w-32 shrink-0 overflow-hidden rounded-xl bg-gray-200 md:h-36 md:w-52">
                 {booking.listing.photos[0] && (
                   <PlaceImg place={booking.listing} className="h-full w-full object-cover" />
                 )}
