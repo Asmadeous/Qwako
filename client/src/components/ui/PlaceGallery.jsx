@@ -5,11 +5,11 @@ const PlaceGallery = ({ place }) => {
 
   if (showAllPhotos) {
     return (
-      <div className="fixed inset-0 z-20 overflow-auto bg-white text-white">
-        <div className="grid gap-4 bg-white px-2 py-20 md:p-8">
+      <div className="fixed inset-0 z-20 overflow-auto bg-paper text-white">
+        <div className="grid gap-4 bg-paper px-2 py-20 md:p-8">
           <div>
             <button
-              className="fixed right-2 top-8 flex gap-1 rounded-2xl bg-white py-2 px-4 text-black shadow-sm shadow-gray-500 md:right-12"
+              className="fixed right-2 top-8 flex gap-1 rounded-2xl bg-paper py-2 px-4 text-ink shadow-sm shadow-gray-500 md:right-12"
               onClick={() => setShowAllPhotos(false)}
             >
               <svg
@@ -45,7 +45,7 @@ const PlaceGallery = ({ place }) => {
         {/* column 1 */}
         <div className="col-span-2 overflow-hidden">
           {place.photos?.[0] && (
-            <div className="h-full w-full overflow-hidden bg-blue-100">
+            <div className="h-full w-full overflow-hidden bg-gray-100">
               <img
                 onClick={() => setShowAllPhotos(true)}
                 className="h-full w-full cursor-pointer object-cover"
@@ -130,7 +130,7 @@ const PlaceGallery = ({ place }) => {
       </div>
 
       <button
-        className="absolute bottom-2 right-2 flex gap-1 rounded-xl bg-white py-2 px-4 shadow-md shadow-gray-500 "
+        className="absolute bottom-2 right-2 flex gap-1 rounded-xl bg-paper py-2 px-4 shadow-md shadow-gray-500 "
         onClick={() => setShowAllPhotos(true)}
       >
         <svg

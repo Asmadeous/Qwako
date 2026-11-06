@@ -96,7 +96,7 @@ Backend (`backend/`):
 - Setup: `bin/setup --skip-server` (installs gems, prepares databases)
 - Dev server: `bin/rails server` (http://localhost:3000, health check `GET /up`)
 - Migrate: `bin/rails db:migrate`
-- Seed: `bin/rails db:seed` (amenities, the 50 listings, and an admin from
+- Seed: `bin/rails db:seed` (amenities, 24 UK demo listings, and an admin from
   `SEED_ADMIN_EMAIL`/`SEED_ADMIN_PASSWORD`; dev default `admin@tgbnb.test` /
   `admin-dev-password`; no admin is seeded in production without both vars)
 - Test: `bin/rails test` (Minitest)

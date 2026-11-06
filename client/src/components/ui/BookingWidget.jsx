@@ -79,7 +79,7 @@ const BookingWidget = ({ place }) => {
   const dateErrors = [errors.base, errors.check_in, errors.check_out, errors.listing].filter(Boolean);
 
   return (
-    <form onSubmit={handleBooking} className="rounded-2xl bg-white p-4 shadow-xl">
+    <form onSubmit={handleBooking} className="rounded-2xl bg-paper p-4 border border-ink/15">
       <div className="text-center text-xl">
         <span className="font-semibold">{formatPrice(place.nightly_price_pence)}</span> per night
       </div>

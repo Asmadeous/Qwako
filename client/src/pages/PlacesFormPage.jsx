@@ -112,10 +112,10 @@ const PlacesFormPage = () => {
 
   const heading = (htmlFor, title, hint) => (
     <>
-      <label htmlFor={htmlFor} className="mt-4 block text-2xl">
+      <label htmlFor={htmlFor} className="mt-8 block font-serif text-3xl">
         {title}
       </label>
-      {hint && <p className="text-sm text-gray-500">{hint}</p>}
+      {hint && <p className="font-grotesk text-sm text-ink/60">{hint}</p>}
     </>
   );
   const fieldError = (field) =>
@@ -132,7 +132,7 @@ const PlacesFormPage = () => {
   return (
     <div className="p-4">
       <AccountNav />
-      <form onSubmit={save} className="mx-auto max-w-4xl">
+      <form onSubmit={save} className="mx-4 max-w-4xl md:mx-0">
         {formError && (
           <p role="alert" className="rounded-[10px] border border-red-700 p-3 text-sm text-red-700">
             {formError}
@@ -143,11 +143,11 @@ const PlacesFormPage = () => {
         <input id="listing-title" type="text" name="title" required maxLength={120} value={form.title} onChange={handleChange} {...invalid('title')} />
         {fieldError('title')}
 
-        {heading('listing-address', 'Area', 'Town and country, for example "St Ives, Cornwall, UK". The last part is the country.')}
+        {heading('listing-address', 'Area', 'Town, county and nation, for example "St Ives, Cornwall, England". The last part is the nation.')}
         <input id="listing-address" type="text" name="address" required maxLength={200} value={form.address} onChange={handleChange} {...invalid('address')} />
         {fieldError('address')}
 
-        <h2 className="mt-4 text-2xl">Photos</h2>
+        <h2 className="mt-8 font-serif text-3xl">Photos</h2>
         <p className="text-sm text-gray-500">The starred photo is the cover. At most 30.</p>
         <PhotosUploader addedPhotos={photos} setAddedPhotos={setPhotos} />
         {fieldError('photos')}
@@ -156,7 +156,7 @@ const PlacesFormPage = () => {
         <textarea id="listing-description" name="description" value={form.description} onChange={handleChange} {...invalid('description')} />
         {fieldError('description')}
 
-        <h2 className="mt-4 text-2xl">Amenities</h2>
+        <h2 className="mt-8 font-serif text-3xl">Amenities</h2>
         <Perks selected={form.amenities} handleFormData={handleChange} />
 
         {heading('listing-house_rules', 'House rules', 'Check-in and check-out times, smoking, parties, pets.')}
@@ -181,7 +181,7 @@ const PlacesFormPage = () => {
           </div>
           <div>
             <label htmlFor="listing-status">Visibility</label>
-            <select id="listing-status" name="status" value={form.status} onChange={handleChange} className="my-2 w-full rounded-[10px] border py-2 px-3">
+            <select id="listing-status" name="status" value={form.status} onChange={handleChange} className="my-2 w-full rounded-xl border border-ink/25 py-2 px-3">
               <option value="published">Published</option>
               <option value="unlisted">Unlisted</option>
               <option value="draft">Draft</option>
@@ -190,11 +190,11 @@ const PlacesFormPage = () => {
         </div>
 
         <button
-          className="mx-auto my-6 flex min-h-[44px] rounded-full bg-primary py-3 px-20 text-xl font-semibold text-white disabled:opacity-70"
+          className="mx-auto my-10 flex min-h-[44px] rounded-full bg-ink py-3 px-20 font-grotesk text-sm font-medium tracking-[0.12em] text-sand disabled:opacity-70"
           disabled={saving}
           aria-busy={saving}
         >
-          {saving ? 'Saving...' : 'Save'}
+          {saving ? 'SAVING...' : 'SAVE STAY'}
         </button>
       </form>
     </div>

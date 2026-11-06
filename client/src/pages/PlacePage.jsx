@@ -53,7 +53,7 @@ const PlacePage = () => {
 
   return (
     <div className="mt-4 overflow-x-hidden px-8 pt-20 ">
-      <h1 className="text-3xl">{place.title}</h1>
+      <h1 className="font-serif text-5xl leading-none md:text-6xl">{place.title}</h1>
 
       <AddressLink placeAddress={place.address} />
       <PlaceGallery place={place} />
@@ -61,7 +61,7 @@ const PlacePage = () => {
       <div className="mt-8 mb-8 grid grid-cols-1 gap-8 md:grid-cols-[2fr_1fr]">
         <div className="">
           <div className="my-4 ">
-            <h2 className="text-2xl font-semibold">Description</h2>
+            <h2 className="font-serif text-3xl">Description</h2>
             {place.description}
           </div>
           Max number of guests: {place.max_guests}
@@ -71,9 +71,9 @@ const PlacePage = () => {
           <BookingWidget place={place} />
         </div>
       </div>
-      <div className="-mx-8 border-t bg-white px-8 py-8">
+      <div className="-mx-8 border-t bg-paper px-8 py-8">
         <div>
-          <h2 className="mt-4 text-2xl font-semibold">House rules</h2>
+          <h2 className="mt-4 font-serif text-3xl">House rules</h2>
         </div>
         <div className="mb-4 mt-2 text-sm leading-5 text-gray-700">
           {place.house_rules}

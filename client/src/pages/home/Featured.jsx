@@ -7,13 +7,13 @@ import { range, useSectionProgress } from './motion';
 // The 3D "structure" walkthrough on the reference site becomes a full-screen
 // walk through seven featured stays, with the same numbering and progress UI.
 const PICKS = [
-  'Watamu Ocean Villa',
-  'Ubud Jungle Villa',
-  'Zermatt Alpine Chalet',
-  'Overwater Villa',
-  'Camps Bay Ocean House',
-  'Lamu Swahili House',
-  'Oia Cave House',
+  'Windermere Lake House',
+  'Porthmeor Beach Cottage',
+  'Snowdonia Mountain Lodge',
+  'Loch Lomond Lodge',
+  'Cotswolds Stone Cottage',
+  'Salcombe Coast House',
+  'Cairngorms Mountain Cabin',
 ];
 
 const Featured = () => {

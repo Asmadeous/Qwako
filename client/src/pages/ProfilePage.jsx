@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 
 import PlacesPage from './PlacesPage';
 import { useAuth } from '../../hooks';
-import { LogOut, Mail, Text } from 'lucide-react';
+import { LogOut } from 'lucide-react';
 import Spinner from '@/components/ui/Spinner';
 import EditProfileDialog from '@/components/ui/EditProfileDialog';
 
@@ -48,48 +48,35 @@ const ProfilePage = () => {
     <div>
       <AccountNav />
       {subpage === 'profile' && (
-        <div className="m-4 flex flex-col items-center gap-8 rounded-[10px]  p-4 sm:h-1/5 sm:flex-row sm:items-stretch lg:gap-28 lg:pl-32 lg:pr-20">
-          {/* avatar */}
-          <div className="flex h-40 w-40 justify-center rounded-full bg-gray-200 p-4  sm:h-72 sm:w-72 md:h-96 md:w-96">
-            <Avatar>
-              {user.avatar_url && <AvatarImage src={user.avatar_url} alt="" />}
-              <AvatarFallback className="text-6xl sm:text-8xl">
-                {user.name.slice(0, 1).toUpperCase()}
-              </AvatarFallback>
-            </Avatar>
-          </div>
+        <section className="mx-4 grid gap-10 rounded-3xl border border-ink/20 p-6 md:mx-0 md:grid-cols-[auto_1fr] md:p-10">
+          <Avatar className="h-40 w-40 md:h-56 md:w-56">
+            {user.avatar_url && <AvatarImage src={user.avatar_url} alt="" className="object-cover" />}
+            <AvatarFallback className="bg-ink font-serif text-7xl text-sand md:text-8xl">
+              {user.name.slice(0, 1).toUpperCase()}
+            </AvatarFallback>
+          </Avatar>
 
-          <div className="flex grow flex-col items-center gap-10 sm:items-start sm:justify-around sm:gap-0">
-            {/* user details */}
-            <div className="flex flex-col items-center gap-2 sm:items-start">
-              <div className="flex items-center gap-2">
-                <Text height="18" width="18" />
-                <div className="text-xl">
-                  <span>Name: </span>
-                  <span className="text-gray-600">{user.name}</span>
-                </div>
+          <div className="flex flex-col justify-between gap-8">
+            <dl className="grid gap-6 sm:grid-cols-2">
+              <div>
+                <dt className="font-grotesk text-[10px] tracking-[0.24em] text-ink/60">NAME</dt>
+                <dd className="mt-2 font-serif text-3xl">{user.name}</dd>
               </div>
-              <div className="flex items-center gap-2">
-                <Mail height="18" width="18" />
-                <div className="text-xl">
-                  <span>Email: </span>
-                  <span className="text-gray-600">{user.email}</span>
-                </div>
+              <div>
+                <dt className="font-grotesk text-[10px] tracking-[0.24em] text-ink/60">EMAIL</dt>
+                <dd className="mt-2 break-all font-serif text-3xl">{user.email}</dd>
               </div>
-              <p></p>
-            </div>
+            </dl>
 
-            {/* Action buttons */}
-            <div className="flex w-full justify-around sm:justify-end sm:gap-5 md:gap-10">
+            <div className="flex flex-wrap gap-3">
               <EditProfileDialog />
-
-              <Button variant="secondary" onClick={handleLogout}>
+              <Button variant="outline" onClick={handleLogout} className="rounded-full border-ink bg-transparent text-ink hover:bg-ink/5">
                 <LogOut className="mr-2 h-4 w-4" />
                 Sign out
               </Button>
             </div>
           </div>
-        </div>
+        </section>
       )}
       {subpage === 'places' && <PlacesPage />}
     </div>

@@ -96,7 +96,7 @@ const LoginPage = () => {
 
         <div className="py-2 text-center text-gray-600">
           Don't have an account yet?{' '}
-          <Link className="text-black underline" to="/register">
+          <Link className="text-ink underline" to="/register">
             Sign up
           </Link>
         </div>

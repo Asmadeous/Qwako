@@ -32,29 +32,18 @@ const PlacesPage = () => {
   return (
     <div>
       <AccountNav />
-      <div className="text-center ">
+      <div className="mx-4 flex items-center justify-between md:mx-0">
+        <span className="font-grotesk text-sm text-ink/70">
+          {places.length} {places.length === 1 ? 'stay' : 'stays'}
+        </span>
         <Link
-          className="inline-flex gap-1 rounded-full bg-primary py-2 px-6 text-white"
+          className="rounded-full bg-ink px-6 py-3 font-grotesk text-xs font-medium tracking-[0.12em] text-sand hover:bg-ink/90"
           to={'/account/places/new'}
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth={1.5}
-            stroke="currentColor"
-            className="h-6 w-6"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M12 4.5v15m7.5-7.5h-15"
-            />
-          </svg>
-          Add a stay
+          + ADD A STAY
         </Link>
       </div>
-      <div className="mx-4 mt-4">
+      <div className="mx-4 mt-4 grid gap-3 md:mx-0">
         {error && <p role="alert">{error}</p>}
         {places.map((place) => (
           <InfoCard place={place} key={place.id} />

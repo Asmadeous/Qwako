@@ -5,7 +5,6 @@ const LINKS = [
   { label: 'Stays', to: '/stays' },
   { label: 'Featured', href: '#featured' },
   { label: 'Inside', href: '#inside' },
-  { label: 'Host with us', to: '/account/places/new' },
 ];
 
 const Nav = () => {

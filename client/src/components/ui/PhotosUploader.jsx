@@ -80,7 +80,7 @@ const PhotosUploader = ({ addedPhotos, setAddedPhotos }) => {
                 type="button"
                 aria-label="Remove photo"
                 onClick={() => removePhoto(link)}
-                className="absolute bottom-1 right-1 cursor-pointer rounded-full bg-black bg-opacity-50 p-1 text-white hover:bg-opacity-70"
+                className="absolute bottom-1 right-1 cursor-pointer rounded-full bg-ink bg-opacity-50 p-1 text-white hover:bg-opacity-70"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -101,7 +101,7 @@ const PhotosUploader = ({ addedPhotos, setAddedPhotos }) => {
                 type="button"
                 aria-label={link === addedPhotos[0] ? 'Cover photo' : 'Make cover photo'}
                 onClick={(e) => selectAsMainPhoto(e, link)}
-                className="absolute bottom-1 left-1 cursor-pointer rounded-full bg-black bg-opacity-50 p-1 text-white hover:bg-opacity-70"
+                className="absolute bottom-1 left-1 cursor-pointer rounded-full bg-ink bg-opacity-50 p-1 text-white hover:bg-opacity-70"
               >
                 {link === addedPhotos[0] && (
                   <svg

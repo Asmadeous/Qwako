@@ -22,7 +22,7 @@ uploads). Each of those features still owns the rest of its scope.
 
 ## Milestone 2 - Properties and discovery
 
-- [ ] 4. **Property catalogue with seed data** - listing, photo and amenity tables with UK address fields and GBP prices; the 50 existing listings as seeds.
+- [ ] 4. **Property catalogue with seed data** - listing, photo and amenity tables with UK address fields and GBP prices; UK demo listings as seeds.
 - [ ] 5. **Public listing page on Rails** - gallery, details, amenities, rules, policy, licence number, total price for chosen dates; area only until booked.
 - [ ] 6. **Stays search on Rails** - destination, dates availability, guests, price, type, amenities, sort, pagination, shareable URL.
 

@@ -1,25 +1,35 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+
+import { formatPrice } from '@/utils/currency';
 import PlaceImg from './PlaceImg';
 
 const InfoCard = ({ place }) => {
   return (
     <Link
       to={`/account/places/${place.id}`}
-      className="my-3 flex cursor-pointer flex-col gap-4 rounded-2xl bg-gray-100 p-4 transition-all hover:bg-gray-300 md:flex-row"
-      key={place.id}
+      className="flex flex-col gap-5 rounded-3xl border border-ink/20 p-3 transition-colors hover:bg-paper sm:flex-row"
     >
-      <div className="flex w-full shrink-0 bg-gray-300 sm:h-32 sm:w-32 ">
-        <PlaceImg place={place} />
+      <div className="h-40 w-full shrink-0 overflow-hidden rounded-2xl sm:h-32 sm:w-44">
+        <PlaceImg place={place} className="h-full w-full object-cover" />
       </div>
-      <div className="">
-        <h2 className="text-lg md:text-xl">
-          {place.title}
+      <div className="flex grow flex-col justify-between gap-2 py-1 pr-2">
+        <div>
+          <span className="font-grotesk text-[10px] tracking-[0.24em] text-ink/60">
+            {place.address.toUpperCase()}
+          </span>
+          <h2 className="mt-1 font-serif text-2xl leading-tight md:text-3xl">{place.title}</h2>
+        </div>
+        <div className="flex items-center gap-3 font-grotesk text-sm">
+          <span>{formatPrice(place.nightly_price_pence)} / night</span>
+          <span className="text-ink/40">·</span>
+          <span>Up to {place.max_guests} guests</span>
           {place.status !== 'published' && (
-            <span className="ml-2 rounded-full bg-gray-300 px-2 py-0.5 text-xs uppercase">{place.status}</span>
+            <span className="rounded-full border border-ink/40 px-2 py-0.5 text-[10px] tracking-[0.18em]">
+              {place.status.toUpperCase()}
+            </span>
           )}
-        </h2>
-        <p className="line-clamp-3 mt-2 text-sm">{place.description}</p>
+        </div>
       </div>
     </Link>
   );

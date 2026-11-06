@@ -4,35 +4,36 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 0 0% 3.9%;
+    /* Sand and ink, matching the home page */
+    --background: 41 37% 88%;
+    --foreground: 20 6% 15%;
 
-    --card: 0 0% 100%;
-    --card-foreground: 0 0% 3.9%;
+    --card: 41 47% 94%;
+    --card-foreground: 20 6% 15%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 3.9%;
+    --popover: 41 47% 94%;
+    --popover-foreground: 20 6% 15%;
 
-    --primary: 0 0% 9%;
-    --primary-foreground: 0 0% 98%;
+    --primary: 20 6% 15%;
+    --primary-foreground: 41 37% 88%;
 
-    --secondary: 0 0% 96.1%;
-    --secondary-foreground: 0 0% 9%;
+    --secondary: 40 32% 84%;
+    --secondary-foreground: 20 6% 15%;
 
-    --muted: 0 0% 96.1%;
-    --muted-foreground: 0 0% 45.1%;
+    --muted: 40 32% 84%;
+    --muted-foreground: 33 11% 38%;
 
-    --accent: 0 0% 96.1%;
-    --accent-foreground: 0 0% 9%;
+    --accent: 40 32% 84%;
+    --accent-foreground: 20 6% 15%;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 98%;
+    --destructive: 0 65% 38%;
+    --destructive-foreground: 41 47% 94%;
 
-    --border: 0 0% 89.8%;
-    --input: 0 0% 89.8%;
-    --ring: 0 0% 3.9%;
+    --border: 37 22% 72%;
+    --input: 37 22% 72%;
+    --ring: 20 6% 15%;
 
-    --radius: 0.75rem;
+    --radius: 1rem;
   }
 }
 
@@ -42,7 +43,7 @@
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background font-grotesk text-foreground antialiased;
   }
 }
 
@@ -52,7 +53,11 @@ input[type='email'],
 input[type='number'],
 input[type='tel'],
 textarea {
-  @apply my-2 w-full rounded-[10px] border py-2 px-3;
+  @apply my-2 w-full rounded-xl border border-ink/25 bg-paper py-2 px-3 text-ink placeholder:text-ink/40 focus:border-ink focus:outline-none focus:ring-2 focus:ring-ink/15;
+}
+
+select {
+  @apply bg-paper text-ink;
 }
 
 textarea {
@@ -64,11 +69,11 @@ button {
 }
 
 button.primary {
-  @apply w-full rounded-[10px] bg-primary p-2 text-white;
+  @apply w-full rounded-full bg-ink p-3 font-grotesk text-sm font-medium tracking-[0.08em] text-sand hover:bg-ink/90 disabled:opacity-60;
 }
 
 button.social {
-  @apply w-full rounded-[10px] border-[1px] border-black bg-white p-2 font-semibold text-black hover:bg-gray-50;
+  @apply w-full rounded-full border border-ink bg-transparent p-3 font-semibold text-ink hover:bg-ink/5;
 }
 
 .card {

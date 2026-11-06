@@ -23,13 +23,27 @@ module.exports = {
       colors: {
         sand: '#EDE6D6',
         ink: '#2A2725',
+        paper: '#F7F3EA',
+        // Warm greys so inner pages match the sand and ink of the home page.
+        gray: {
+          50: '#F7F3EA',
+          100: '#F1EBDF',
+          200: '#E4DCCB',
+          300: '#D3C8B3',
+          400: '#B3A890',
+          500: '#8C8270',
+          600: '#6B6355',
+          700: '#4D473F',
+          800: '#38332E',
+          900: '#2A2725',
+        },
         border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',
         ring: 'hsl(var(--ring))',
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',
         primary: {
-          DEFAULT: '#2563EB',
+          DEFAULT: '#2A2725',
           foreground: 'hsl(var(--primary-foreground))',
         },
         secondary: {

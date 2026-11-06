@@ -2,17 +2,17 @@ import React from 'react';
 import { Outlet } from 'react-router-dom';
 
 import { Header } from './Header';
-import Footer from './Footer';
+import SiteFooter from '@/pages/home/SiteFooter';
 
 const Layout = () => {
   return (
-    <>
+    <div className="bg-sand text-ink">
       <Header />
-      <div className="mx-auto flex min-h-screen max-w-screen-xl flex-col">
+      <main className="mx-auto flex min-h-screen max-w-screen-xl flex-col px-1 md:px-4">
         <Outlet />
-      </div>
-      <Footer />
-    </>
+      </main>
+      <SiteFooter />
+    </div>
   );
 };
 

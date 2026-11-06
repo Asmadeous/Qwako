@@ -14,7 +14,7 @@ Requirements: Ruby 4.0, PostgreSQL, Node 20+ and Yarn.
 ```bash
 cd backend
 bin/setup --skip-server   # gems, databases, migrations
-bin/rails db:seed         # amenities, 50 listings, a dev admin
+bin/rails db:seed         # amenities, 24 UK demo listings, a dev admin
 bin/rails server          # http://localhost:3000
 ```
 

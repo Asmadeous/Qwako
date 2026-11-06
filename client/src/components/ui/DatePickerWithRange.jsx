@@ -35,7 +35,7 @@ export default function DatePickerWithRange({ className, setDateRange }) {
       <Popover>
         <PopoverTrigger
           asChild
-          className="border-none text-black hover:bg-transparent"
+          className="border-none text-ink hover:bg-transparent"
         >
           <Button
             id="date"

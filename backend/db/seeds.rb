@@ -21,12 +21,12 @@ else
   warn "Skipping admin account: set SEED_ADMIN_EMAIL and SEED_ADMIN_PASSWORD."
 end
 
-# The 50 prototype listings. Prices were converted to GBP from each listing's
-# local currency (see source_price) and rounded to the nearest 5 pounds.
+# Demo UK holiday lets. Addresses end with the nation, which becomes the
+# listing's country (England, Scotland, Wales or Northern Ireland).
 listings = JSON.parse(File.read(Rails.root.join("db/seeds/listings.json")))
 listings.each do |attrs|
   listing = Listing.find_or_initialize_by(title: attrs["title"])
-  listing.update!(attrs.except("source_price"))
+  listing.update!(attrs)
 end
 
 puts "Seeded #{Amenity.count} amenities, #{Listing.count} listings, #{User.admin.count} admin(s)."

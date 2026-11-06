@@ -8,22 +8,22 @@ import {
   REGIONS,
   SORTS,
   activeFilterCount,
-  countriesIn,
+  countiesIn,
 } from '@/utils/listingFilters';
 
 const selectClass =
-  'h-10 rounded-full border border-gray-300 bg-white px-4 text-sm text-gray-800 shadow-sm hover:border-gray-400 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20';
+  'h-10 rounded-full border border-gray-300 bg-paper px-4 text-sm text-gray-800 shadow-sm hover:border-gray-400 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20';
 
 const pillClass = (active) =>
   `h-10 whitespace-nowrap rounded-full border px-4 text-sm transition ${
     active
       ? 'border-primary bg-primary text-white'
-      : 'border-gray-300 bg-white text-gray-800 hover:border-gray-400'
+      : 'border-gray-300 bg-paper text-gray-800 hover:border-gray-400'
   }`;
 
 const Filters = ({ places, filters, setFilters, resultCount }) => {
   const set = (patch) => setFilters((f) => ({ ...f, ...patch }));
-  const countries = countriesIn(places, filters.region);
+  const counties = countiesIn(places, filters.region);
   const active = activeFilterCount(filters);
 
   const toggleAmenity = (id) =>
@@ -57,12 +57,12 @@ const Filters = ({ places, filters, setFilters, resultCount }) => {
       {/* Dropdowns and amenity toggles */}
       <div className="flex flex-wrap items-center gap-2 border-t border-gray-200 pt-3">
         <select
-          aria-label="Region"
+          aria-label="Nation"
           className={selectClass}
           value={filters.region}
-          onChange={(e) => set({ region: e.target.value, country: 'all' })}
+          onChange={(e) => set({ region: e.target.value, county: 'all' })}
         >
-          <option value="all">Anywhere</option>
+          <option value="all">Anywhere in the UK</option>
           {REGIONS.map((r) => (
             <option key={r} value={r}>
               {r}
@@ -70,15 +70,15 @@ const Filters = ({ places, filters, setFilters, resultCount }) => {
           ))}
         </select>
 
-        {countries.length > 1 && (
+        {counties.length > 1 && (
           <select
-            aria-label="Country"
+            aria-label="County"
             className={selectClass}
-            value={filters.country}
-            onChange={(e) => set({ country: e.target.value })}
+            value={filters.county}
+            onChange={(e) => set({ county: e.target.value })}
           >
-            <option value="all">All countries</option>
-            {countries.map((c) => (
+            <option value="all">All counties</option>
+            {counties.map((c) => (
               <option key={c} value={c}>
                 {c}
               </option>
@@ -102,7 +102,6 @@ const Filters = ({ places, filters, setFilters, resultCount }) => {
 
         <select
           aria-label="Budget per night"
-          title="Approximate, converted to US dollars"
           className={selectClass}
           value={filters.budget}
           onChange={(e) => set({ budget: e.target.value })}
@@ -145,9 +144,6 @@ const Filters = ({ places, filters, setFilters, resultCount }) => {
         <span>
           <strong className="text-gray-900">{resultCount}</strong>{' '}
           {resultCount === 1 ? 'stay' : 'stays'}
-          {filters.budget !== 'any' && (
-            <span className="text-gray-400"> · prices compared in approx. USD</span>
-          )}
         </span>
         {active > 0 && (
           <button

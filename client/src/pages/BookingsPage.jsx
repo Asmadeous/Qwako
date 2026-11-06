@@ -30,83 +30,55 @@ const BookingsPage = () => {
   if (loading) return <Spinner />;
   if (error) {
     return (
-      <div className="flex flex-col items-center">
+      <div>
         <AccountNav />
-        <p role="alert">{error}</p>
+        <p role="alert" className="mx-4 md:mx-0">{error}</p>
       </div>
     );
   }
 
   return (
-    <div className="flex flex-col items-center">
+    <div>
       <AccountNav />
-      <div>
-        {bookings?.length > 0 ? (
+      <div className="mx-4 grid gap-4 md:mx-0">
+        {bookings.length > 0 ? (
           bookings.map((booking) => (
             <Link
               to={`/account/bookings/${booking.id}`}
-              className="mx-4 my-8 flex h-28 gap-4 overflow-hidden rounded-2xl bg-gray-200 md:h-40 lg:mx-0"
+              className="group flex gap-5 overflow-hidden rounded-3xl border border-ink/20 p-3 transition-colors hover:bg-paper"
               key={booking.id}
             >
-              <div className="w-2/6 md:w-1/6">
+              <div className="h-28 w-32 shrink-0 overflow-hidden rounded-2xl md:h-36 md:w-52">
                 {booking.listing.photos[0] && (
-                  <PlaceImg
-                    place={booking.listing}
-                    className={'h-full w-full object-cover'}
-                  />
+                  <PlaceImg place={booking.listing} className="h-full w-full object-cover" />
                 )}
               </div>
-              <div className="grow py-3 pr-3">
-                <h2 className="md:text-2xl">{booking.listing.title}</h2>
-                <div className="md:text-xl">
-                  <div className="flex gap-2 border-t "></div>
-                  <div className="md:text-xl">
-                    <BookingDates
-                      booking={booking}
-                      className="mb-2 mt-4 hidden items-center text-gray-600  md:flex"
-                    />
-
-                    <div className="my-2 flex items-center gap-1">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        strokeWidth={1.5}
-                        stroke="currentColor"
-                        className="h-7 w-7"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5z"
-                        />
-                      </svg>
-                      <span className="text-xl md:text-2xl">
-                        Total price: {formatPrice(booking.total_pence)}
-                      </span>
-                    </div>
-                  </div>
+              <div className="flex grow flex-col justify-between py-1 pr-2">
+                <div>
+                  <span className="font-grotesk text-[10px] tracking-[0.24em] text-ink/60">
+                    {booking.status.toUpperCase().replace('_', ' ')}
+                  </span>
+                  <h2 className="mt-1 font-serif text-2xl leading-tight md:text-4xl">{booking.listing.title}</h2>
+                  <BookingDates booking={booking} className="mt-2 hidden items-center gap-1 text-sm text-ink/70 md:flex" />
                 </div>
+                <span className="font-grotesk text-sm">
+                  Total <strong className="font-semibold">{formatPrice(booking.total_pence)}</strong>
+                </span>
               </div>
             </Link>
           ))
         ) : (
-          <div className="">
-            <div className="flex flex-col justify-start">
-              <h1 className="my-6 text-3xl font-semibold">Trips</h1>
-              <hr className="border border-gray-300" />
-              <h3 className="pt-6 text-2xl font-semibold">
-                No trips booked... yet!
-              </h3>
-              <p>
-                Time to dust off your bags and start planning your next adventure
-              </p>
-              <Link to="/" className="my-4">
-                <div className="flex w-40 justify-center rounded-lg border border-black p-3 text-lg font-semibold hover:bg-gray-50">
-                  Start Searching
-                </div>
-              </Link>
-            </div>
+          <div className="rounded-3xl border border-ink/20 p-8 md:p-12">
+            <h2 className="font-serif text-4xl md:text-5xl">No trips booked yet.</h2>
+            <p className="mt-3 max-w-md font-grotesk text-sm text-ink/70">
+              Browse the cottages, cabins and city flats and pick your dates.
+            </p>
+            <Link
+              to="/stays"
+              className="mt-6 inline-block border-b border-ink pb-0.5 font-grotesk text-xs tracking-[0.12em]"
+            >
+              BROWSE STAYS <span className="ml-2">→</span>
+            </Link>
           </div>
         )}
       </div>

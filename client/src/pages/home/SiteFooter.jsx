@@ -1,6 +1,10 @@
 import { Link } from 'react-router-dom';
 
-const SiteFooter = () => (
+import { useAuth } from '../../../hooks';
+
+const SiteFooter = () => {
+  const { user } = useAuth();
+  return (
   <footer className="bg-sand px-3 pt-16 pb-3 text-ink md:px-4">
     <div className="rounded-3xl border border-ink/20 px-5 py-6 md:px-8">
       <div className="flex justify-between border-b border-ink/20 pb-6 font-grotesk text-[10px] tracking-[0.2em]">
@@ -21,16 +25,24 @@ const SiteFooter = () => (
           <span className="font-grotesk text-[9px] tracking-[0.24em] text-ink/60">EXPLORE</span>
           <ul className="mt-4 space-y-2 font-grotesk text-sm">
             <li><Link to="/stays" className="hover:underline">All stays</Link></li>
-            <li><a href="#featured" className="hover:underline">Featured</a></li>
-            <li><a href="#inside" className="hover:underline">Inside a stay</a></li>
+            <li><a href="/#featured" className="hover:underline">Featured</a></li>
+            <li><a href="/#inside" className="hover:underline">Inside a stay</a></li>
           </ul>
         </div>
         <div>
           <span className="font-grotesk text-[9px] tracking-[0.24em] text-ink/60">ACCOUNT</span>
           <ul className="mt-4 space-y-2 font-grotesk text-sm">
-            <li><Link to="/login" className="hover:underline">Sign in</Link></li>
-            <li><Link to="/register" className="hover:underline">Create account</Link></li>
-            <li><Link to="/account/places/new" className="hover:underline">Host with us</Link></li>
+            {user ? (
+              <>
+                <li><Link to="/account" className="hover:underline">Your account</Link></li>
+                <li><Link to="/account/bookings" className="hover:underline">Your bookings</Link></li>
+              </>
+            ) : (
+              <>
+                <li><Link to="/login" className="hover:underline">Sign in</Link></li>
+                <li><Link to="/register" className="hover:underline">Create account</Link></li>
+              </>
+            )}
           </ul>
         </div>
       </div>
@@ -40,10 +52,11 @@ const SiteFooter = () => (
         <span className="flex items-center gap-2 tracking-normal text-[10px]">
           <span className="h-1.5 w-1.5 rounded-full bg-green-600" /> Now taking bookings
         </span>
-        <a href="#top" className="hover:underline">BACK TO TOP</a>
+        <a href="#" onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="hover:underline">BACK TO TOP</a>
       </div>
     </div>
   </footer>
-);
+  );
+};
 
 export default SiteFooter;

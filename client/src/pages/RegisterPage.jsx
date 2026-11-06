@@ -119,7 +119,7 @@ const RegisterPage = () => {
 
         <div className="py-2 text-center text-gray-600">
           Already have an account?{' '}
-          <Link className="text-black underline" to="/login">
+          <Link className="text-ink underline" to="/login">
             Sign in
           </Link>
         </div>

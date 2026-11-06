@@ -1,710 +1,48 @@
 [
   {
-    "title": "Lakeside Cabin",
-    "address": "Lake Tahoe, California, USA",
-    "description": "Cozy log cabin among the pines, a short walk from the lake and its private dock.",
-    "house_rules": "Check-in from 2pm, check-out by 11am. No smoking indoors. No parties.",
+    "title": "Porthmeor Beach Cottage",
+    "address": "St Ives, Cornwall, England",
+    "description": "A whitewashed fisherman's cottage two minutes from Porthmeor beach, with a log burner and a sunny walled garden.",
+    "house_rules": "Check-in from 4pm, check-out by 10am. Up to two well-behaved dogs welcome; please keep them off the beds. No smoking indoors.",
     "max_guests": 4,
-    "nightly_price_pence": 14000,
-    "amenity_keys": [
-      "wifi",
-      "parking"
-    ],
-    "photo_urls": [
-      "https://images.unsplash.com/photo-1449158743715-0a90ebb6d2d8?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1615874959474-d609969a20ed?w=1200&q=80&auto=format&fit=crop"
-    ],
-    "source_price": "180 USD"
-  },
-  {
-    "title": "Beach Villa",
-    "address": "Diani Beach, Kenya",
-    "description": "Ocean-view villa steps from the white sand, with a deck made for sunsets.",
-    "house_rules": "Check-in from 2pm, check-out by 11am. No smoking indoors. No parties.",
-    "max_guests": 6,
-    "nightly_price_pence": 17000,
+    "nightly_price_pence": 16500,
     "amenity_keys": [
       "wifi",
       "pets",
-      "parking"
-    ],
-    "photo_urls": [
-      "https://images.unsplash.com/photo-1499793983690-e29da59ef1c2?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1584132967334-10e028bd69f7?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1578683010236-d716f9a3f461?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=1200&q=80&auto=format&fit=crop"
-    ],
-    "source_price": "28000 KES"
-  },
-  {
-    "title": "City Loft",
-    "address": "Westlands, Nairobi, Kenya",
-    "description": "Modern loft in the heart of Westlands, close to restaurants, malls and nightlife.",
-    "house_rules": "Check-in from 2pm, check-out by 11am. No smoking indoors. No parties.",
-    "max_guests": 2,
-    "nightly_price_pence": 4500,
-    "amenity_keys": [
-      "wifi",
       "tv"
-    ],
-    "photo_urls": [
-      "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?w=1200&q=80&auto=format&fit=crop"
-    ],
-    "source_price": "7500 KES"
-  },
-  {
-    "title": "Karen Garden Cottage",
-    "address": "Karen, Nairobi, Kenya",
-    "description": "Quiet cottage in leafy Karen with a big garden, minutes from the Giraffe Centre.",
-    "house_rules": "Check-in from 2pm, check-out by 11am. No smoking indoors. No parties.",
-    "max_guests": 4,
-    "nightly_price_pence": 6000,
-    "amenity_keys": [
-      "wifi",
-      "parking",
-      "pets"
     ],
     "photo_urls": [
       "https://images.unsplash.com/photo-1480074568708-e7b720bb3f09?w=1200&q=80&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1615874959474-d609969a20ed?w=1200&q=80&auto=format&fit=crop"
-    ],
-    "source_price": "9500 KES"
-  },
-  {
-    "title": "Kilimani Modern Apartment",
-    "address": "Kilimani, Nairobi, Kenya",
-    "description": "Bright apartment with a full kitchen and fast Wi-Fi, ideal for work trips.",
-    "house_rules": "Check-in from 2pm, check-out by 11am. No smoking indoors. No parties.",
-    "max_guests": 3,
-    "nightly_price_pence": 4000,
-    "amenity_keys": [
-      "wifi",
-      "tv",
-      "parking"
-    ],
-    "photo_urls": [
-      "https://images.unsplash.com/photo-1574362848149-11496d93a7c7?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1560185893-a55cbc8c57e8?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1484154218962-a197022b5858?w=1200&q=80&auto=format&fit=crop"
-    ],
-    "source_price": "6500 KES"
-  },
-  {
-    "title": "Watamu Ocean Villa",
-    "address": "Watamu, Kenya",
-    "description": "Spacious pool villa near Watamu Marine Park, perfect for families and groups.",
-    "house_rules": "Check-in from 2pm, check-out by 11am. No smoking indoors. No parties.",
-    "max_guests": 8,
-    "nightly_price_pence": 21000,
-    "amenity_keys": [
-      "wifi",
-      "parking",
-      "tv"
-    ],
-    "photo_urls": [
-      "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1540518614846-7eded433c457?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1600566752355-35792bedcfea?w=1200&q=80&auto=format&fit=crop"
-    ],
-    "source_price": "35000 KES"
-  },
-  {
-    "title": "Lamu Swahili House",
-    "address": "Lamu Island, Kenya",
-    "description": "Whitewashed Swahili-style home in Shela, a short dhow ride from Lamu Old Town.",
-    "house_rules": "Check-in from 2pm, check-out by 11am. No smoking indoors. No parties.",
-    "max_guests": 6,
-    "nightly_price_pence": 11000,
-    "amenity_keys": [
-      "wifi",
-      "radio"
-    ],
-    "photo_urls": [
-      "https://images.unsplash.com/photo-1523217582562-09d0def993a6?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1590490360182-c33d57733427?w=1200&q=80&auto=format&fit=crop"
-    ],
-    "source_price": "18000 KES"
-  },
-  {
-    "title": "Naivasha Lake Retreat",
-    "address": "Naivasha, Kenya",
-    "description": "Lakeside retreat with hippos at the shore and Hell's Gate an easy drive away.",
-    "house_rules": "Check-in from 2pm, check-out by 11am. No smoking indoors. No parties.",
-    "max_guests": 6,
-    "nightly_price_pence": 9000,
-    "amenity_keys": [
-      "parking",
-      "pets",
-      "radio"
-    ],
-    "photo_urls": [
-      "https://images.unsplash.com/photo-1470770841072-f978cf4d019e?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1501183638710-841dd1904471?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=1200&q=80&auto=format&fit=crop"
-    ],
-    "source_price": "15000 KES"
-  },
-  {
-    "title": "Nanyuki Mountain Lodge",
-    "address": "Nanyuki, Kenya",
-    "description": "Timber lodge with Mount Kenya views, a fireplace and safari trips nearby.",
-    "house_rules": "Check-in from 2pm, check-out by 11am. No smoking indoors. No parties.",
-    "max_guests": 8,
-    "nightly_price_pence": 13500,
-    "amenity_keys": [
-      "wifi",
-      "parking",
-      "tv"
-    ],
-    "photo_urls": [
-      "https://images.unsplash.com/photo-1595877244574-e90ce41ce089?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1600210491892-03d54c0aaf87?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1618773928121-c32242e63f39?w=1200&q=80&auto=format&fit=crop"
-    ],
-    "source_price": "22000 KES"
-  },
-  {
-    "title": "Malindi Pool Villa",
-    "address": "Malindi, Kenya",
-    "description": "Luxury villa with a private pool and staff, a few minutes from Malindi beach.",
-    "house_rules": "Check-in from 2pm, check-out by 11am. No smoking indoors. No parties.",
-    "max_guests": 10,
-    "nightly_price_pence": 25500,
-    "amenity_keys": [
-      "wifi",
-      "parking",
-      "tv",
-      "pets"
-    ],
-    "photo_urls": [
-      "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1616594039964-ae9021a400a0?w=1200&q=80&auto=format&fit=crop"
-    ],
-    "source_price": "42000 KES"
-  },
-  {
-    "title": "Nyali Penthouse",
-    "address": "Nyali, Mombasa, Kenya",
-    "description": "Top-floor penthouse with sea breezes and a wide balcony over Nyali.",
-    "house_rules": "Check-in from 2pm, check-out by 11am. No smoking indoors. No parties.",
-    "max_guests": 4,
-    "nightly_price_pence": 8500,
-    "amenity_keys": [
-      "wifi",
-      "tv",
-      "parking"
-    ],
-    "photo_urls": [
-      "https://images.unsplash.com/photo-1520608421741-68228b76b6df?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1554995207-c18c203602cb?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1600607687644-c7171b42498f?w=1200&q=80&auto=format&fit=crop"
-    ],
-    "source_price": "14000 KES"
-  },
-  {
-    "title": "Galu Beachfront Cottage",
-    "address": "Galu Beach, Diani, Kenya",
-    "description": "Beachfront cottage on quiet Galu Beach, great for kitesurfing and snorkelling.",
-    "house_rules": "Check-in from 2pm, check-out by 11am. No smoking indoors. No parties.",
-    "max_guests": 4,
-    "nightly_price_pence": 9500,
-    "amenity_keys": [
-      "wifi",
-      "pets"
-    ],
-    "photo_urls": [
-      "https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1556020685-ae41abfc9365?w=1200&q=80&auto=format&fit=crop"
-    ],
-    "source_price": "16000 KES"
-  },
-  {
-    "title": "Zanzibar Beach Bungalow",
-    "address": "Nungwi, Zanzibar, Tanzania",
-    "description": "Palm-shaded bungalow on Nungwi beach, with turquoise water at the door.",
-    "house_rules": "Check-in from 2pm, check-out by 11am. No smoking indoors. No parties.",
-    "max_guests": 4,
-    "nightly_price_pence": 10000,
-    "amenity_keys": [
-      "wifi",
-      "radio"
-    ],
-    "photo_urls": [
-      "https://images.unsplash.com/photo-1549294413-26f195200c16?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1602002418082-a4443e081dd1?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1611892440504-42a792e24d32?w=1200&q=80&auto=format&fit=crop"
-    ],
-    "source_price": "320000 TZS"
-  },
-  {
-    "title": "Arusha Garden Villa",
-    "address": "Arusha, Tanzania",
-    "description": "Garden villa with a pool, the perfect base for Serengeti and Kilimanjaro trips.",
-    "house_rules": "Check-in from 2pm, check-out by 11am. No smoking indoors. No parties.",
-    "max_guests": 6,
-    "nightly_price_pence": 14000,
-    "amenity_keys": [
-      "wifi",
-      "parking",
-      "tv"
-    ],
-    "photo_urls": [
-      "https://images.unsplash.com/photo-1599809275671-b5942cabc7a2?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1617806118233-18e1de247200?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?w=1200&q=80&auto=format&fit=crop"
-    ],
-    "source_price": "450000 TZS"
-  },
-  {
-    "title": "Kololo Hillside Home",
-    "address": "Kololo, Kampala, Uganda",
-    "description": "Family home on Kololo hill with city views and a quiet garden.",
-    "house_rules": "Check-in from 2pm, check-out by 11am. No smoking indoors. No parties.",
-    "max_guests": 6,
-    "nightly_price_pence": 8000,
-    "amenity_keys": [
-      "wifi",
-      "parking",
-      "tv"
-    ],
-    "photo_urls": [
-      "https://images.unsplash.com/photo-1605276374104-dee2a0ed3cd6?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1560185007-cde436f6a4d0?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1560185893-a55cbc8c57e8?w=1200&q=80&auto=format&fit=crop"
-    ],
-    "source_price": "380000 UGX"
-  },
-  {
-    "title": "Kigali Modern Townhouse",
-    "address": "Kigali, Rwanda",
-    "description": "Sleek townhouse in a calm neighbourhood, close to the Kigali Convention Centre.",
-    "house_rules": "Check-in from 2pm, check-out by 11am. No smoking indoors. No parties.",
-    "max_guests": 4,
-    "nightly_price_pence": 6500,
-    "amenity_keys": [
-      "wifi",
-      "parking"
-    ],
-    "photo_urls": [
-      "https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1493809842364-78817add7ffb?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1540518614846-7eded433c457?w=1200&q=80&auto=format&fit=crop"
-    ],
-    "source_price": "120000 RWF"
-  },
-  {
-    "title": "Camps Bay Ocean House",
-    "address": "Camps Bay, Cape Town, South Africa",
-    "description": "Glass-fronted house with an infinity pool and Atlantic views under the Twelve Apostles.",
-    "house_rules": "Check-in from 2pm, check-out by 11am. No smoking indoors. No parties.",
-    "max_guests": 8,
-    "nightly_price_pence": 28000,
-    "amenity_keys": [
-      "wifi",
-      "parking",
-      "tv"
-    ],
-    "photo_urls": [
-      "https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=1200&q=80&auto=format&fit=crop"
-    ],
-    "source_price": "6500 ZAR"
-  },
-  {
-    "title": "Marrakech Riad",
-    "address": "Medina, Marrakech, Morocco",
-    "description": "Traditional riad with a courtyard pool, tucked inside the old Medina.",
-    "house_rules": "Check-in from 2pm, check-out by 11am. No smoking indoors. No parties.",
-    "max_guests": 6,
-    "nightly_price_pence": 17500,
-    "amenity_keys": [
-      "wifi",
-      "radio"
-    ],
-    "photo_urls": [
-      "https://images.unsplash.com/photo-1416331108676-a22ccb276e35?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1600210491892-03d54c0aaf87?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1590490360182-c33d57733427?w=1200&q=80&auto=format&fit=crop"
-    ],
-    "source_price": "2200 MAD"
-  },
-  {
-    "title": "Praslin Island Hideaway",
-    "address": "Praslin, Seychelles",
-    "description": "Romantic hideaway on Praslin with a private jetty and crystal-clear lagoon.",
-    "house_rules": "Check-in from 2pm, check-out by 11am. No smoking indoors. No parties.",
-    "max_guests": 2,
-    "nightly_price_pence": 25000,
-    "amenity_keys": [
-      "wifi"
-    ],
-    "photo_urls": [
-      "https://images.unsplash.com/photo-1505881502353-a1986add3762?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1584132967334-10e028bd69f7?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1559599238-308793637427?w=1200&q=80&auto=format&fit=crop"
-    ],
-    "source_price": "4500 SCR"
-  },
-  {
-    "title": "Grand Baie Pool Villa",
-    "address": "Grand Baie, Mauritius",
-    "description": "Tropical villa with a big pool and garden, walking distance to Grand Baie.",
-    "house_rules": "Check-in from 2pm, check-out by 11am. No smoking indoors. No parties.",
-    "max_guests": 8,
-    "nightly_price_pence": 31000,
-    "amenity_keys": [
-      "wifi",
-      "parking",
-      "tv"
-    ],
-    "photo_urls": [
-      "https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=1200&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1615874959474-d609969a20ed?w=1200&q=80&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1578683010236-d716f9a3f461?w=1200&q=80&auto=format&fit=crop"
-    ],
-    "source_price": "18000 MUR"
+    ]
   },
   {
-    "title": "Overwater Villa",
-    "address": "North Malé Atoll, Maldives",
-    "description": "Overwater villa with a glass floor panel and steps straight into the lagoon.",
-    "house_rules": "Check-in from 2pm, check-out by 11am. No smoking indoors. No parties.",
-    "max_guests": 2,
-    "nightly_price_pence": 61500,
-    "amenity_keys": [
-      "wifi",
-      "tv"
-    ],
-    "photo_urls": [
-      "https://images.unsplash.com/photo-1573843981267-be1999ff37cd?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1602002418082-a4443e081dd1?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=1200&q=80&auto=format&fit=crop"
-    ],
-    "source_price": "12000 MVR"
-  },
-  {
-    "title": "Ubud Jungle Villa",
-    "address": "Ubud, Bali, Indonesia",
-    "description": "Jungle villa with an infinity pool above the rice terraces near Ubud.",
-    "house_rules": "Check-in from 2pm, check-out by 11am. No smoking indoors. No parties.",
-    "max_guests": 4,
-    "nightly_price_pence": 13500,
-    "amenity_keys": [
-      "wifi",
-      "parking"
-    ],
-    "photo_urls": [
-      "https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1611892440504-42a792e24d32?w=1200&q=80&auto=format&fit=crop"
-    ],
-    "source_price": "2800000 IDR"
-  },
-  {
-    "title": "Kamala Pool Villa",
-    "address": "Kamala, Phuket, Thailand",
-    "description": "Hillside villa with a pool and sea views, a few minutes from Kamala beach.",
-    "house_rules": "Check-in from 2pm, check-out by 11am. No smoking indoors. No parties.",
-    "max_guests": 6,
-    "nightly_price_pence": 21500,
-    "amenity_keys": [
-      "wifi",
-      "tv",
-      "parking"
-    ],
-    "photo_urls": [
-      "https://images.unsplash.com/photo-1540541338287-41700207dee6?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1595576508898-0ad5c879a061?w=1200&q=80&auto=format&fit=crop"
-    ],
-    "source_price": "9500 THB"
-  },
-  {
-    "title": "Ha Long Bay Retreat",
-    "address": "Ha Long, Vietnam",
-    "description": "Calm retreat overlooking the limestone islands of Ha Long Bay.",
-    "house_rules": "Check-in from 2pm, check-out by 11am. No smoking indoors. No parties.",
-    "max_guests": 2,
-    "nightly_price_pence": 8000,
-    "amenity_keys": [
-      "wifi",
-      "tv"
-    ],
-    "photo_urls": [
-      "https://images.unsplash.com/photo-1528127269322-539801943592?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1566665797739-1674de7a421a?w=1200&q=80&auto=format&fit=crop"
-    ],
-    "source_price": "2500000 VND"
-  },
-  {
-    "title": "Shibuya Minimalist Apartment",
-    "address": "Shibuya, Tokyo, Japan",
-    "description": "Compact, design-led apartment near Shibuya Crossing and the Yamanote line.",
-    "house_rules": "Check-in from 2pm, check-out by 11am. No smoking indoors. No parties.",
-    "max_guests": 2,
-    "nightly_price_pence": 11500,
-    "amenity_keys": [
-      "wifi",
-      "tv"
-    ],
-    "photo_urls": [
-      "https://images.unsplash.com/photo-1600585154526-990dced4db0d?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1556020685-ae41abfc9365?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1600607687644-c7171b42498f?w=1200&q=80&auto=format&fit=crop"
-    ],
-    "source_price": "22000 JPY"
-  },
-  {
-    "title": "Goa Beach House",
-    "address": "Candolim, Goa, India",
-    "description": "Laid-back beach house with a pool and loungers, close to Candolim beach.",
-    "house_rules": "Check-in from 2pm, check-out by 11am. No smoking indoors. No parties.",
-    "max_guests": 6,
-    "nightly_price_pence": 11500,
+    "title": "Windermere Lake House",
+    "address": "Bowness-on-Windermere, Cumbria, England",
+    "description": "A Victorian lake house with its own jetty, big bay windows over Windermere and easy walks into the fells.",
+    "house_rules": "Check-in from 4pm, check-out by 10am. No smoking indoors. No parties or events.",
+    "max_guests": 8,
+    "nightly_price_pence": 34000,
     "amenity_keys": [
       "wifi",
       "parking",
-      "pets"
-    ],
-    "photo_urls": [
-      "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1595576508898-0ad5c879a061?w=1200&q=80&auto=format&fit=crop"
-    ],
-    "source_price": "12000 INR"
-  },
-  {
-    "title": "Dubai Marina Apartment",
-    "address": "Dubai Marina, Dubai, UAE",
-    "description": "High-rise apartment with marina views, near JBR beach and the tram.",
-    "house_rules": "Check-in from 2pm, check-out by 11am. No smoking indoors. No parties.",
-    "max_guests": 4,
-    "nightly_price_pence": 20500,
-    "amenity_keys": [
-      "wifi",
       "tv",
-      "parking"
+      "entrance"
     ],
     "photo_urls": [
-      "https://images.unsplash.com/photo-1513584684374-8bab748fbf90?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1600121848594-d8644e57abab?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1616594039964-ae9021a400a0?w=1200&q=80&auto=format&fit=crop"
-    ],
-    "source_price": "950 AED"
-  },
-  {
-    "title": "Oia Cave House",
-    "address": "Oia, Santorini, Greece",
-    "description": "Traditional cave house carved into the cliffs, famous sunsets from the terrace.",
-    "house_rules": "Check-in from 2pm, check-out by 11am. No smoking indoors. No parties.",
-    "max_guests": 2,
-    "nightly_price_pence": 24000,
-    "amenity_keys": [
-      "wifi"
-    ],
-    "photo_urls": [
-      "https://images.unsplash.com/photo-1533104816931-20fa691ff6ca?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1584132967334-10e028bd69f7?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1559599238-308793637427?w=1200&q=80&auto=format&fit=crop"
-    ],
-    "source_price": "280 EUR"
-  },
-  {
-    "title": "Manarola Sea-View Apartment",
-    "address": "Manarola, Cinque Terre, Italy",
-    "description": "Colourful apartment above the harbour with views over the Ligurian Sea.",
-    "house_rules": "Check-in from 2pm, check-out by 11am. No smoking indoors. No parties.",
-    "max_guests": 4,
-    "nightly_price_pence": 16000,
-    "amenity_keys": [
-      "wifi"
-    ],
-    "photo_urls": [
-      "https://images.unsplash.com/photo-1516483638261-f4dbaf036963?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1505691938895-1758d7feb511?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1615874959474-d609969a20ed?w=1200&q=80&auto=format&fit=crop"
-    ],
-    "source_price": "190 EUR"
-  },
-  {
-    "title": "Venice Canal Apartment",
-    "address": "San Polo, Venice, Italy",
-    "description": "Elegant apartment on a quiet canal, a short walk from the Rialto Bridge.",
-    "house_rules": "Check-in from 2pm, check-out by 11am. No smoking indoors. No parties.",
-    "max_guests": 3,
-    "nightly_price_pence": 18000,
-    "amenity_keys": [
-      "wifi",
-      "tv"
-    ],
-    "photo_urls": [
-      "https://images.unsplash.com/photo-1523906834658-6e24ef2386f9?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1600210491892-03d54c0aaf87?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?w=1200&q=80&auto=format&fit=crop"
-    ],
-    "source_price": "210 EUR"
-  },
-  {
-    "title": "Lake Como Villa",
-    "address": "Bellagio, Lake Como, Italy",
-    "description": "Villa with a lakeside garden and boat access in the pearl of Lake Como.",
-    "house_rules": "Check-in from 2pm, check-out by 11am. No smoking indoors. No parties.",
-    "max_guests": 6,
-    "nightly_price_pence": 29000,
-    "amenity_keys": [
-      "wifi",
-      "parking"
-    ],
-    "photo_urls": [
-      "https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1501183638710-841dd1904471?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1618773928121-c32242e63f39?w=1200&q=80&auto=format&fit=crop"
-    ],
-    "source_price": "340 EUR"
-  },
-  {
-    "title": "Alfama Apartment",
-    "address": "Alfama, Lisbon, Portugal",
-    "description": "Sunny apartment in historic Alfama, with tram 28 right outside.",
-    "house_rules": "Check-in from 2pm, check-out by 11am. No smoking indoors. No parties.",
-    "max_guests": 4,
-    "nightly_price_pence": 10000,
-    "amenity_keys": [
-      "wifi",
-      "tv"
-    ],
-    "photo_urls": [
-      "https://images.unsplash.com/photo-1520608421741-68228b76b6df?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1560185007-cde436f6a4d0?w=1200&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1464146072230-91cabc968266?w=1200&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=1200&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=1200&q=80&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?w=1200&q=80&auto=format&fit=crop"
-    ],
-    "source_price": "120 EUR"
+    ]
   },
   {
-    "title": "Eixample Flat",
-    "address": "Eixample, Barcelona, Spain",
-    "description": "Stylish flat with high ceilings, minutes from Sagrada Família.",
-    "house_rules": "Check-in from 2pm, check-out by 11am. No smoking indoors. No parties.",
-    "max_guests": 4,
-    "nightly_price_pence": 13000,
-    "amenity_keys": [
-      "wifi",
-      "tv"
-    ],
-    "photo_urls": [
-      "https://images.unsplash.com/photo-1574362848149-11496d93a7c7?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1556020685-ae41abfc9365?w=1200&q=80&auto=format&fit=crop"
-    ],
-    "source_price": "150 EUR"
-  },
-  {
-    "title": "Ibiza Sunset Villa",
-    "address": "San Antonio, Ibiza, Spain",
-    "description": "Modern villa with a large pool and terraces built for Ibiza sunsets.",
-    "house_rules": "Check-in from 2pm, check-out by 11am. No smoking indoors. No parties.",
-    "max_guests": 10,
-    "nightly_price_pence": 55500,
-    "amenity_keys": [
-      "wifi",
-      "parking",
-      "tv"
-    ],
-    "photo_urls": [
-      "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1554995207-c18c203602cb?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1578683010236-d716f9a3f461?w=1200&q=80&auto=format&fit=crop"
-    ],
-    "source_price": "650 EUR"
-  },
-  {
-    "title": "Le Marais Loft",
-    "address": "Le Marais, Paris, France",
-    "description": "Chic loft in Le Marais, close to cafés, galleries and the Seine.",
-    "house_rules": "Check-in from 2pm, check-out by 11am. No smoking indoors. No parties.",
-    "max_guests": 2,
-    "nightly_price_pence": 19500,
-    "amenity_keys": [
-      "wifi",
-      "tv"
-    ],
-    "photo_urls": [
-      "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1617806118233-18e1de247200?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd?w=1200&q=80&auto=format&fit=crop"
-    ],
-    "source_price": "230 EUR"
-  },
-  {
-    "title": "Zermatt Alpine Chalet",
-    "address": "Zermatt, Switzerland",
-    "description": "Snowy chalet with Matterhorn views, ski-in access in winter.",
-    "house_rules": "Check-in from 2pm, check-out by 11am. No smoking indoors. No parties.",
-    "max_guests": 6,
-    "nightly_price_pence": 46500,
-    "amenity_keys": [
-      "wifi",
-      "parking"
-    ],
-    "photo_urls": [
-      "https://images.unsplash.com/photo-1510798831971-661eb04b3739?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1600210491892-03d54c0aaf87?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=1200&q=80&auto=format&fit=crop"
-    ],
-    "source_price": "520 CHF"
-  },
-  {
-    "title": "Vík Red Cottage",
-    "address": "Vík, Iceland",
-    "description": "Little red cottage near black-sand beaches, great for northern lights.",
-    "house_rules": "Check-in from 2pm, check-out by 11am. No smoking indoors. No parties.",
-    "max_guests": 4,
-    "nightly_price_pence": 21500,
-    "amenity_keys": [
-      "wifi",
-      "parking"
-    ],
-    "photo_urls": [
-      "https://images.unsplash.com/photo-1518780664697-55e3ad937233?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1501183638710-841dd1904471?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1522444195799-478538b28823?w=1200&q=80&auto=format&fit=crop"
-    ],
-    "source_price": "38000 ISK"
-  },
-  {
-    "title": "Lofoten Fjord Cabin",
-    "address": "Lofoten, Norway",
-    "description": "Cabin by the fjord under dramatic peaks, midnight sun in summer.",
-    "house_rules": "Check-in from 2pm, check-out by 11am. No smoking indoors. No parties.",
-    "max_guests": 4,
-    "nightly_price_pence": 20500,
-    "amenity_keys": [
-      "wifi",
-      "parking"
-    ],
-    "photo_urls": [
-      "https://images.unsplash.com/photo-1542718610-a1d656d1884c?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1560185893-a55cbc8c57e8?w=1200&q=80&auto=format&fit=crop"
-    ],
-    "source_price": "2800 NOK"
-  },
-  {
-    "title": "Cotswolds Cottage",
-    "address": "Bourton-on-the-Water, UK",
-    "description": "Classic stone cottage in a picture-postcard Cotswolds village.",
-    "house_rules": "Check-in from 2pm, check-out by 11am. No smoking indoors. No parties.",
+    "title": "Cotswolds Stone Cottage",
+    "address": "Bourton-on-the-Water, Gloucestershire, England",
+    "description": "A honey-stone cottage on a quiet lane, a short stroll from the river, village pubs and tea rooms.",
+    "house_rules": "Check-in from 4pm, check-out by 10am. Up to two well-behaved dogs welcome; please keep them off the beds. No smoking indoors.",
     "max_guests": 6,
     "nightly_price_pence": 21000,
     "amenity_keys": [
@@ -714,16 +52,16 @@
     ],
     "photo_urls": [
       "https://images.unsplash.com/photo-1430285561322-7808604715df?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1590490360182-c33d57733427?w=1200&q=80&auto=format&fit=crop"
-    ],
-    "source_price": "210 GBP"
+      "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=1200&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1560185893-a55cbc8c57e8?w=1200&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1484154218962-a197022b5858?w=1200&q=80&auto=format&fit=crop"
+    ]
   },
   {
-    "title": "Loch Lomond Lake House",
-    "address": "Loch Lomond, Scotland",
-    "description": "Lake house on the bonnie banks with woodland walks from the door.",
-    "house_rules": "Check-in from 2pm, check-out by 11am. No smoking indoors. No parties.",
+    "title": "Loch Lomond Lodge",
+    "address": "Balloch, West Dunbartonshire, Scotland",
+    "description": "A timber lodge on the shore of Loch Lomond with a wood stove, a hot tub and views to Ben Lomond.",
+    "house_rules": "Check-in from 4pm, check-out by 10am. No smoking indoors. No parties or events.",
     "max_guests": 6,
     "nightly_price_pence": 18000,
     "amenity_keys": [
@@ -732,166 +70,245 @@
       "pets"
     ],
     "photo_urls": [
-      "https://images.unsplash.com/photo-1464146072230-91cabc968266?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?w=1200&q=80&auto=format&fit=crop"
-    ],
-    "source_price": "180 GBP"
-  },
-  {
-    "title": "Notting Hill Townhouse",
-    "address": "Notting Hill, London, UK",
-    "description": "Pretty townhouse near Portobello Road market and Hyde Park.",
-    "house_rules": "Check-in from 2pm, check-out by 11am. No smoking indoors. No parties.",
-    "max_guests": 4,
-    "nightly_price_pence": 26000,
-    "amenity_keys": [
-      "wifi",
-      "tv"
-    ],
-    "photo_urls": [
-      "https://images.unsplash.com/photo-1576941089067-2de3c901e126?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1493809842364-78817add7ffb?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1540518614846-7eded433c457?w=1200&q=80&auto=format&fit=crop"
-    ],
-    "source_price": "260 GBP"
-  },
-  {
-    "title": "Miami Beach Modern Villa",
-    "address": "Miami Beach, Florida, USA",
-    "description": "Modern villa with a pool and a short stroll to South Beach.",
-    "house_rules": "Check-in from 2pm, check-out by 11am. No smoking indoors. No parties.",
-    "max_guests": 8,
-    "nightly_price_pence": 51000,
-    "amenity_keys": [
-      "wifi",
-      "parking",
-      "tv"
-    ],
-    "photo_urls": [
-      "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1200&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1510798831971-661eb04b3739?w=1200&q=80&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1616594039964-ae9021a400a0?w=1200&q=80&auto=format&fit=crop"
-    ],
-    "source_price": "650 USD"
+      "https://images.unsplash.com/photo-1540518614846-7eded433c457?w=1200&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1600566752355-35792bedcfea?w=1200&q=80&auto=format&fit=crop"
+    ]
   },
   {
-    "title": "Malibu Beach House",
-    "address": "Malibu, California, USA",
-    "description": "Beach house right on the sand, with surf breaks a few steps away.",
-    "house_rules": "Check-in from 2pm, check-out by 11am. No smoking indoors. No parties.",
-    "max_guests": 6,
-    "nightly_price_pence": 67000,
+    "title": "Cairngorms Mountain Cabin",
+    "address": "Aviemore, Highland, Scotland",
+    "description": "A snug cabin among the pines at the foot of the Cairngorms, close to trails, ski slopes and Loch Morlich.",
+    "house_rules": "Check-in from 4pm, check-out by 10am. No smoking indoors. No parties or events.",
+    "max_guests": 4,
+    "nightly_price_pence": 15000,
     "amenity_keys": [
       "wifi",
       "parking"
     ],
     "photo_urls": [
-      "https://images.unsplash.com/photo-1615571022219-eb45cf7faa9d?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1559599238-308793637427?w=1200&q=80&auto=format&fit=crop"
-    ],
-    "source_price": "850 USD"
+      "https://images.unsplash.com/photo-1542718610-a1d656d1884c?w=1200&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=1200&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1590490360182-c33d57733427?w=1200&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1501183638710-841dd1904471?w=1200&q=80&auto=format&fit=crop"
+    ]
   },
   {
-    "title": "Hamptons Farmhouse",
-    "address": "East Hampton, New York, USA",
-    "description": "Classic shingle farmhouse with a wraparound porch and big lawn.",
-    "house_rules": "Check-in from 2pm, check-out by 11am. No smoking indoors. No parties.",
-    "max_guests": 8,
-    "nightly_price_pence": 56500,
+    "title": "Skye Croft Cabin",
+    "address": "Portree, Isle of Skye, Scotland",
+    "description": "A small red croft cabin on open hillside with sea views, perfect for two walkers and stargazers.",
+    "house_rules": "Check-in from 4pm, check-out by 10am. No smoking indoors. No parties or events.",
+    "max_guests": 2,
+    "nightly_price_pence": 9500,
     "amenity_keys": [
-      "wifi",
       "parking",
-      "pets"
+      "entrance"
     ],
     "photo_urls": [
-      "https://images.unsplash.com/photo-1570129477492-45c003edd2be?w=1200&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1518780664697-55e3ad937233?w=1200&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=1200&q=80&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1600210491892-03d54c0aaf87?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1615874959474-d609969a20ed?w=1200&q=80&auto=format&fit=crop"
-    ],
-    "source_price": "720 USD"
+      "https://images.unsplash.com/photo-1618773928121-c32242e63f39?w=1200&q=80&auto=format&fit=crop"
+    ]
   },
   {
-    "title": "Aspen Ski Cabin",
-    "address": "Aspen, Colorado, USA",
-    "description": "Warm mountain cabin close to the slopes, with a stone fireplace.",
-    "house_rules": "Check-in from 2pm, check-out by 11am. No smoking indoors. No parties.",
-    "max_guests": 6,
-    "nightly_price_pence": 42500,
+    "title": "Kielder Forest Cabin",
+    "address": "Kielder, Northumberland, England",
+    "description": "A log cabin deep in Kielder Forest, under some of the darkest skies in England, with a private deck.",
+    "house_rules": "Check-in from 4pm, check-out by 10am. Up to two well-behaved dogs welcome; please keep them off the beds. No smoking indoors.",
+    "max_guests": 4,
+    "nightly_price_pence": 12000,
+    "amenity_keys": [
+      "parking",
+      "pets",
+      "entrance"
+    ],
+    "photo_urls": [
+      "https://images.unsplash.com/photo-1449158743715-0a90ebb6d2d8?w=1200&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=1200&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1616594039964-ae9021a400a0?w=1200&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1554995207-c18c203602cb?w=1200&q=80&auto=format&fit=crop"
+    ]
+  },
+  {
+    "title": "Wye Valley Treetop Lodge",
+    "address": "Tintern, Monmouthshire, Wales",
+    "description": "A glass-fronted lodge in the woods above the River Wye, a short walk from Tintern Abbey.",
+    "house_rules": "Check-in from 4pm, check-out by 10am. No smoking indoors. No parties or events.",
+    "max_guests": 4,
+    "nightly_price_pence": 16000,
     "amenity_keys": [
       "wifi",
       "parking",
+      "entrance"
+    ],
+    "photo_urls": [
+      "https://images.unsplash.com/photo-1595877244574-e90ce41ce089?w=1200&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1600607687644-c7171b42498f?w=1200&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1556020685-ae41abfc9365?w=1200&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1611892440504-42a792e24d32?w=1200&q=80&auto=format&fit=crop"
+    ]
+  },
+  {
+    "title": "Snowdonia Mountain Lodge",
+    "address": "Betws-y-Coed, Conwy, Wales",
+    "description": "A modern lodge in Eryri National Park with mountain views, a drying room and a wood-fired hot tub.",
+    "house_rules": "Check-in from 4pm, check-out by 10am. Up to two well-behaved dogs welcome; please keep them off the beds. No smoking indoors.",
+    "max_guests": 6,
+    "nightly_price_pence": 19500,
+    "amenity_keys": [
+      "wifi",
+      "parking",
+      "pets",
+      "tv"
+    ],
+    "photo_urls": [
+      "https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=1200&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1617806118233-18e1de247200?w=1200&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?w=1200&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1560185007-cde436f6a4d0?w=1200&q=80&auto=format&fit=crop"
+    ]
+  },
+  {
+    "title": "Hexham Woodland House",
+    "address": "Hexham, Northumberland, England",
+    "description": "A slate-roofed family house in mature woodland, close to Hadrian's Wall and the market town of Hexham.",
+    "house_rules": "Check-in from 4pm, check-out by 10am. Up to two well-behaved dogs welcome; please keep them off the beds. No smoking indoors.",
+    "max_guests": 6,
+    "nightly_price_pence": 17500,
+    "amenity_keys": [
+      "wifi",
+      "parking",
+      "pets",
       "tv"
     ],
     "photo_urls": [
       "https://images.unsplash.com/photo-1449844908441-8829872d2607?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1501183638710-841dd1904471?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1618773928121-c32242e63f39?w=1200&q=80&auto=format&fit=crop"
-    ],
-    "source_price": "540 USD"
+      "https://images.unsplash.com/photo-1493809842364-78817add7ffb?w=1200&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=1200&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1559599238-308793637427?w=1200&q=80&auto=format&fit=crop"
+    ]
   },
   {
-    "title": "Banff Mountain Cabin",
-    "address": "Banff, Alberta, Canada",
-    "description": "Cabin in the Rockies, close to Lake Louise and Banff hot springs.",
-    "house_rules": "Check-in from 2pm, check-out by 11am. No smoking indoors. No parties.",
-    "max_guests": 6,
-    "nightly_price_pence": 22000,
-    "amenity_keys": [
-      "wifi",
-      "parking"
-    ],
-    "photo_urls": [
-      "https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=1200&q=80&auto=format&fit=crop"
-    ],
-    "source_price": "380 CAD"
-  },
-  {
-    "title": "Tulum Jungle Villa",
-    "address": "Tulum, Mexico",
-    "description": "Jungle villa with a plunge pool, a bike ride from the beach and cenotes.",
-    "house_rules": "Check-in from 2pm, check-out by 11am. No smoking indoors. No parties.",
-    "max_guests": 6,
-    "nightly_price_pence": 28000,
-    "amenity_keys": [
-      "wifi",
-      "parking"
-    ],
-    "photo_urls": [
-      "https://images.unsplash.com/photo-1544984243-ec57ea16fe25?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1611892440504-42a792e24d32?w=1200&q=80&auto=format&fit=crop"
-    ],
-    "source_price": "6500 MXN"
-  },
-  {
-    "title": "Copacabana Beachfront",
-    "address": "Copacabana, Rio de Janeiro, Brazil",
-    "description": "Beachfront apartment with views over Copacabana and Sugarloaf Mountain.",
-    "house_rules": "Check-in from 2pm, check-out by 11am. No smoking indoors. No parties.",
+    "title": "Brighton Seafront Apartment",
+    "address": "Kemptown, Brighton, East Sussex, England",
+    "description": "A bright apartment with a balcony over the sea, steps from the beach, the pier and the Lanes.",
+    "house_rules": "Check-in from 3pm, check-out by 11am. No smoking. Quiet hours 10pm to 8am; this is a residential building.",
     "max_guests": 4,
-    "nightly_price_pence": 12000,
+    "nightly_price_pence": 14000,
     "amenity_keys": [
       "wifi",
       "tv"
     ],
     "photo_urls": [
-      "https://images.unsplash.com/photo-1564501049412-61c2a3083791?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1600121848594-d8644e57abab?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1600607687644-c7171b42498f?w=1200&q=80&auto=format&fit=crop"
-    ],
-    "source_price": "850 BRL"
+      "https://images.unsplash.com/photo-1520608421741-68228b76b6df?w=1200&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1595576508898-0ad5c879a061?w=1200&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1566665797739-1674de7a421a?w=1200&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1600121848594-d8644e57abab?w=1200&q=80&auto=format&fit=crop"
+    ]
   },
   {
-    "title": "Mosman Harbour House",
-    "address": "Mosman, Sydney, Australia",
-    "description": "Contemporary house near the harbour, a ferry ride from the Opera House.",
-    "house_rules": "Check-in from 2pm, check-out by 11am. No smoking indoors. No parties.",
+    "title": "Northern Quarter Loft",
+    "address": "Northern Quarter, Manchester, Greater Manchester, England",
+    "description": "An industrial-style loft in the heart of Manchester's Northern Quarter, close to Piccadilly station.",
+    "house_rules": "Check-in from 3pm, check-out by 11am. No smoking. Quiet hours 10pm to 8am; this is a residential building.",
+    "max_guests": 2,
+    "nightly_price_pence": 11000,
+    "amenity_keys": [
+      "wifi",
+      "tv"
+    ],
+    "photo_urls": [
+      "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=1200&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1505691938895-1758d7feb511?w=1200&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd?w=1200&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1522444195799-478538b28823?w=1200&q=80&auto=format&fit=crop"
+    ]
+  },
+  {
+    "title": "Bristol Harbourside Flat",
+    "address": "Harbourside, Bristol, Bristol, England",
+    "description": "A modern flat by the floating harbour, an easy walk to the SS Great Britain and the city centre.",
+    "house_rules": "Check-in from 3pm, check-out by 11am. No smoking. Quiet hours 10pm to 8am; this is a residential building.",
+    "max_guests": 4,
+    "nightly_price_pence": 12000,
+    "amenity_keys": [
+      "wifi",
+      "tv",
+      "parking"
+    ],
+    "photo_urls": [
+      "https://images.unsplash.com/photo-1574362848149-11496d93a7c7?w=1200&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=1200&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1615874959474-d609969a20ed?w=1200&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1578683010236-d716f9a3f461?w=1200&q=80&auto=format&fit=crop"
+    ]
+  },
+  {
+    "title": "Leith Shore Apartment",
+    "address": "Leith, Edinburgh, City of Edinburgh, Scotland",
+    "description": "A contemporary apartment on the Shore in Leith, with restaurants below and a tram into the city centre.",
+    "house_rules": "Check-in from 3pm, check-out by 11am. No smoking. Quiet hours 10pm to 8am; this is a residential building.",
+    "max_guests": 4,
+    "nightly_price_pence": 15000,
+    "amenity_keys": [
+      "wifi",
+      "tv"
+    ],
+    "photo_urls": [
+      "https://images.unsplash.com/photo-1600585154526-990dced4db0d?w=1200&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=1200&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=1200&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?w=1200&q=80&auto=format&fit=crop"
+    ]
+  },
+  {
+    "title": "Harrogate Family House",
+    "address": "Harrogate, North Yorkshire, England",
+    "description": "A spacious brick family house with a garden and driveway, ten minutes from the Stray and Bettys.",
+    "house_rules": "Check-in from 4pm, check-out by 10am. No smoking indoors. No parties or events.",
+    "max_guests": 8,
+    "nightly_price_pence": 23000,
+    "amenity_keys": [
+      "wifi",
+      "parking",
+      "tv"
+    ],
+    "photo_urls": [
+      "https://images.unsplash.com/photo-1605276374104-dee2a0ed3cd6?w=1200&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=1200&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1560185893-a55cbc8c57e8?w=1200&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1484154218962-a197022b5858?w=1200&q=80&auto=format&fit=crop"
+    ]
+  },
+  {
+    "title": "Cotswolds Barn Conversion",
+    "address": "Chipping Campden, Gloucestershire, England",
+    "description": "A contemporary barn conversion with vaulted ceilings, underfloor heating and views across open farmland.",
+    "house_rules": "Check-in from 4pm, check-out by 10am. No smoking indoors. No parties or events.",
+    "max_guests": 8,
+    "nightly_price_pence": 29000,
+    "amenity_keys": [
+      "wifi",
+      "parking",
+      "tv",
+      "entrance"
+    ],
+    "photo_urls": [
+      "https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?w=1200&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=1200&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1540518614846-7eded433c457?w=1200&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1600566752355-35792bedcfea?w=1200&q=80&auto=format&fit=crop"
+    ]
+  },
+  {
+    "title": "Salcombe Coast House",
+    "address": "Salcombe, Devon, England",
+    "description": "A timber-clad coast house above the estuary, a short walk to sandy coves, sailing and harbour cafes.",
+    "house_rules": "Check-in from 4pm, check-out by 10am. No smoking indoors. No parties or events.",
     "max_guests": 6,
-    "nightly_price_pence": 25000,
+    "nightly_price_pence": 32000,
     "amenity_keys": [
       "wifi",
       "parking",
@@ -899,27 +316,140 @@
     ],
     "photo_urls": [
       "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?w=1200&q=80&auto=format&fit=crop"
-    ],
-    "source_price": "480 AUD"
+      "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=1200&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1590490360182-c33d57733427?w=1200&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1501183638710-841dd1904471?w=1200&q=80&auto=format&fit=crop"
+    ]
   },
   {
-    "title": "Queenstown Lake Lodge",
-    "address": "Queenstown, New Zealand",
-    "description": "Lodge with lake and mountain views, close to skiing and adventure sports.",
-    "house_rules": "Check-in from 2pm, check-out by 11am. No smoking indoors. No parties.",
-    "max_guests": 4,
-    "nightly_price_pence": 18500,
+    "title": "Surrey Hills Modern House",
+    "address": "Dorking, Surrey, England",
+    "description": "A light-filled modern house set in a large garden, on the edge of the Surrey Hills and under an hour from London.",
+    "house_rules": "Check-in from 4pm, check-out by 10am. No smoking indoors. No parties or events.",
+    "max_guests": 8,
+    "nightly_price_pence": 38000,
     "amenity_keys": [
       "wifi",
+      "parking",
+      "tv",
+      "entrance"
+    ],
+    "photo_urls": [
+      "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1200&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=1200&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1600210491892-03d54c0aaf87?w=1200&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1618773928121-c32242e63f39?w=1200&q=80&auto=format&fit=crop"
+    ]
+  },
+  {
+    "title": "Bath Georgian Apartment",
+    "address": "Bath, Somerset, England",
+    "description": "An elegant first-floor apartment in a Georgian terrace, close to the Royal Crescent and the Roman Baths.",
+    "house_rules": "Check-in from 3pm, check-out by 11am. No smoking. Quiet hours 10pm to 8am; this is a residential building.",
+    "max_guests": 4,
+    "nightly_price_pence": 17500,
+    "amenity_keys": [
+      "wifi",
+      "tv"
+    ],
+    "photo_urls": [
+      "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=1200&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1616594039964-ae9021a400a0?w=1200&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1554995207-c18c203602cb?w=1200&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1600607687644-c7171b42498f?w=1200&q=80&auto=format&fit=crop"
+    ]
+  },
+  {
+    "title": "York City Walls Townhouse",
+    "address": "York, North Yorkshire, England",
+    "description": "A townhouse inside the city walls, a few minutes from York Minster and the Shambles.",
+    "house_rules": "Check-in from 3pm, check-out by 11am. No smoking. Quiet hours 10pm to 8am; this is a residential building.",
+    "max_guests": 6,
+    "nightly_price_pence": 20000,
+    "amenity_keys": [
+      "wifi",
+      "tv"
+    ],
+    "photo_urls": [
+      "https://images.unsplash.com/photo-1556020685-ae41abfc9365?w=1200&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1611892440504-42a792e24d32?w=1200&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1617806118233-18e1de247200?w=1200&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?w=1200&q=80&auto=format&fit=crop"
+    ]
+  },
+  {
+    "title": "Cardiff Bay Apartment",
+    "address": "Cardiff Bay, Cardiff, Cardiff, Wales",
+    "description": "A waterfront apartment in Cardiff Bay with views over the barrage, near the Wales Millennium Centre.",
+    "house_rules": "Check-in from 3pm, check-out by 11am. No smoking. Quiet hours 10pm to 8am; this is a residential building.",
+    "max_guests": 4,
+    "nightly_price_pence": 10500,
+    "amenity_keys": [
+      "wifi",
+      "tv",
       "parking"
     ],
     "photo_urls": [
-      "https://images.unsplash.com/photo-1596394516093-501ba68a0ba6?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1501183638710-841dd1904471?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=1200&q=80&auto=format&fit=crop"
+      "https://images.unsplash.com/photo-1560185007-cde436f6a4d0?w=1200&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1493809842364-78817add7ffb?w=1200&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=1200&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1559599238-308793637427?w=1200&q=80&auto=format&fit=crop"
+    ]
+  },
+  {
+    "title": "Belfast Cathedral Quarter Flat",
+    "address": "Cathedral Quarter, Belfast, County Antrim, Northern Ireland",
+    "description": "A stylish flat above the cobbled streets of the Cathedral Quarter, close to bars, music and the Titanic Quarter.",
+    "house_rules": "Check-in from 3pm, check-out by 11am. No smoking. Quiet hours 10pm to 8am; this is a residential building.",
+    "max_guests": 2,
+    "nightly_price_pence": 9500,
+    "amenity_keys": [
+      "wifi",
+      "tv"
     ],
-    "source_price": "390 NZD"
+    "photo_urls": [
+      "https://images.unsplash.com/photo-1595576508898-0ad5c879a061?w=1200&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1566665797739-1674de7a421a?w=1200&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1600121848594-d8644e57abab?w=1200&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1505691938895-1758d7feb511?w=1200&q=80&auto=format&fit=crop"
+    ]
+  },
+  {
+    "title": "Norfolk Broads Cottage",
+    "address": "Wroxham, Norfolk, England",
+    "description": "A thatched waterside cottage on the Broads with a private mooring and a garden down to the river.",
+    "house_rules": "Check-in from 4pm, check-out by 10am. Up to two well-behaved dogs welcome; please keep them off the beds. No smoking indoors.",
+    "max_guests": 4,
+    "nightly_price_pence": 14500,
+    "amenity_keys": [
+      "wifi",
+      "parking",
+      "pets"
+    ],
+    "photo_urls": [
+      "https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd?w=1200&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1522444195799-478538b28823?w=1200&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=1200&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1615874959474-d609969a20ed?w=1200&q=80&auto=format&fit=crop"
+    ]
+  },
+  {
+    "title": "Giant's Causeway Coast Cottage",
+    "address": "Bushmills, County Antrim, Northern Ireland",
+    "description": "A stone cottage on the Causeway Coast, a short drive from the Giant's Causeway and Bushmills distillery.",
+    "house_rules": "Check-in from 4pm, check-out by 10am. Up to two well-behaved dogs welcome; please keep them off the beds. No smoking indoors.",
+    "max_guests": 5,
+    "nightly_price_pence": 13000,
+    "amenity_keys": [
+      "wifi",
+      "parking",
+      "pets"
+    ],
+    "photo_urls": [
+      "https://images.unsplash.com/photo-1578683010236-d716f9a3f461?w=1200&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=1200&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=1200&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?w=1200&q=80&auto=format&fit=crop"
+    ]
   }
 ]

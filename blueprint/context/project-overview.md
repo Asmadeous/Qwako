@@ -1,6 +1,6 @@
 # T&G BnB - Project Overview
 
-<!-- blueprint:source-hash 03ad2ca8f2d6635a706755cfde28cb145347b36c399d2838a5cb754b0c123dec -->
+<!-- blueprint:source-hash ac0757bc2b9e0b4a59a6ac4de7e26c08ee4c6b0934d16aebd9aeb7231c481b59 -->
 
 > Direct-booking website for one owner's UK holiday lets: nightly stays with an
 > Airbnb-style booking flow, plus guest and owner dashboards. Not a marketplace.
@@ -57,7 +57,7 @@ Milestone 1 - Accounts
 
 Milestone 2 - Properties and discovery
 
-4. **Property catalogue with seed data** - listings, photos, amenities, UK address, GBP; 50 existing listings seeded.
+4. **Property catalogue with seed data** - listings, photos, amenities, UK address, GBP; UK demo listings seeded.
 5. **Public listing page on Rails** - gallery, details, rules, policy, licence, total for chosen dates; area only until booked.
 6. **Stays search on Rails** - destination, date availability, guests, price, type, amenities, sort, pagination, shareable URL.
 
