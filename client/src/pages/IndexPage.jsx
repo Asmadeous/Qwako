@@ -1,4 +1,6 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 import { usePlaces } from '../../hooks';
 import Spinner from '@/components/ui/Spinner';
@@ -7,6 +9,17 @@ import Filters from '@/components/ui/Filters';
 import { DEFAULT_FILTERS, applyFilters } from '@/utils/listingFilters';
 
 const IndexPage = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  // Shown once when an old listing link redirected here.
+  useEffect(() => {
+    const notice = location.state?.notice;
+    if (!notice) return;
+    toast.info(notice, { toastId: 'stay-notice' });
+    navigate(location.pathname + location.search, { replace: true, state: null });
+  }, [location, navigate]);
+
   const { places, loading, error } = usePlaces();
   const [filters, setFilters] = useState(DEFAULT_FILTERS);
 
