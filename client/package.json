@@ -15,21 +15,21 @@
     "@radix-ui/react-popover": "^1.0.6",
     "@radix-ui/react-slot": "^1.0.2",
     "@tailwindcss/line-clamp": "^0.4.4",
-    "autoprefixer": "^10.4.13",
-    "axios": "^1.2.5",
+    "autoprefixer": "^10",
+    "axios": "^1",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.0.0",
     "date-fns": "^2.30.0",
     "dotenv": "^16.3.1",
     "lucide-react": "^0.274.0",
-    "postcss": "^8.4.21",
+    "postcss": "^8",
     "react": "^18.2.0",
     "react-day-picker": "^8.8.1",
     "react-dom": "^18.2.0",
-    "react-router-dom": "^6.8.0",
+    "react-router-dom": "^6",
     "react-toastify": "^9.1.2",
     "tailwind-merge": "^1.14.0",
-    "tailwindcss": "^3.2.4",
+    "tailwindcss": "^3",
     "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
@@ -39,5 +39,10 @@
     "prettier": "^3.0.3",
     "prettier-plugin-tailwindcss": "^0.5.4",
     "vite": "^4.0.0"
+  },
+  "resolutions": {
+    "@babel/runtime": "^7.26.10",
+    "braces": "^3.0.3",
+    "picomatch": "^2.3.2"
   }
 }
