@@ -65,7 +65,7 @@ const PlaceGallery = ({ place }) => {
       <Dialog.Portal>
         <Dialog.Content className="fixed inset-0 z-50 overflow-y-auto bg-paper focus:outline-none">
           <div className="sticky top-0 z-10 flex items-center justify-between gap-4 border-b border-ink/10 bg-paper/95 px-4 py-3 md:px-8">
-            <Dialog.Title className="truncate font-serif text-2xl">{place.title}</Dialog.Title>
+            <Dialog.Title className="truncate font-bold tracking-tight text-2xl">{place.title}</Dialog.Title>
             <Dialog.Description className="sr-only">All photos of this stay</Dialog.Description>
             <Dialog.Close
               aria-label="Close photos"

@@ -13,28 +13,28 @@ const Hero = () => (
     <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/10 to-black/40" />
 
     <div className="relative flex h-full flex-col px-5 pt-14 pb-6 md:px-8">
-      <h1 className="animate-[fadeUp_1.2s_ease-out_0.2s_both] font-serif text-[18vw] leading-[0.85] tracking-tight md:text-[8.5vw]">
+      <h1 className="animate-[fadeUp_1.2s_ease-out_0.2s_both] font-bold tracking-tight text-[15vw] leading-[0.9] md:text-[8.5vw]">
         Stays,
         <br />
-        Considered.
+        considered.
       </h1>
-      <div className="mt-6 flex animate-[fadeUp_1.2s_ease-out_0.5s_both] flex-wrap gap-6 font-grotesk text-xs tracking-[0.08em]">
+      <div className="mt-6 flex animate-[fadeUp_1.2s_ease-out_0.5s_both] flex-wrap gap-6 text-sm font-medium">
         <Link to="/stays" className="border-b border-white/80 pb-0.5 hover:border-white">
-          BROWSE STAYS <span className="ml-2">→</span>
+          Browse stays <span className="ml-2">→</span>
         </Link>
         <a href="#featured" className="border-b border-white/80 pb-0.5 hover:border-white">
-          SEE FEATURED <span className="ml-2">→</span>
+          See featured stays <span className="ml-2">→</span>
         </a>
       </div>
 
-      <div className="mt-auto grid animate-[fadeUp_1.2s_ease-out_0.8s_both] grid-cols-2 gap-y-3 font-grotesk text-[11px] tracking-[0.22em] md:mt-[14vh] md:grid-cols-4">
-        <span>FEATURED STAYS</span>
-        <span className="text-right md:text-center">ACROSS KENYA</span>
+      <div className="mt-auto grid animate-[fadeUp_1.2s_ease-out_0.8s_both] grid-cols-2 gap-y-3 text-sm font-medium md:mt-[14vh] md:grid-cols-4">
+        <span>Featured stays</span>
+        <span className="text-right md:text-center">Across Kenya</span>
         <span className="md:text-center">2026</span>
-        <a href="#featured" className="text-right">EXPLORE</a>
+        <a href="#featured" className="text-right">Explore</a>
       </div>
 
-      <p className="mx-auto mt-8 max-w-xs animate-[fadeUp_1.2s_ease-out_1s_both] text-center font-grotesk text-sm leading-snug md:mt-auto">
+      <p className="mx-auto mt-8 max-w-xs animate-[fadeUp_1.2s_ease-out_1s_both] text-center text-sm leading-snug md:mt-auto">
         A good stay is more than a bed for the night.
         <br />
         It is how the light finds you in the morning.

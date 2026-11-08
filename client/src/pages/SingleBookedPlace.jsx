@@ -99,7 +99,7 @@ const SingleBookedPlace = () => {
                 <p className="inline-flex rounded-full border border-ink/20 px-3 py-1 text-sm">
                   {bookingStatusLabel(booking.status)}
                 </p>
-                <h2 className="mt-3 font-serif text-4xl leading-tight md:text-5xl">
+                <h2 className="mt-3 font-bold tracking-tight text-4xl leading-tight md:text-5xl">
                   <Link to={`/place/${booking.listing.id}`} className="hover:underline hover:decoration-ink/30 hover:underline-offset-4">
                     {booking.listing.title}
                   </Link>
@@ -120,7 +120,7 @@ const SingleBookedPlace = () => {
 
             {booking.status === 'pending_payment' && (
               <section aria-live="polite" className="mt-6 rounded-2xl border border-ink/15 bg-paper p-5 md:max-w-xl">
-                <h3 className="font-serif text-2xl">
+                <h3 className="font-bold tracking-tight text-2xl">
                   {checking ? 'Checking your payment...' : 'Waiting for your payment'}
                 </h3>
                 <p className="mt-1 text-sm text-ink/70">
@@ -141,7 +141,7 @@ const SingleBookedPlace = () => {
 
             {booking.status === 'expired' && booking.pay_online && (
               <section className="mt-6 rounded-2xl border border-ink/15 bg-paper p-5 md:max-w-xl">
-                <h3 className="font-serif text-2xl">The hold on these dates ended</h3>
+                <h3 className="font-bold tracking-tight text-2xl">The hold on these dates ended</h3>
                 <p className="mt-1 text-sm text-ink/70">
                   Payment didn't arrive within 15 minutes, so the dates were released. If you were charged, the owner
                   will confirm or refund it.
@@ -165,7 +165,7 @@ const SingleBookedPlace = () => {
           </>
         ) : (
           <div className="mt-4 rounded-2xl border border-ink/15 px-6 py-14">
-            <h2 className="font-serif text-4xl">We couldn't find that booking.</h2>
+            <h2 className="font-bold tracking-tight text-4xl">We couldn't find that booking.</h2>
             <p className="mt-2 text-ink/70">It may belong to another account. Your bookings are listed on the bookings tab.</p>
             <Link
               to="/account/bookings"

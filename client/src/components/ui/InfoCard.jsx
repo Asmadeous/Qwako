@@ -15,18 +15,18 @@ const InfoCard = ({ place }) => {
       </div>
       <div className="flex grow flex-col justify-between gap-2 py-1 pr-2">
         <div>
-          <span className="font-grotesk text-[10px] tracking-[0.24em] text-ink/60">
-            {place.address.toUpperCase()}
+          <span className="text-sm font-medium text-ink/60">
+            {place.address}
           </span>
-          <h2 className="mt-1 font-serif text-2xl leading-tight md:text-3xl">{place.title}</h2>
+          <h2 className="mt-1 font-bold tracking-tight text-2xl leading-tight md:text-3xl">{place.title}</h2>
         </div>
-        <div className="flex items-center gap-3 font-grotesk text-sm">
+        <div className="flex items-center gap-3 text-sm">
           <span>{formatPrice(place.nightly_price_cents, place.currency)} / night</span>
           <span className="text-ink/40">·</span>
           <span>Up to {place.max_guests} guests</span>
           {place.status !== 'published' && (
-            <span className="rounded-full border border-ink/40 px-2 py-0.5 text-[10px] tracking-[0.18em]">
-              {place.status.toUpperCase()}
+            <span className="rounded-full border border-ink/40 px-2 py-0.5 text-sm font-medium">
+              {place.status === 'draft' ? 'Draft' : 'Unlisted'}
             </span>
           )}
         </div>

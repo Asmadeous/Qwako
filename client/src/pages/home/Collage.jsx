@@ -25,7 +25,7 @@ const Collage = () => {
     <section ref={ref} className="relative h-[320vh] bg-sand text-ink">
       <div className="sticky top-0 h-[100svh] overflow-hidden">
         <h2
-          className="absolute left-1/2 top-[9vh] w-full -translate-x-1/2 text-center font-serif text-4xl leading-tight md:text-5xl"
+          className="absolute left-1/2 top-[9vh] w-full -translate-x-1/2 text-center font-bold tracking-tight text-4xl leading-tight md:text-5xl"
           style={{ opacity: 1 - range(p, 0.05, 0.3), transform: `translate(-50%, ${-40 * t}px)` }}
         >
           A slower way
@@ -78,7 +78,7 @@ const Collage = () => {
             done ? 'opacity-100' : 'pointer-events-none opacity-0'
           }`}
         >
-          <span className="font-grotesk text-[11px] tracking-[0.3em] drop-shadow">
+          <span className="text-sm font-medium drop-shadow">
             {String(slide + 1).padStart(2, '0')} / {String(images.length).padStart(2, '0')}
           </span>
           <div className="flex gap-2">

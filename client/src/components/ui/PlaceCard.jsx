@@ -23,7 +23,7 @@ const PlaceCard = ({ place }) => {
           />
         )}
       </div>
-      <h2 className="mt-3 font-serif text-2xl leading-tight">{title}</h2>
+      <h2 className="mt-3 font-bold tracking-tight text-2xl leading-tight">{title}</h2>
       <p className="mt-0.5 text-sm text-ink/65">
         {town}
         {county && county !== town ? `, ${county}` : ''}

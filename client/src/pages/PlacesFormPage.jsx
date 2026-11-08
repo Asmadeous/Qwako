@@ -159,7 +159,7 @@ const PlacesFormPage = () => {
   const section = (title, hint, children) => (
     <section className="grid gap-6 border-t border-ink/15 py-10 md:grid-cols-[minmax(0,240px)_1fr] md:gap-12">
       <div>
-        <h2 className="font-serif text-3xl leading-tight">{title}</h2>
+        <h2 className="font-bold tracking-tight text-3xl leading-tight">{title}</h2>
         {hint && <p className="mt-1 text-sm text-ink/60">{hint}</p>}
       </div>
       <div className="grid gap-6">{children}</div>

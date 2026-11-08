@@ -33,14 +33,14 @@ const PlacesPage = () => {
     <div>
       <AccountNav />
       <div className="mx-4 flex items-center justify-between">
-        <span className="font-grotesk text-sm text-ink/70">
+        <span className="text-sm text-ink/70">
           {places.length} {places.length === 1 ? 'stay' : 'stays'}
         </span>
         <Link
-          className="rounded-full bg-ink px-6 py-3 font-grotesk text-xs font-medium tracking-[0.12em] text-sand hover:bg-ink/90"
+          className="rounded-full bg-ink px-6 py-3 text-sm font-medium text-sand hover:bg-ink/90"
           to={'/account/places/new'}
         >
-          + ADD A STAY
+          Add a stay
         </Link>
       </div>
       <div className="mx-4 mt-4 grid gap-3">

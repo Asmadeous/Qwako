@@ -1,7 +1,7 @@
 import { IMG } from './images';
 import { ease, lerp, range, useSectionProgress, photoProps } from './motion';
 
-const WORD = 'T&G / BNB';
+const WORD = 'T&G BnB';
 
 const Marquee = () => {
   const [ref, p] = useSectionProgress();
@@ -11,7 +11,7 @@ const Marquee = () => {
     <section ref={ref} className="relative h-[260vh] bg-sand text-ink">
       <div className="sticky top-0 flex h-[100svh] items-center overflow-hidden">
         <div
-          className="flex w-max animate-marquee whitespace-nowrap font-grotesk text-[17vw] font-semibold leading-none tracking-[-0.04em] md:text-[11vw]"
+          className="flex w-max animate-marquee whitespace-nowrap text-[17vw] font-extrabold leading-none tracking-tight md:text-[11vw]"
           style={{ opacity: 1 - range(p, 0.45, 0.75) }}
           aria-hidden="true"
         >
@@ -36,10 +36,10 @@ const Marquee = () => {
         </div>
 
         <span
-          className="absolute bottom-6 left-1/2 -translate-x-1/2 font-grotesk text-[10px] tracking-[0.3em] text-ink/60"
+          className="absolute bottom-6 left-1/2 -translate-x-1/2 text-sm font-medium text-ink/60"
           style={{ opacity: 1 - range(p, 0.05, 0.25) }}
         >
-          SCROLL TO ENTER
+          Scroll to enter
         </span>
       </div>
     </section>

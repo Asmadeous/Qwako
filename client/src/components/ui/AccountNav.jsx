@@ -23,26 +23,26 @@ const AccountNav = () => {
   const tabs =
     user?.role === 'admin'
       ? [
-          { id: 'profile', label: 'PROFILE', to: '/account' },
-          { id: 'reservations', label: 'BOOKINGS', to: '/account/reservations' },
-          { id: 'places', label: 'MANAGE STAYS', to: '/account/places' },
+          { id: 'profile', label: 'Profile', to: '/account' },
+          { id: 'reservations', label: 'Bookings', to: '/account/reservations' },
+          { id: 'places', label: 'Manage stays', to: '/account/places' },
         ]
       : [
-          { id: 'profile', label: 'PROFILE', to: '/account' },
-          { id: 'bookings', label: 'BOOKINGS', to: '/account/bookings' },
+          { id: 'profile', label: 'Profile', to: '/account' },
+          { id: 'bookings', label: 'Bookings', to: '/account/bookings' },
         ];
 
   return (
     <div className="mt-24 mb-10 w-full px-4">
       <div className="flex items-end justify-between border-b border-ink/20 pb-6">
         <div>
-          <span className="font-grotesk text-[10px] tracking-[0.24em] text-ink/60">
-            {user?.role === 'admin' ? 'OWNER DASHBOARD' : 'YOUR ACCOUNT'}
+          <span className="text-sm font-medium text-ink/60">
+            {user?.role === 'admin' ? 'Owner dashboard' : 'Your account'}
           </span>
-          <h1 className="mt-3 font-serif text-5xl leading-[0.9] md:text-7xl">{titleFor(pathname)}</h1>
+          <h1 className="mt-3 font-bold tracking-tight text-5xl leading-[0.9] md:text-7xl">{titleFor(pathname)}</h1>
         </div>
       </div>
-      <nav className="flex gap-6 pt-4 font-grotesk text-[11px] tracking-[0.18em]" aria-label="Account">
+      <nav className="flex gap-6 pt-4 text-sm font-medium" aria-label="Account">
         {tabs.map((tab) => (
           <Link
             key={tab.id}

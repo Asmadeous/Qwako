@@ -47,7 +47,7 @@ const BookingRow = ({ booking }) => {
           </span>
         </span>
         <span className="min-w-0">
-          <span className="block truncate font-serif text-2xl leading-tight">{booking.listing.title}</span>
+          <span className="block truncate font-bold tracking-tight text-2xl leading-tight">{booking.listing.title}</span>
           <span className="block truncate text-sm text-ink/55">{town}</span>
         </span>
         <span className="min-w-0 text-sm">

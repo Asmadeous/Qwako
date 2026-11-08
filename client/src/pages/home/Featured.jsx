@@ -61,23 +61,23 @@ const Featured = () => {
           <div className="absolute inset-x-5 bottom-6 md:inset-x-8">
             <div className="flex items-end justify-between gap-6">
               <div key={active} className="animate-[fadeUp_0.8s_ease-out_both]">
-                <span className="flex items-center gap-2 font-grotesk text-[9px] tracking-[0.3em] text-white/70">
-                  <span className="h-px w-5 bg-white/70" /> FEATURED STAY
+                <span className="flex items-center gap-2 text-sm font-medium text-white/70">
+                  <span className="h-px w-5 bg-white/70" /> Featured stay
                 </span>
-                <Link to={`/place/${stays[active].id}`} className="mt-2 block font-grotesk text-3xl tracking-tight hover:underline md:text-5xl">
+                <Link to={`/place/${stays[active].id}`} className="mt-2 block text-3xl font-bold tracking-tight hover:underline md:text-5xl">
                   {stays[active].title}
                 </Link>
-                <span className="mt-2 block font-grotesk text-[10px] tracking-[0.24em] text-white/80">
-                  {stays[active].address.toUpperCase()} ·{' '}
-                  {formatPrice(stays[active].nightly_price_cents, stays[active].currency)} / NIGHT
+                <span className="mt-2 block text-sm font-medium text-white/80">
+                  {stays[active].address},{' '}
+                  {formatPrice(stays[active].nightly_price_cents, stays[active].currency)} a night
                 </span>
               </div>
               <div className="text-right">
-                <span className="block font-grotesk text-6xl font-light leading-none md:text-8xl">
+                <span className="block text-6xl font-bold leading-none md:text-8xl">
                   {String(active + 1).padStart(2, '0')}
                 </span>
-                <span className="font-grotesk text-[9px] tracking-[0.3em] text-white/60">
-                  OF {String(n).padStart(2, '0')}
+                <span className="text-sm font-medium text-white/60">
+                  of {String(n).padStart(2, '0')}
                 </span>
               </div>
             </div>

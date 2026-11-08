@@ -1,5 +1,6 @@
 import { Routes, Route } from 'react-router-dom';
 import { Slide, ToastContainer } from 'react-toastify';
+import { AlertCircle, CheckCircle2, Info } from 'lucide-react';
 import 'react-toastify/dist/ReactToastify.css';
 
 import Layout from './components/ui/Layout';
@@ -19,6 +20,13 @@ import OwnerBookingPage from './pages/OwnerBookingPage';
 import { UserProvider } from './providers/UserProvider';
 import { PlaceProvider } from './providers/PlaceProvider';
 import NotFoundPage from './pages/NotFoundPage';
+
+// Toast icons in the site's colours instead of the library's green and red.
+const toastIcon = ({ type }) => {
+  if (type === 'error') return <AlertCircle aria-hidden strokeWidth={2} className="size-5 text-[#F2B8B5]" />;
+  if (type === 'success') return <CheckCircle2 aria-hidden strokeWidth={2} className="size-5 text-sand" />;
+  return <Info aria-hidden strokeWidth={2} className="size-5 text-sand" />;
+};
 
 function App() {
   return (
@@ -45,7 +53,14 @@ function App() {
               <Route path="*" element={<NotFoundPage />} />
             </Route>
           </Routes>
-          <ToastContainer autoClose={2000} transition={Slide} />
+          <ToastContainer
+            position="bottom-center"
+            autoClose={3000}
+            hideProgressBar
+            closeOnClick
+            transition={Slide}
+            icon={toastIcon}
+          />
         </PlaceProvider>
       </UserProvider>
     </>

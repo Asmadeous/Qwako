@@ -22,7 +22,7 @@ const HomePage = () => {
   }, []);
 
   return (
-    <main className="home bg-sand font-grotesk antialiased">
+    <main className="home bg-sand antialiased">
       <Nav />
       <Hero />
       <Collage />

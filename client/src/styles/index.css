@@ -43,12 +43,16 @@
   }
 
   body {
-    @apply bg-background font-grotesk text-foreground antialiased;
+    @apply bg-background font-sans text-foreground antialiased;
   }
 
+  /* Headings are bold and slightly tightened, in the same family as the text. */
   h1,
   h2,
-  h3 {
+  h3,
+  h4 {
+    font-weight: 700;
+    letter-spacing: -0.02em;
     text-wrap: balance;
   }
 
@@ -89,7 +93,7 @@ textarea {
 }
 
 button.primary {
-  @apply w-full rounded-full bg-ink p-3 font-grotesk text-sm font-medium tracking-[0.08em] text-sand hover:bg-ink/90 disabled:opacity-60;
+  @apply w-full rounded-full bg-ink p-3 text-sm font-semibold text-sand hover:bg-ink/90 disabled:opacity-60;
 }
 
 button.social {
@@ -100,23 +104,60 @@ button.social {
   @apply h-[410px] w-[327px] sm:h-[500px] sm:w-[435px] md:h-[400px] md:w-[350px] lg:h-[400px] lg:w-[330px] xl:h-[350px] xl:w-[300px];
 }
 
-/* Toasts in the site's type and colours. */
+/* Toasts: an ink card with sand text, like the site's buttons and panels. */
 .Toastify {
-  --toastify-font-family: 'Familjen Grotesk', system-ui, sans-serif;
-  --toastify-color-light: #f7f3ea;
-  --toastify-text-color-light: #2a2725;
-  --toastify-color-info: #2a2725;
-  --toastify-color-success: #2a2725;
-  --toastify-color-error: #b91c1c;
-  --toastify-color-progress-light: #2a2725;
-  --toastify-color-progress-info: #2a2725;
-  --toastify-color-progress-success: #2a2725;
-  --toastify-color-progress-error: #b91c1c;
+  --toastify-font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  --toastify-toast-min-height: 0;
+  --toastify-toast-width: 26rem;
+}
+
+.Toastify__toast-container--bottom-center {
+  bottom: max(1rem, env(safe-area-inset-bottom));
 }
 
 .Toastify__toast {
-  border: 1px solid rgb(42 39 37 / 0.15);
+  align-items: center;
+  margin-bottom: 0.5rem;
+  padding: 0.875rem 1rem;
+  border: 1px solid rgb(237 230 214 / 0.12);
   border-radius: 1rem;
-  box-shadow: 0 4px 16px rgb(42 39 37 / 0.08);
+  background: #2a2725;
+  color: #ede6d6;
+  box-shadow: 0 10px 30px rgb(42 39 37 / 0.25);
   font-size: 0.9375rem;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.Toastify__toast-body {
+  margin: 0;
+  padding: 0;
+  gap: 0.75rem;
+}
+
+.Toastify__toast-icon {
+  width: 1.25rem;
+  margin-inline-end: 0;
+}
+
+.Toastify__close-button {
+  align-self: center;
+  color: #ede6d6;
+  opacity: 0.6;
+}
+
+.Toastify__close-button:hover,
+.Toastify__close-button:focus-visible {
+  opacity: 1;
+}
+
+@media (max-width: 480px) {
+  .Toastify__toast-container {
+    padding: 0 0.75rem;
+  }
+
+  .Toastify__toast {
+    margin-bottom: 0.5rem;
+    border-radius: 1rem;
+  }
 }

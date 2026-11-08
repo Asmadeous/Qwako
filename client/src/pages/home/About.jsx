@@ -8,12 +8,12 @@ const About = () => {
   return (
     <section id="about" ref={ref} className="bg-sand px-5 py-[18vh] text-ink md:px-8">
       <div className="grid gap-8 md:grid-cols-[1fr_5fr]">
-        <span className={`${r(0).className} font-grotesk text-[10px] tracking-[0.24em]`} style={r(0).style}>
-          ABOUT
+        <span className={`${r(0).className} text-sm font-medium`} style={r(0).style}>
+          About
         </span>
         <div>
           <p
-            className={`${r(150).className} max-w-5xl font-grotesk text-[8.5vw] font-medium leading-[1.02] tracking-tight md:text-[4.2vw]`}
+            className={`${r(150).className} max-w-5xl text-[8.5vw] font-bold leading-[1.05] tracking-tight md:text-[4.2vw]`}
             style={r(150).style}
           >
             <img
@@ -28,7 +28,7 @@ const About = () => {
             className="mt-10 h-px origin-left bg-ink/40 transition-transform duration-[1600ms] ease-out"
             style={{ transform: `scaleX(${inView ? 1 : 0})`, transitionDelay: '400ms' }}
           />
-          <p className={`${r(600).className} mt-6 max-w-xs font-grotesk text-sm leading-snug`} style={r(600).style}>
+          <p className={`${r(600).className} mt-6 max-w-xs text-sm leading-snug`} style={r(600).style}>
             T&amp;G BnB is a collection of hand-picked holiday homes across Kenya:
             beach villas on the coast, city apartments in Nairobi and quiet cabins
             in the highlands, each chosen for how it feels to live in.

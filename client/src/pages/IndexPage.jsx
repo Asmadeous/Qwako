@@ -25,7 +25,7 @@ const IndexPage = () => {
   return (
     <div className="px-4 pt-28 pb-24 md:px-4">
       <header className="mb-8 max-w-2xl">
-        <h1 className="font-serif text-5xl leading-none md:text-7xl">Stays</h1>
+        <h1 className="font-bold tracking-tight text-5xl leading-none md:text-7xl">Stays</h1>
         <p className="mt-3 text-ink/70">
           Holiday homes across {areaLabel(places)}, booked directly with the owner.
         </p>
@@ -53,7 +53,7 @@ const IndexPage = () => {
             </div>
           ) : (
             <div className="mt-8 rounded-2xl border border-ink/15 px-6 py-14 text-center">
-              <h2 className="font-serif text-4xl">No stays match those filters.</h2>
+              <h2 className="font-bold tracking-tight text-4xl">No stays match those filters.</h2>
               <p className="mt-2 text-ink/70">Remove a filter or widen your price range to see more.</p>
               <button
                 type="button"

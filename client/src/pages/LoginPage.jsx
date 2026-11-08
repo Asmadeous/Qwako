@@ -58,7 +58,7 @@ const LoginPage = () => {
   return (
     <div className="flex grow justify-center px-4 pt-32 pb-24 md:pt-40">
       <div className="w-full max-w-md">
-        <h1 className="font-serif text-5xl leading-none md:text-6xl">Sign in</h1>
+        <h1 className="font-bold tracking-tight text-5xl leading-none md:text-6xl">Sign in</h1>
         <p className="mt-3 mb-8 text-ink/70">Welcome back. Sign in to book a stay or see your bookings.</p>
         <form onSubmit={handleSubmit}>
           {formError && (

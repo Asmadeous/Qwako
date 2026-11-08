@@ -30,7 +30,7 @@ const Study = () => {
                 s.dark ? 'bg-ink text-sand' : 'bg-white text-ink'
               }`}
             >
-              <h2 className="font-grotesk text-4xl leading-[1.05] tracking-tight md:text-5xl">
+              <h2 className="text-4xl font-bold leading-[1.05] tracking-tight md:text-5xl">
                 {s.title.map((l) => (
                   <span key={l} className="block">
                     {l}
@@ -42,7 +42,7 @@ const Study = () => {
                   {SLIDES.map((_, k) => (
                     <span
                       key={k}
-                      className={`-ml-1 flex h-9 w-9 items-center justify-center rounded-full border font-grotesk text-[10px] first:ml-0 ${
+                      className={`-ml-1 flex h-9 w-9 items-center justify-center rounded-full border text-[10px] first:ml-0 ${
                         k === i ? 'border-current' : 'border-current opacity-30'
                       }`}
                     >
@@ -50,7 +50,7 @@ const Study = () => {
                     </span>
                   ))}
                 </div>
-                <p className="max-w-[16rem] font-grotesk text-xs leading-snug">{s.text}</p>
+                <p className="max-w-[16rem] text-xs leading-snug">{s.text}</p>
               </div>
             </div>
           );

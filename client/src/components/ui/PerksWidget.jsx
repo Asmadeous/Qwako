@@ -16,7 +16,7 @@ const PerksWidget = ({ perks = [] }) => {
 
   return (
     <section className="border-t border-ink/15 py-8">
-      <h2 className="font-serif text-3xl">What's included</h2>
+      <h2 className="font-bold tracking-tight text-3xl">What's included</h2>
       <ul className="mt-5 grid gap-x-8 gap-y-4 sm:grid-cols-2">
         {offered.map(({ id, label, Icon }) => (
           <li key={id} className="flex items-center gap-3">

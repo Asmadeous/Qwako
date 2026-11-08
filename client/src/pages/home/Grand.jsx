@@ -12,10 +12,10 @@ const Grand = () => {
       <section className="relative bg-white px-5 pt-[22vh] pb-[12vh] text-center text-ink">
         <div className="pointer-events-none absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-sand to-white" />
         <div ref={headRef} className="relative">
-          <span className={`${r(0).className} block font-grotesk text-[9px] tracking-[0.3em]`} style={r(0).style}>
-            THE CITY LOFT
+          <span className={`${r(0).className} block text-sm font-medium`} style={r(0).style}>
+            The city loft
           </span>
-          <h2 className={`${r(150).className} mt-4 font-serif text-[13vw] leading-[0.95] md:text-[6.5vw]`} style={r(150).style}>
+          <h2 className={`${r(150).className} mt-4 font-bold tracking-tight text-[13vw] leading-[0.95] md:text-[6.5vw]`} style={r(150).style}>
             Small spaces,
             <br />
             carefully kept.
@@ -37,7 +37,7 @@ const Grand = () => {
             <img {...photoProps(IMG.smallRoom, 2400)} alt="Warm, sunlit living room" className="h-full w-full object-cover" />
             <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" style={{ opacity: t }} />
             <h3
-              className="absolute bottom-[8vh] left-5 font-grotesk text-[13vw] font-medium leading-[0.95] tracking-tight text-white md:left-8 md:text-[6vw]"
+              className="absolute bottom-[8vh] left-5 text-[13vw] font-bold leading-[0.95] tracking-tight text-white md:left-8 md:text-[6vw]"
               style={{ opacity: range(p, 0.6, 0.85), transform: `translateY(${lerp(30, 0, range(p, 0.6, 0.85))}px)` }}
             >
               Stay a little

@@ -18,7 +18,7 @@ const PriceBreakdown = ({ booking }) => (
     )}
     <div className="mt-2 flex items-baseline justify-between border-t border-ink/15 pt-3">
       <dt className="font-semibold">Total</dt>
-      <dd className="font-serif text-3xl leading-none">{formatPrice(booking.total_cents, booking.currency)}</dd>
+      <dd className="font-bold tracking-tight text-3xl leading-none">{formatPrice(booking.total_cents, booking.currency)}</dd>
     </div>
   </dl>
 );

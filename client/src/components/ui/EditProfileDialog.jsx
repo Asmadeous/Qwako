@@ -121,11 +121,11 @@ const EditProfileDialog = () => {
 
             {/* Display user avatar based on picture state */}
             {picture ? (
-              <Avatar className="transition-all ease-in-out hover:z-0 hover:hidden ">
+              <Avatar className="transition-all ease-in-out hover:z-0 hover:hidden">
                 <AvatarImage src={URL.createObjectURL(picture)} />
               </Avatar>
             ) : (
-              <Avatar className="transition-all ease-in-out hover:z-0 hover:hidden ">
+              <Avatar className="transition-all ease-in-out hover:z-0 hover:hidden">
                 <AvatarImage src={user.avatar_url} />
               </Avatar>
             )}

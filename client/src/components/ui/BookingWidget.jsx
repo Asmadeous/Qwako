@@ -105,7 +105,7 @@ const BookingWidget = ({ place }) => {
   return (
     <form onSubmit={handleBooking} className="rounded-2xl border border-ink/15 bg-paper p-5 md:p-6">
       <p className="flex items-baseline gap-2">
-        <span className="tabular font-serif text-4xl leading-none">{formatPrice(place.nightly_price_cents, place.currency)}</span>
+        <span className="tabular font-bold tracking-tight text-4xl leading-none">{formatPrice(place.nightly_price_cents, place.currency)}</span>
         <span className="text-ink/70">a night</span>
       </p>
       {place.cleaning_charge_cents > 0 && (

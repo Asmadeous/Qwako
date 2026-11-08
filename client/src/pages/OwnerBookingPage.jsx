@@ -34,7 +34,7 @@ const danger =
 const ConfirmDialog = ({ open, onOpenChange, title, children, confirmLabel, busyLabel, busy, onConfirm, tone = 'primary' }) => (
   <Dialog open={open} onOpenChange={(next) => !busy && onOpenChange(next)}>
     <DialogContent className="max-w-md rounded-2xl border-ink/15 bg-paper text-ink">
-      <DialogTitle className="font-serif text-3xl font-normal leading-tight">{title}</DialogTitle>
+      <DialogTitle className="font-bold tracking-tight text-3xl leading-tight">{title}</DialogTitle>
       <DialogDescription asChild>
         <div className="grid gap-2 text-sm text-ink/75">{children}</div>
       </DialogDescription>
@@ -116,20 +116,20 @@ const OwnerBookingPageContent = () => {
 
         {!booking ? (
           <div role="alert" className="mt-4 rounded-2xl border border-ink/15 bg-paper p-6">
-            <p className="font-serif text-2xl">We couldn't load that booking.</p>
+            <p className="font-bold tracking-tight text-2xl">We couldn't load that booking.</p>
             <p className="mt-1 text-sm text-ink/70">{loadError}</p>
           </div>
         ) : (
           <>
             {refundsDue.map((payment) => (
               <section key={payment.id} className="mt-2 mb-6 rounded-2xl border border-red-700/30 bg-red-50 p-5 text-red-950 md:max-w-3xl">
-                <h3 className="font-serif text-2xl">Refund due: {formatPrice(payment.amount_cents, payment.currency)}</h3>
+                <h3 className="font-bold tracking-tight text-2xl">Refund due: {formatPrice(payment.amount_cents, payment.currency)}</h3>
                 <p className="mt-1 text-sm">
                   {booking.status === 'cancelled_by_owner' || booking.status === 'cancelled_by_guest'
                     ? 'The guest paid, but this booking is cancelled.'
                     : 'Paystack took this payment, but it could not confirm the stay (the hold had ended and the dates were taken, or the amount was wrong).'}{' '}
                   Refund it in your Paystack dashboard: open Transactions and search for{' '}
-                  <span className="tabular rounded bg-white/70 px-1.5 py-0.5 font-mono text-xs">{payment.reference}</span>. Then
+                  <span className="tabular rounded bg-white/70 px-1.5 py-0.5 text-xs">{payment.reference}</span>. Then
                   record it here.
                 </p>
                 <button type="button" className={`${primary} mt-4`} onClick={() => openConfirm(payment)}>
@@ -143,7 +143,7 @@ const OwnerBookingPageContent = () => {
                 <p className="inline-flex rounded-full border border-ink/20 px-3 py-1 text-sm">
                   {bookingStatusLabel(booking.status, { owner: true })}
                 </p>
-                <h2 className="mt-3 font-serif text-4xl leading-tight md:text-5xl">
+                <h2 className="mt-3 font-bold tracking-tight text-4xl leading-tight md:text-5xl">
                   <Link to={`/place/${booking.listing.id}`} className="hover:underline hover:decoration-ink/30 hover:underline-offset-4">
                     {booking.listing.title}
                   </Link>
@@ -164,7 +164,7 @@ const OwnerBookingPageContent = () => {
 
               <div className="md:col-start-1">
                 <section className="border-t border-ink/15 pt-6 md:mt-2">
-                  <h3 className="font-serif text-2xl">Guest</h3>
+                  <h3 className="font-bold tracking-tight text-2xl">Guest</h3>
                   <p className="mt-2">{booking.guest.name}</p>
                   <a
                     href={`mailto:${booking.guest.email}`}
@@ -177,7 +177,7 @@ const OwnerBookingPageContent = () => {
                 </section>
 
                 <section className="mt-8 border-t border-ink/15 pt-6">
-                  <h3 className="font-serif text-2xl">Payments</h3>
+                  <h3 className="font-bold tracking-tight text-2xl">Payments</h3>
                   {booking.payments.length === 0 ? (
                     <p className="mt-2 text-sm text-ink/70">
                       {booking.pay_online ? 'The guest has not started paying.' : 'This stay is not paid online.'}
@@ -190,7 +190,7 @@ const OwnerBookingPageContent = () => {
                             <span className="font-semibold">{PAYMENT_STATUS[payment.status] ?? payment.status}</span>
                             {payment.status === 'succeeded' && ` by ${channelName(payment.channel)}`}
                             {payment.paid_at && <span className="text-ink/60">, {when(payment.paid_at)}</span>}
-                            <span className="block font-mono text-xs text-ink/55">{payment.reference}</span>
+                            <span className="block text-xs text-ink/55">{payment.reference}</span>
                             {payment.refunded_at && <span className="block text-ink/70">Refunded {when(payment.refunded_at)}</span>}
                             {payment.refund_due && <span className="block font-semibold text-red-800">Refund due</span>}
                           </span>
@@ -203,7 +203,7 @@ const OwnerBookingPageContent = () => {
 
                 {booking.can_cancel && (
                   <section className="mt-8 border-t border-ink/15 pt-6">
-                    <h3 className="font-serif text-2xl">Cancel this booking</h3>
+                    <h3 className="font-bold tracking-tight text-2xl">Cancel this booking</h3>
                     <p className="mt-1 max-w-prose text-sm text-ink/70">
                       The dates open up for other guests straight away.
                       {paidTotal > 0 && ' The guest has paid, so the booking will be marked as needing a refund.'}

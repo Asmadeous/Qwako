@@ -43,7 +43,7 @@ const ProfilePage = () => {
         <section className="mx-4 grid gap-10 rounded-3xl border border-ink/20 p-6 md:grid-cols-[auto_1fr] md:p-10">
           <Avatar className="h-40 w-40 md:h-56 md:w-56">
             {user.avatar_url && <AvatarImage src={user.avatar_url} alt="" className="object-cover" />}
-            <AvatarFallback className="bg-ink font-serif text-7xl text-sand md:text-8xl">
+            <AvatarFallback className="bg-ink font-bold tracking-tight text-7xl text-sand md:text-8xl">
               {user.name.slice(0, 1).toUpperCase()}
             </AvatarFallback>
           </Avatar>
@@ -51,12 +51,12 @@ const ProfilePage = () => {
           <div className="flex flex-col justify-between gap-8">
             <dl className="grid gap-6 sm:grid-cols-2">
               <div>
-                <dt className="font-grotesk text-[10px] tracking-[0.24em] text-ink/60">NAME</dt>
-                <dd className="mt-2 font-serif text-3xl">{user.name}</dd>
+                <dt className="text-sm font-medium text-ink/60">Name</dt>
+                <dd className="mt-2 font-bold tracking-tight text-3xl">{user.name}</dd>
               </div>
               <div>
-                <dt className="font-grotesk text-[10px] tracking-[0.24em] text-ink/60">EMAIL</dt>
-                <dd className="mt-2 break-all font-serif text-3xl">{user.email}</dd>
+                <dt className="text-sm font-medium text-ink/60">Email</dt>
+                <dd className="mt-2 break-all font-bold tracking-tight text-3xl">{user.email}</dd>
               </div>
             </dl>
 

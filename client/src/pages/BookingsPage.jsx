@@ -56,13 +56,13 @@ const BookingsPage = () => {
               </div>
               <div className="flex grow flex-col justify-between py-1 pr-2">
                 <div>
-                  <span className="font-grotesk text-[10px] uppercase tracking-[0.24em] text-ink/60">
+                  <span className="text-sm font-medium text-ink/60">
                     {bookingStatusLabel(booking.status)}
                   </span>
-                  <h2 className="mt-1 font-serif text-2xl leading-tight md:text-4xl">{booking.listing.title}</h2>
+                  <h2 className="mt-1 font-bold tracking-tight text-2xl leading-tight md:text-4xl">{booking.listing.title}</h2>
                   <BookingDates booking={booking} className="mt-2 hidden items-center gap-1 text-sm text-ink/70 md:flex" />
                 </div>
-                <span className="font-grotesk text-sm">
+                <span className="text-sm">
                   Total <strong className="font-semibold">{formatPrice(booking.total_cents, booking.currency)}</strong>
                 </span>
               </div>
@@ -70,15 +70,15 @@ const BookingsPage = () => {
           ))
         ) : (
           <div className="rounded-3xl border border-ink/20 p-8 md:p-12">
-            <h2 className="font-serif text-4xl md:text-5xl">No trips booked yet.</h2>
-            <p className="mt-3 max-w-md font-grotesk text-sm text-ink/70">
+            <h2 className="font-bold tracking-tight text-4xl md:text-5xl">No trips booked yet.</h2>
+            <p className="mt-3 max-w-md text-sm text-ink/70">
               Browse the cottages, cabins and city flats and pick your dates.
             </p>
             <Link
               to="/stays"
-              className="mt-6 inline-block border-b border-ink pb-0.5 font-grotesk text-xs tracking-[0.12em]"
+              className="mt-6 inline-block border-b border-ink pb-0.5 text-sm font-medium"
             >
-              BROWSE STAYS <span className="ml-2">→</span>
+              Browse stays <span className="ml-2">→</span>
             </Link>
           </div>
         )}

@@ -3,24 +3,24 @@ import { photo, useSectionProgress, photoProps } from './motion';
 
 const ROOMS = [
   {
-    label: 'THE LIVING ROOM',
+    label: 'The living room',
     title: ['Room to', 'unwind.'],
     text: 'Comfortable sofas, good light and space to spread out. Everything you need for a slow evening in.',
-    tags: 'FAST WI-FI · LIVING AREA · KITCHEN · TV',
+    tags: 'Fast Wi-Fi, a living area, kitchen and TV',
     image: IMG.living,
   },
   {
-    label: 'THE BEDROOM',
+    label: 'The bedroom',
     title: ['Mornings,', 'unhurried.'],
     text: 'Crisp linen, blackout curtains and a window onto the garden. A room that asks nothing of you but rest.',
-    tags: 'GARDEN VIEW · QUALITY LINEN',
+    tags: 'Garden view and good linen',
     image: IMG.bedroom,
   },
   {
-    label: 'THE SECOND ROOM',
+    label: 'The second room',
     title: ['Space for', 'one more.'],
     text: 'A second bedroom kept just as carefully, for family, friends or a quiet place to work.',
-    tags: 'FLEXIBLE · CALM · NATURAL LIGHT',
+    tags: 'Flexible, calm and full of natural light',
     image: IMG.secondRoom,
   },
 ];
@@ -43,8 +43,8 @@ const Inside = () => {
               alt=""
               className="ml-auto h-24 w-20 animate-[fadeUp_0.7s_ease-out_both] rounded-lg object-cover"
             />
-            <span className="font-grotesk text-[9px] tracking-[0.3em]">
-              INSIDE THE STAY &nbsp; {String(active + 1).padStart(2, '0')}{' '}
+            <span className="text-sm font-medium">
+              Inside the stay &nbsp; {String(active + 1).padStart(2, '0')}{' '}
               <span className="text-ink/40">/ {String(ROOMS.length).padStart(2, '0')}</span>
             </span>
           </div>
@@ -65,16 +65,16 @@ const Inside = () => {
           {/* right: text + next thumb */}
           <div className="flex flex-col justify-between md:pl-4">
             <div key={active} className="animate-[fadeUp_0.8s_ease-out_both] md:mt-[22vh]">
-              <span className="font-grotesk text-[9px] tracking-[0.3em]">{ROOMS[active].label}</span>
-              <h3 className="mt-3 font-grotesk text-3xl leading-[1.05] tracking-tight md:text-4xl">
+              <span className="text-sm font-medium">{ROOMS[active].label}</span>
+              <h3 className="mt-3 text-3xl font-bold leading-[1.05] tracking-tight md:text-4xl">
                 {ROOMS[active].title.map((l) => (
                   <span key={l} className="block">
                     {l}
                   </span>
                 ))}
               </h3>
-              <p className="mt-4 max-w-xs font-grotesk text-xs leading-snug">{ROOMS[active].text}</p>
-              <span className="mt-4 block font-grotesk text-[9px] tracking-[0.24em] text-ink/70">
+              <p className="mt-4 max-w-xs text-xs leading-snug">{ROOMS[active].text}</p>
+              <span className="mt-4 block text-sm font-medium text-ink/70">
                 {ROOMS[active].tags}
               </span>
             </div>

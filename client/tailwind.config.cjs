@@ -16,9 +16,9 @@ module.exports = {
       },
     },
     extend: {
+      // One typeface everywhere: bold for headings, regular for text.
       fontFamily: {
-        serif: ['"Instrument Serif"', 'Georgia', 'serif'],
-        grotesk: ['"Familjen Grotesk"', 'system-ui', 'sans-serif'],
+        sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
       },
       colors: {
         sand: '#EDE6D6',

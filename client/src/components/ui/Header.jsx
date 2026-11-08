@@ -5,7 +5,7 @@ import { Avatar, AvatarImage, AvatarFallback } from '@radix-ui/react-avatar';
 import { useAuth } from '../../../hooks';
 
 const navClass = ({ isActive }) =>
-  `inline-flex min-h-11 items-center whitespace-nowrap font-grotesk text-[11px] tracking-[0.18em] hover:underline ${isActive ? 'underline underline-offset-4' : ''}`;
+  `inline-flex min-h-11 items-center whitespace-nowrap text-sm font-medium hover:underline ${isActive ? 'underline underline-offset-4' : ''}`;
 
 // Same wordmark, type and palette as the home page navigation.
 export const Header = () => {
@@ -26,17 +26,17 @@ export const Header = () => {
       }`}
     >
       <div className="mx-auto flex max-w-screen-xl items-center justify-between gap-4 px-5 py-2 md:px-8">
-        <Link to="/" className="inline-flex min-h-11 items-center whitespace-nowrap font-grotesk text-sm font-medium tracking-tight">
-          T&amp;G / BNB
+        <Link to="/" className="inline-flex min-h-11 items-center whitespace-nowrap text-base font-extrabold tracking-tight">
+          T&amp;G BnB
         </Link>
 
         <nav className="flex items-center gap-5 md:gap-7" aria-label="Main">
           <NavLink to="/stays" className={navClass}>
-            STAYS
+            Stays
           </NavLink>
           {user ? (
-            <Link to="/account" className="flex min-h-11 items-center gap-2 font-grotesk text-[11px] tracking-[0.18em]">
-              <span className="hidden md:inline">ACCOUNT</span>
+            <Link to="/account" className="flex min-h-11 items-center gap-2 text-sm font-medium">
+              <span className="hidden md:inline">Account</span>
               <Avatar className="flex h-8 w-8 overflow-hidden rounded-full">
                 {user.avatar_url && (
                   <AvatarImage src={user.avatar_url} alt="" className="h-full w-full object-cover" />
@@ -48,7 +48,7 @@ export const Header = () => {
             </Link>
           ) : (
             <NavLink to="/login" className={navClass}>
-              SIGN IN
+              Sign in
             </NavLink>
           )}
         </nav>
