@@ -4,7 +4,7 @@ module Api
       rate_limit to: 20, within: 10.minutes, only: :create, with: -> { render_rate_limited }
 
       def index
-        bookings = Current.user.bookings.includes(listing: %i[photos amenities]).order(check_in: :desc)
+        bookings = Current.user.bookings.includes(listing: %i[photos videos amenities]).order(check_in: :desc)
         render json: { bookings: bookings.map { |booking| booking_json(booking) } }
       end
 

@@ -7,13 +7,13 @@ import { range, useSectionProgress } from './motion';
 // The 3D "structure" walkthrough on the reference site becomes a full-screen
 // walk through seven featured stays, with the same numbering and progress UI.
 const PICKS = [
-  'Windermere Lake House',
-  'Porthmeor Beach Cottage',
-  'Snowdonia Mountain Lodge',
-  'Loch Lomond Lodge',
-  'Cotswolds Stone Cottage',
-  'Salcombe Coast House',
-  'Cairngorms Mountain Cabin',
+  'Diani Beach Villa',
+  'Shela Village House',
+  'Karen Garden House',
+  'Nanyuki Forest Cabin',
+  'Watamu Ocean House',
+  'Naivasha Lakeside Cottage',
+  'Westlands Skyline Apartment',
 ];
 
 const Featured = () => {
@@ -66,7 +66,7 @@ const Featured = () => {
                 </Link>
                 <span className="mt-2 block font-grotesk text-[10px] tracking-[0.24em] text-white/80">
                   {stays[active].address.toUpperCase()} ·{' '}
-                  {formatPrice(stays[active].nightly_price_pence)} / NIGHT
+                  {formatPrice(stays[active].nightly_price_cents, stays[active].currency)} / NIGHT
                 </span>
               </div>
               <div className="text-right">

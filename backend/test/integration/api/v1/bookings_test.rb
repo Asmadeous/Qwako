@@ -15,16 +15,25 @@ class Api::V1::BookingsTest < ActionDispatch::IntegrationTest
   test "the server prices the stay and ignores any client total" do
     sign_in_as users(:ada)
     assert_difference "Booking.count", 1 do
-      book(total_pence: 1, nightly_price_pence: 1)
+      book(total_cents: 1, nightly_price_cents: 1)
     end
     assert_response :created
     booking = response.parsed_body["booking"]
     assert_equal 3, booking["nights"]
-    assert_equal 21000, booking["nightly_price_pence"]
-    assert_equal 3000, booking["cleaning_charge_pence"]
-    assert_equal 66000, booking["total_pence"]
+    assert_equal 21000, booking["nightly_price_cents"]
+    assert_equal 3000, booking["cleaning_charge_cents"]
+    assert_equal 66000, booking["total_cents"]
     assert_equal "confirmed", booking["status"]
     assert_equal "Cotswolds Cottage", booking.dig("listing", "title")
+  end
+
+  test "a Kenyan stay is booked in shillings" do
+    sign_in_as users(:ada)
+    book(listing: listings(:loft), guests_count: 2)
+    assert_response :created
+    booking = response.parsed_body["booking"]
+    assert_equal "KES", booking["currency"]
+    assert_equal 3 * 950000, booking["total_cents"]
   end
 
   test "overlapping dates are refused, back-to-back stays are fine" do

@@ -23,7 +23,7 @@ const BookingWidget = ({ place }) => {
 
   const nights =
     dateRange?.from && dateRange?.to ? differenceInCalendarDays(dateRange.to, dateRange.from) : 0;
-  const total = nights > 0 ? nights * place.nightly_price_pence + place.cleaning_charge_pence : 0;
+  const total = nights > 0 ? nights * place.nightly_price_cents + place.cleaning_charge_cents : 0;
 
   const handleBooking = async (e) => {
     e.preventDefault();
@@ -66,12 +66,12 @@ const BookingWidget = ({ place }) => {
   return (
     <form onSubmit={handleBooking} className="rounded-2xl border border-ink/15 bg-paper p-5 md:p-6">
       <p className="flex items-baseline gap-2">
-        <span className="tabular font-serif text-4xl leading-none">{formatPrice(place.nightly_price_pence)}</span>
+        <span className="tabular font-serif text-4xl leading-none">{formatPrice(place.nightly_price_cents, place.currency)}</span>
         <span className="text-ink/70">a night</span>
       </p>
-      {place.cleaning_charge_pence > 0 && (
+      {place.cleaning_charge_cents > 0 && (
         <p className="mt-1 text-sm text-ink/60">
-          Plus a {formatPrice(place.cleaning_charge_pence)} cleaning charge per stay
+          Plus a {formatPrice(place.cleaning_charge_cents, place.currency)} cleaning charge per stay
         </p>
       )}
 
@@ -128,19 +128,19 @@ const BookingWidget = ({ place }) => {
         <dl className="tabular mt-5 space-y-2 text-sm">
           <div className="flex justify-between">
             <dt className="text-ink/70">
-              {formatPrice(place.nightly_price_pence)} x {nights} {nights === 1 ? 'night' : 'nights'}
+              {formatPrice(place.nightly_price_cents, place.currency)} x {nights} {nights === 1 ? 'night' : 'nights'}
             </dt>
-            <dd>{formatPrice(nights * place.nightly_price_pence)}</dd>
+            <dd>{formatPrice(nights * place.nightly_price_cents, place.currency)}</dd>
           </div>
-          {place.cleaning_charge_pence > 0 && (
+          {place.cleaning_charge_cents > 0 && (
             <div className="flex justify-between">
               <dt className="text-ink/70">Cleaning charge</dt>
-              <dd>{formatPrice(place.cleaning_charge_pence)}</dd>
+              <dd>{formatPrice(place.cleaning_charge_cents, place.currency)}</dd>
             </div>
           )}
           <div className="flex justify-between border-t border-ink/15 pt-2 text-base font-semibold">
             <dt>Total</dt>
-            <dd>{formatPrice(total)}</dd>
+            <dd>{formatPrice(total, place.currency)}</dd>
           </div>
         </dl>
       )}

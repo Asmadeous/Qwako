@@ -6,8 +6,8 @@
 
 ## 1. Problem - What problem are we solving?
 
-T&G BnB is the direct-booking website for one client and his own UK
-properties: nightly stays with an Airbnb-style booking experience. It is not a
+T&G BnB is the direct-booking website for one client and his own holiday
+properties, launching in Kenya first with UK properties to follow: nightly stays with an Airbnb-style booking experience. It is not a
 marketplace: there are no third-party hosts, no host sign-ups and no platform
 fees.
 
@@ -48,14 +48,18 @@ replaces rather than patches:
 | Guest (customer) | Signed-in traveller; every sign-up is a guest | Book stays, pay, manage trips, save wishlists, message the owner, review stays, manage profile and settings. |
 | Admin | The owner and his staff | Manage properties, calendar, prices, bookings, guests, payments, reviews and messages; see occupancy and revenue. |
 
-Market: United Kingdom. Locale `en-GB`, currency GBP, time zone Europe/London,
-dates shown as `5 Nov 2026` / `05/11/2026`. Most guests use a phone; every page
+Market: Kenya first, the UK later. Each stay's country is the last part of its
+address and sets its currency: Kenya prices in KES (`Ksh 9,500`), England,
+Scotland, Wales and Northern Ireland in GBP. English, dates shown as
+`5 Nov 2026`. Open questions for the Kenya launch: the payment provider (M-Pesa
+and cards in KES; see Booking and payments), Kenya time zone for check-in rules,
+and Kenyan legal requirements (Data Protection Act 2019, tourism levy). Most guests use a phone; every page
 must work at 360px wide.
 
 ## 3. Features - What does the MVP need?
 
 ### Public site (no account needed)
-- Editorial home page (already built; copy and imagery to be made UK-specific).
+- Editorial home page (already built; copy written for the Kenya launch).
 - Stays search: destination (town, city or postcode area), check-in/check-out
   dates (only stays free for those nights), guests, price range, property type,
   amenities, sort, pagination, shareable URL with all filters.
@@ -77,7 +81,8 @@ must work at 360px wide.
 - Admin accounts are created by the owner, never by public sign-up.
 
 ### Booking and payments
-- Server-side quote: nights x nightly price + cleaning charge = total, in GBP.
+- Server-side quote: nights x nightly price + cleaning charge = total, in the
+  stay's currency (KES or GBP), snapshotted on the booking.
   No service fees.
 - Booking rules per property: minimum/maximum nights, max guests, check-in/out
   times, advance notice, booking window.
@@ -85,7 +90,8 @@ must work at 360px wide.
   **Request to Book** (card authorised at request; the owner has 24 hours to
   accept; captured on acceptance, released on decline or expiry).
 - Double bookings are impossible at the database level.
-- Payments with **Stripe** paid straight into the client's Stripe account:
+- Payments (provider for KES to be confirmed for the Kenya launch; M-Pesa is
+  expected). For UK stays, **Stripe** paid straight into the client's Stripe account:
   cards with 3-D Secure, Apple Pay and Google Pay. Unpaid holds expire after
   15 minutes and free the dates.
 - Receipts for every payment.
@@ -143,12 +149,13 @@ must work at 360px wide.
 - Third-party hosts, host sign-up, platform fees or payouts.
 - Native mobile apps (the web app is mobile-first instead).
 - Map-based search, iCal/channel sync, dynamic pricing (Phase 2).
-- Languages other than English; currencies other than GBP.
+- Languages other than English; currencies other than KES and GBP.
 
 ## 4. Data - What are we storing?
 
 All tables use **UUID primary keys** (`gen_random_uuid()` via `pgcrypto`) and
-UUID foreign keys. Money is stored as integer pence; never as floats.
+UUID foreign keys. Money is stored as integer cents (minor units) of the stay's currency, with the
+currency (`KES` or `GBP`) stored beside it; never as floats.
 
 - **users** - email (unique, citext), password_digest, name, phone, avatar,
   role (guest, admin), status (active, suspended), email_verified_at,
@@ -185,10 +192,9 @@ UUID foreign keys. Money is stored as integer pence; never as floats.
 
 Card details are never stored; Stripe holds them.
 
-**Seed data:** the 50 existing listings (titles, descriptions, photos,
-amenities, guest limits) are loaded by `db/seeds.rb`, with prices converted to
-GBP, plus one admin account and one demo guest with sample bookings for
-development.
+**Seed data:** 12 Kenyan demo listings (Nairobi, the coast, Lamu, Naivasha,
+Nanyuki, Nakuru, Kisumu) priced in KES are loaded by `db/seeds.rb`, plus one
+admin account for development. Listings can also carry uploaded videos.
 
 ## 5. Tech - What stack are we using?
 
@@ -236,7 +242,7 @@ receipts show VAT.
     44px touch targets.
 - References (ideas only): Airbnb Trips and Host "Today", Booking.com account
   dashboard, shadcn/ui dashboard blocks, RentNest dashboards.
-- UK English spelling and formats (£, dd/mm/yyyy, postcodes).
+- English spelling; prices in the stay's currency (`Ksh`, `£`); dates as `5 Nov 2026`.
 - Accessibility: WCAG 2.2 AA, keyboard navigation, focus rings, alt text,
   reduced-motion support.
 
@@ -259,7 +265,8 @@ receipts show VAT.
 - Internet-facing site with untrusted users; payments involved.
 - Scale: one owner, a small portfolio of properties, hundreds to low thousands
   of guests a year; one server, one database.
-- Law that shapes features: UK GDPR and Data Protection Act 2018 (privacy
+- Law that shapes features (Kenyan requirements to be confirmed for launch):
+  for UK stays, UK GDPR and Data Protection Act 2018 (privacy
   notice, data export and deletion); PECR (cookie and marketing consent);
   Consumer Contracts Regulations and DMCC Act 2024 (total price up front, clear
   cancellation terms); Scottish short-term let licence numbers; London
@@ -267,5 +274,5 @@ receipts show VAT.
 - Security: server-side pricing, authorization on every endpoint, rate limiting
   on sign-in and booking endpoints, signed Stripe webhooks with idempotency, no
   secrets in the repo, admin actions audited.
-- Non-requirements: multi-region, multi-currency, marketplace features,
+- Non-requirements: multi-region hosting, currency conversion, marketplace features,
   offline mode.

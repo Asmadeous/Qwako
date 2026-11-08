@@ -13,7 +13,8 @@ for optional tool settings.
 
 ## What this is
 
-T&G BnB is the direct-booking website for one owner's UK holiday lets: guests
+T&G BnB is the direct-booking website for one owner's holiday homes (Kenya first,
+UK later; prices in KES or GBP by country): guests
 browse and book nights, and the owner manages properties, bookings and payments
 from an admin dashboard. Not a marketplace.
 
@@ -96,7 +97,7 @@ Backend (`backend/`):
 - Setup: `bin/setup --skip-server` (installs gems, prepares databases)
 - Dev server: `bin/rails server` (http://localhost:3000, health check `GET /up`)
 - Migrate: `bin/rails db:migrate`
-- Seed: `bin/rails db:seed` (amenities, 24 UK demo listings, and an admin from
+- Seed: `bin/rails db:seed` (amenities, 12 Kenyan demo listings, and an admin from
   `SEED_ADMIN_EMAIL`/`SEED_ADMIN_PASSWORD`; dev default `admin@tgbnb.test` /
   `admin-dev-password`; no admin is seeded in production without both vars)
 - Test: `bin/rails test` (Minitest)

@@ -1,30 +1,73 @@
 [
   {
-    "title": "Porthmeor Beach Cottage",
-    "address": "St Ives, Cornwall, England",
-    "description": "A whitewashed fisherman's cottage two minutes from Porthmeor beach, with a log burner and a sunny walled garden.",
-    "house_rules": "Check-in from 4pm, check-out by 10am. Up to two well-behaved dogs welcome; please keep them off the beds. No smoking indoors.",
+    "title": "Westlands Skyline Apartment",
+    "address": "Westlands, Nairobi, Kenya",
+    "description": "A bright two-bedroom apartment on the 14th floor in Westlands, a short walk from Sarit Centre and the Westlands restaurants. Backup power and fast fibre.",
+    "house_rules": "Check-in from 2pm, check-out by 10am. No smoking indoors. No parties or events. Building security will ask for ID at the gate.",
     "max_guests": 4,
-    "nightly_price_pence": 16500,
+    "nightly_price_cents": 950000,
+    "cleaning_charge_cents": 150000,
     "amenity_keys": [
       "wifi",
+      "tv",
+      "parking"
+    ],
+    "photo_urls": [
+      "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=1200&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1600121848594-d8644e57abab?w=1200&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1595576508898-0ad5c879a061?w=1200&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1484154218962-a197022b5858?w=1200&q=80&auto=format&fit=crop"
+    ]
+  },
+  {
+    "title": "Kilimani Garden Flat",
+    "address": "Kilimani, Nairobi, Kenya",
+    "description": "A quiet ground-floor flat opening onto a shared garden, close to Yaya Centre and a 20-minute drive from the city centre.",
+    "house_rules": "Check-in from 2pm, check-out by 10am. No smoking indoors. No parties or events.",
+    "max_guests": 2,
+    "nightly_price_cents": 750000,
+    "cleaning_charge_cents": 100000,
+    "amenity_keys": [
+      "wifi",
+      "tv",
+      "entrance"
+    ],
+    "photo_urls": [
+      "https://images.unsplash.com/photo-1520608421741-68228b76b6df?w=1200&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=1200&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=1200&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1600566752355-35792bedcfea?w=1200&q=80&auto=format&fit=crop"
+    ]
+  },
+  {
+    "title": "Karen Garden House",
+    "address": "Karen, Nairobi, Kenya",
+    "description": "A family house on a leafy acre in Karen with a fireplace, a wide veranda and space for children to play. Near the Giraffe Centre and Karen Blixen Museum.",
+    "house_rules": "Check-in from 2pm, check-out by 10am. No smoking indoors. No parties or events. Dogs welcome by arrangement.",
+    "max_guests": 8,
+    "nightly_price_cents": 2800000,
+    "cleaning_charge_cents": 350000,
+    "amenity_keys": [
+      "wifi",
+      "parking",
       "pets",
       "tv"
     ],
     "photo_urls": [
-      "https://images.unsplash.com/photo-1480074568708-e7b720bb3f09?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1615874959474-d609969a20ed?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1578683010236-d716f9a3f461?w=1200&q=80&auto=format&fit=crop"
+      "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1200&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1600210491892-03d54c0aaf87?w=1200&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?w=1200&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1556020685-ae41abfc9365?w=1200&q=80&auto=format&fit=crop"
     ]
   },
   {
-    "title": "Windermere Lake House",
-    "address": "Bowness-on-Windermere, Cumbria, England",
-    "description": "A Victorian lake house with its own jetty, big bay windows over Windermere and easy walks into the fells.",
-    "house_rules": "Check-in from 4pm, check-out by 10am. No smoking indoors. No parties or events.",
+    "title": "Diani Beach Villa",
+    "address": "Diani Beach, Kwale, Kenya",
+    "description": "A modern villa a few steps from the white sand at Diani, with a private pool, ceiling fans in every room and a housekeeper on weekdays.",
+    "house_rules": "Check-in from 2pm, check-out by 10am. No smoking indoors. No parties or events.",
     "max_guests": 8,
-    "nightly_price_pence": 34000,
+    "nightly_price_cents": 3200000,
+    "cleaning_charge_cents": 400000,
     "amenity_keys": [
       "wifi",
       "parking",
@@ -32,207 +75,39 @@
       "entrance"
     ],
     "photo_urls": [
-      "https://images.unsplash.com/photo-1464146072230-91cabc968266?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?w=1200&q=80&auto=format&fit=crop"
-    ]
-  },
-  {
-    "title": "Cotswolds Stone Cottage",
-    "address": "Bourton-on-the-Water, Gloucestershire, England",
-    "description": "A honey-stone cottage on a quiet lane, a short stroll from the river, village pubs and tea rooms.",
-    "house_rules": "Check-in from 4pm, check-out by 10am. Up to two well-behaved dogs welcome; please keep them off the beds. No smoking indoors.",
-    "max_guests": 6,
-    "nightly_price_pence": 21000,
-    "amenity_keys": [
-      "wifi",
-      "parking",
-      "pets"
-    ],
-    "photo_urls": [
-      "https://images.unsplash.com/photo-1430285561322-7808604715df?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1560185893-a55cbc8c57e8?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1484154218962-a197022b5858?w=1200&q=80&auto=format&fit=crop"
-    ]
-  },
-  {
-    "title": "Loch Lomond Lodge",
-    "address": "Balloch, West Dunbartonshire, Scotland",
-    "description": "A timber lodge on the shore of Loch Lomond with a wood stove, a hot tub and views to Ben Lomond.",
-    "house_rules": "Check-in from 4pm, check-out by 10am. No smoking indoors. No parties or events.",
-    "max_guests": 6,
-    "nightly_price_pence": 18000,
-    "amenity_keys": [
-      "wifi",
-      "parking",
-      "pets"
-    ],
-    "photo_urls": [
-      "https://images.unsplash.com/photo-1510798831971-661eb04b3739?w=1200&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=1200&q=80&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1540518614846-7eded433c457?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1600566752355-35792bedcfea?w=1200&q=80&auto=format&fit=crop"
+      "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=1200&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1493809842364-78817add7ffb?w=1200&q=80&auto=format&fit=crop"
     ]
   },
   {
-    "title": "Cairngorms Mountain Cabin",
-    "address": "Aviemore, Highland, Scotland",
-    "description": "A snug cabin among the pines at the foot of the Cairngorms, close to trails, ski slopes and Loch Morlich.",
-    "house_rules": "Check-in from 4pm, check-out by 10am. No smoking indoors. No parties or events.",
-    "max_guests": 4,
-    "nightly_price_pence": 15000,
+    "title": "Watamu Ocean House",
+    "address": "Watamu, Kilifi, Kenya",
+    "description": "An airy house above the beach at Watamu, close to the marine park for snorkelling and to Gede ruins.",
+    "house_rules": "Check-in from 2pm, check-out by 10am. No smoking indoors. No parties or events.",
+    "max_guests": 6,
+    "nightly_price_cents": 2600000,
+    "cleaning_charge_cents": 300000,
     "amenity_keys": [
       "wifi",
       "parking"
     ],
     "photo_urls": [
-      "https://images.unsplash.com/photo-1542718610-a1d656d1884c?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1590490360182-c33d57733427?w=1200&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?w=1200&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1554995207-c18c203602cb?w=1200&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd?w=1200&q=80&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1501183638710-841dd1904471?w=1200&q=80&auto=format&fit=crop"
     ]
   },
   {
-    "title": "Skye Croft Cabin",
-    "address": "Portree, Isle of Skye, Scotland",
-    "description": "A small red croft cabin on open hillside with sea views, perfect for two walkers and stargazers.",
-    "house_rules": "Check-in from 4pm, check-out by 10am. No smoking indoors. No parties or events.",
-    "max_guests": 2,
-    "nightly_price_pence": 9500,
-    "amenity_keys": [
-      "parking",
-      "entrance"
-    ],
-    "photo_urls": [
-      "https://images.unsplash.com/photo-1518780664697-55e3ad937233?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1600210491892-03d54c0aaf87?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1618773928121-c32242e63f39?w=1200&q=80&auto=format&fit=crop"
-    ]
-  },
-  {
-    "title": "Kielder Forest Cabin",
-    "address": "Kielder, Northumberland, England",
-    "description": "A log cabin deep in Kielder Forest, under some of the darkest skies in England, with a private deck.",
-    "house_rules": "Check-in from 4pm, check-out by 10am. Up to two well-behaved dogs welcome; please keep them off the beds. No smoking indoors.",
+    "title": "Nyali Beach Apartment",
+    "address": "Nyali, Mombasa, Kenya",
+    "description": "A sea-facing apartment in Nyali with a shared pool, ten minutes from Old Town Mombasa and Fort Jesus.",
+    "house_rules": "Check-in from 2pm, check-out by 10am. No smoking indoors. No parties or events.",
     "max_guests": 4,
-    "nightly_price_pence": 12000,
-    "amenity_keys": [
-      "parking",
-      "pets",
-      "entrance"
-    ],
-    "photo_urls": [
-      "https://images.unsplash.com/photo-1449158743715-0a90ebb6d2d8?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1616594039964-ae9021a400a0?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1554995207-c18c203602cb?w=1200&q=80&auto=format&fit=crop"
-    ]
-  },
-  {
-    "title": "Wye Valley Treetop Lodge",
-    "address": "Tintern, Monmouthshire, Wales",
-    "description": "A glass-fronted lodge in the woods above the River Wye, a short walk from Tintern Abbey.",
-    "house_rules": "Check-in from 4pm, check-out by 10am. No smoking indoors. No parties or events.",
-    "max_guests": 4,
-    "nightly_price_pence": 16000,
-    "amenity_keys": [
-      "wifi",
-      "parking",
-      "entrance"
-    ],
-    "photo_urls": [
-      "https://images.unsplash.com/photo-1595877244574-e90ce41ce089?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1600607687644-c7171b42498f?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1556020685-ae41abfc9365?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1611892440504-42a792e24d32?w=1200&q=80&auto=format&fit=crop"
-    ]
-  },
-  {
-    "title": "Snowdonia Mountain Lodge",
-    "address": "Betws-y-Coed, Conwy, Wales",
-    "description": "A modern lodge in Eryri National Park with mountain views, a drying room and a wood-fired hot tub.",
-    "house_rules": "Check-in from 4pm, check-out by 10am. Up to two well-behaved dogs welcome; please keep them off the beds. No smoking indoors.",
-    "max_guests": 6,
-    "nightly_price_pence": 19500,
-    "amenity_keys": [
-      "wifi",
-      "parking",
-      "pets",
-      "tv"
-    ],
-    "photo_urls": [
-      "https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1617806118233-18e1de247200?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1560185007-cde436f6a4d0?w=1200&q=80&auto=format&fit=crop"
-    ]
-  },
-  {
-    "title": "Hexham Woodland House",
-    "address": "Hexham, Northumberland, England",
-    "description": "A slate-roofed family house in mature woodland, close to Hadrian's Wall and the market town of Hexham.",
-    "house_rules": "Check-in from 4pm, check-out by 10am. Up to two well-behaved dogs welcome; please keep them off the beds. No smoking indoors.",
-    "max_guests": 6,
-    "nightly_price_pence": 17500,
-    "amenity_keys": [
-      "wifi",
-      "parking",
-      "pets",
-      "tv"
-    ],
-    "photo_urls": [
-      "https://images.unsplash.com/photo-1449844908441-8829872d2607?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1493809842364-78817add7ffb?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1559599238-308793637427?w=1200&q=80&auto=format&fit=crop"
-    ]
-  },
-  {
-    "title": "Brighton Seafront Apartment",
-    "address": "Kemptown, Brighton, East Sussex, England",
-    "description": "A bright apartment with a balcony over the sea, steps from the beach, the pier and the Lanes.",
-    "house_rules": "Check-in from 3pm, check-out by 11am. No smoking. Quiet hours 10pm to 8am; this is a residential building.",
-    "max_guests": 4,
-    "nightly_price_pence": 14000,
-    "amenity_keys": [
-      "wifi",
-      "tv"
-    ],
-    "photo_urls": [
-      "https://images.unsplash.com/photo-1520608421741-68228b76b6df?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1595576508898-0ad5c879a061?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1566665797739-1674de7a421a?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1600121848594-d8644e57abab?w=1200&q=80&auto=format&fit=crop"
-    ]
-  },
-  {
-    "title": "Northern Quarter Loft",
-    "address": "Northern Quarter, Manchester, Greater Manchester, England",
-    "description": "An industrial-style loft in the heart of Manchester's Northern Quarter, close to Piccadilly station.",
-    "house_rules": "Check-in from 3pm, check-out by 11am. No smoking. Quiet hours 10pm to 8am; this is a residential building.",
-    "max_guests": 2,
-    "nightly_price_pence": 11000,
-    "amenity_keys": [
-      "wifi",
-      "tv"
-    ],
-    "photo_urls": [
-      "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1505691938895-1758d7feb511?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1522444195799-478538b28823?w=1200&q=80&auto=format&fit=crop"
-    ]
-  },
-  {
-    "title": "Bristol Harbourside Flat",
-    "address": "Harbourside, Bristol, Bristol, England",
-    "description": "A modern flat by the floating harbour, an easy walk to the SS Great Britain and the city centre.",
-    "house_rules": "Check-in from 3pm, check-out by 11am. No smoking. Quiet hours 10pm to 8am; this is a residential building.",
-    "max_guests": 4,
-    "nightly_price_pence": 12000,
+    "nightly_price_cents": 1100000,
+    "cleaning_charge_cents": 150000,
     "amenity_keys": [
       "wifi",
       "tv",
@@ -240,36 +115,77 @@
     ],
     "photo_urls": [
       "https://images.unsplash.com/photo-1574362848149-11496d93a7c7?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1615874959474-d609969a20ed?w=1200&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=1200&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1616594039964-ae9021a400a0?w=1200&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1600607687644-c7171b42498f?w=1200&q=80&auto=format&fit=crop"
+    ]
+  },
+  {
+    "title": "Shela Village House",
+    "address": "Shela, Lamu, Kenya",
+    "description": "A cool, whitewashed house in Shela village with arched rooms, a rooftop terrace and the beach a short walk away. No cars on the island; we arrange boat transfers from Manda airstrip.",
+    "house_rules": "Check-in from 2pm, check-out by 10am. No smoking indoors. No parties or events.",
+    "max_guests": 6,
+    "nightly_price_cents": 1800000,
+    "cleaning_charge_cents": 200000,
+    "amenity_keys": [
+      "wifi",
+      "entrance"
+    ],
+    "photo_urls": [
+      "https://images.unsplash.com/photo-1600210491892-03d54c0aaf87?w=1200&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1611892440504-42a792e24d32?w=1200&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1618773928121-c32242e63f39?w=1200&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1540518614846-7eded433c457?w=1200&q=80&auto=format&fit=crop"
+    ]
+  },
+  {
+    "title": "Naivasha Lakeside Cottage",
+    "address": "Naivasha, Nakuru, Kenya",
+    "description": "A timber cottage near the shore of Lake Naivasha, close to Hell's Gate National Park and Crescent Island.",
+    "house_rules": "Check-in from 2pm, check-out by 10am. No smoking indoors. No parties or events. Hippos graze near the lake at night; please stay inside after dark.",
+    "max_guests": 4,
+    "nightly_price_cents": 1600000,
+    "cleaning_charge_cents": 200000,
+    "amenity_keys": [
+      "wifi",
+      "parking",
+      "pets"
+    ],
+    "photo_urls": [
+      "https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=1200&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1617806118233-18e1de247200?w=1200&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1590490360182-c33d57733427?w=1200&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=1200&q=80&auto=format&fit=crop"
+    ]
+  },
+  {
+    "title": "Nanyuki Forest Cabin",
+    "address": "Nanyuki, Laikipia, Kenya",
+    "description": "A glass-fronted cabin among the trees outside Nanyuki with views towards Mount Kenya. A good base for Ol Pejeta Conservancy.",
+    "house_rules": "Check-in from 2pm, check-out by 10am. No smoking indoors. No parties or events.",
+    "max_guests": 2,
+    "nightly_price_cents": 1450000,
+    "cleaning_charge_cents": 150000,
+    "amenity_keys": [
+      "parking",
+      "entrance"
+    ],
+    "photo_urls": [
+      "https://images.unsplash.com/photo-1595877244574-e90ce41ce089?w=1200&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1560185893-a55cbc8c57e8?w=1200&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=1200&q=80&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1578683010236-d716f9a3f461?w=1200&q=80&auto=format&fit=crop"
     ]
   },
   {
-    "title": "Leith Shore Apartment",
-    "address": "Leith, Edinburgh, City of Edinburgh, Scotland",
-    "description": "A contemporary apartment on the Shore in Leith, with restaurants below and a tram into the city centre.",
-    "house_rules": "Check-in from 3pm, check-out by 11am. No smoking. Quiet hours 10pm to 8am; this is a residential building.",
-    "max_guests": 4,
-    "nightly_price_pence": 15000,
-    "amenity_keys": [
-      "wifi",
-      "tv"
-    ],
-    "photo_urls": [
-      "https://images.unsplash.com/photo-1600585154526-990dced4db0d?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?w=1200&q=80&auto=format&fit=crop"
-    ]
-  },
-  {
-    "title": "Harrogate Family House",
-    "address": "Harrogate, North Yorkshire, England",
-    "description": "A spacious brick family house with a garden and driveway, ten minutes from the Stray and Bettys.",
-    "house_rules": "Check-in from 4pm, check-out by 10am. No smoking indoors. No parties or events.",
-    "max_guests": 8,
-    "nightly_price_pence": 23000,
+    "title": "Nakuru Hillside Home",
+    "address": "Nakuru, Nakuru, Kenya",
+    "description": "A spacious family home on the hillside above Nakuru town, 15 minutes from Lake Nakuru National Park.",
+    "house_rules": "Check-in from 2pm, check-out by 10am. No smoking indoors. No parties or events.",
+    "max_guests": 6,
+    "nightly_price_cents": 1200000,
+    "cleaning_charge_cents": 150000,
     "amenity_keys": [
       "wifi",
       "parking",
@@ -277,179 +193,48 @@
     ],
     "photo_urls": [
       "https://images.unsplash.com/photo-1605276374104-dee2a0ed3cd6?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1560185893-a55cbc8c57e8?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1484154218962-a197022b5858?w=1200&q=80&auto=format&fit=crop"
-    ]
-  },
-  {
-    "title": "Cotswolds Barn Conversion",
-    "address": "Chipping Campden, Gloucestershire, England",
-    "description": "A contemporary barn conversion with vaulted ceilings, underfloor heating and views across open farmland.",
-    "house_rules": "Check-in from 4pm, check-out by 10am. No smoking indoors. No parties or events.",
-    "max_guests": 8,
-    "nightly_price_pence": 29000,
-    "amenity_keys": [
-      "wifi",
-      "parking",
-      "tv",
-      "entrance"
-    ],
-    "photo_urls": [
-      "https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1540518614846-7eded433c457?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1600566752355-35792bedcfea?w=1200&q=80&auto=format&fit=crop"
-    ]
-  },
-  {
-    "title": "Salcombe Coast House",
-    "address": "Salcombe, Devon, England",
-    "description": "A timber-clad coast house above the estuary, a short walk to sandy coves, sailing and harbour cafes.",
-    "house_rules": "Check-in from 4pm, check-out by 10am. No smoking indoors. No parties or events.",
-    "max_guests": 6,
-    "nightly_price_pence": 32000,
-    "amenity_keys": [
-      "wifi",
-      "parking",
-      "tv"
-    ],
-    "photo_urls": [
-      "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1590490360182-c33d57733427?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1501183638710-841dd1904471?w=1200&q=80&auto=format&fit=crop"
-    ]
-  },
-  {
-    "title": "Surrey Hills Modern House",
-    "address": "Dorking, Surrey, England",
-    "description": "A light-filled modern house set in a large garden, on the edge of the Surrey Hills and under an hour from London.",
-    "house_rules": "Check-in from 4pm, check-out by 10am. No smoking indoors. No parties or events.",
-    "max_guests": 8,
-    "nightly_price_pence": 38000,
-    "amenity_keys": [
-      "wifi",
-      "parking",
-      "tv",
-      "entrance"
-    ],
-    "photo_urls": [
-      "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1600210491892-03d54c0aaf87?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1618773928121-c32242e63f39?w=1200&q=80&auto=format&fit=crop"
-    ]
-  },
-  {
-    "title": "Bath Georgian Apartment",
-    "address": "Bath, Somerset, England",
-    "description": "An elegant first-floor apartment in a Georgian terrace, close to the Royal Crescent and the Roman Baths.",
-    "house_rules": "Check-in from 3pm, check-out by 11am. No smoking. Quiet hours 10pm to 8am; this is a residential building.",
-    "max_guests": 4,
-    "nightly_price_pence": 17500,
-    "amenity_keys": [
-      "wifi",
-      "tv"
-    ],
-    "photo_urls": [
-      "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1616594039964-ae9021a400a0?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1554995207-c18c203602cb?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1600607687644-c7171b42498f?w=1200&q=80&auto=format&fit=crop"
-    ]
-  },
-  {
-    "title": "York City Walls Townhouse",
-    "address": "York, North Yorkshire, England",
-    "description": "A townhouse inside the city walls, a few minutes from York Minster and the Shambles.",
-    "house_rules": "Check-in from 3pm, check-out by 11am. No smoking. Quiet hours 10pm to 8am; this is a residential building.",
-    "max_guests": 6,
-    "nightly_price_pence": 20000,
-    "amenity_keys": [
-      "wifi",
-      "tv"
-    ],
-    "photo_urls": [
-      "https://images.unsplash.com/photo-1556020685-ae41abfc9365?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1611892440504-42a792e24d32?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1617806118233-18e1de247200?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?w=1200&q=80&auto=format&fit=crop"
-    ]
-  },
-  {
-    "title": "Cardiff Bay Apartment",
-    "address": "Cardiff Bay, Cardiff, Cardiff, Wales",
-    "description": "A waterfront apartment in Cardiff Bay with views over the barrage, near the Wales Millennium Centre.",
-    "house_rules": "Check-in from 3pm, check-out by 11am. No smoking. Quiet hours 10pm to 8am; this is a residential building.",
-    "max_guests": 4,
-    "nightly_price_pence": 10500,
-    "amenity_keys": [
-      "wifi",
-      "tv",
-      "parking"
-    ],
-    "photo_urls": [
       "https://images.unsplash.com/photo-1560185007-cde436f6a4d0?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1493809842364-78817add7ffb?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1559599238-308793637427?w=1200&q=80&auto=format&fit=crop"
+      "https://images.unsplash.com/photo-1559599238-308793637427?w=1200&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1522444195799-478538b28823?w=1200&q=80&auto=format&fit=crop"
     ]
   },
   {
-    "title": "Belfast Cathedral Quarter Flat",
-    "address": "Cathedral Quarter, Belfast, County Antrim, Northern Ireland",
-    "description": "A stylish flat above the cobbled streets of the Cathedral Quarter, close to bars, music and the Titanic Quarter.",
-    "house_rules": "Check-in from 3pm, check-out by 11am. No smoking. Quiet hours 10pm to 8am; this is a residential building.",
-    "max_guests": 2,
-    "nightly_price_pence": 9500,
+    "title": "Kisumu Lakefront Apartment",
+    "address": "Kisumu, Kisumu, Kenya",
+    "description": "A modern apartment near the shores of Lake Victoria, close to Dunga Hill and the Kisumu waterfront restaurants.",
+    "house_rules": "Check-in from 2pm, check-out by 10am. No smoking indoors. No parties or events.",
+    "max_guests": 3,
+    "nightly_price_cents": 850000,
+    "cleaning_charge_cents": 100000,
     "amenity_keys": [
       "wifi",
       "tv"
     ],
     "photo_urls": [
-      "https://images.unsplash.com/photo-1595576508898-0ad5c879a061?w=1200&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1600585154526-990dced4db0d?w=1200&q=80&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1566665797739-1674de7a421a?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1600121848594-d8644e57abab?w=1200&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=1200&q=80&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1505691938895-1758d7feb511?w=1200&q=80&auto=format&fit=crop"
     ]
   },
   {
-    "title": "Norfolk Broads Cottage",
-    "address": "Wroxham, Norfolk, England",
-    "description": "A thatched waterside cottage on the Broads with a private mooring and a garden down to the river.",
-    "house_rules": "Check-in from 4pm, check-out by 10am. Up to two well-behaved dogs welcome; please keep them off the beds. No smoking indoors.",
+    "title": "Kilifi Creek Retreat",
+    "address": "Kilifi, Kilifi, Kenya",
+    "description": "A calm house with a deck over Kilifi Creek, good for paddleboarding at high tide and sundowners at Distant Relatives.",
+    "house_rules": "Check-in from 2pm, check-out by 10am. No smoking indoors. No parties or events.",
     "max_guests": 4,
-    "nightly_price_pence": 14500,
+    "nightly_price_cents": 1900000,
+    "cleaning_charge_cents": 250000,
     "amenity_keys": [
       "wifi",
       "parking",
       "pets"
     ],
     "photo_urls": [
-      "https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1522444195799-478538b28823?w=1200&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=1200&q=80&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?w=1200&q=80&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=1200&q=80&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1615874959474-d609969a20ed?w=1200&q=80&auto=format&fit=crop"
-    ]
-  },
-  {
-    "title": "Giant's Causeway Coast Cottage",
-    "address": "Bushmills, County Antrim, Northern Ireland",
-    "description": "A stone cottage on the Causeway Coast, a short drive from the Giant's Causeway and Bushmills distillery.",
-    "house_rules": "Check-in from 4pm, check-out by 10am. Up to two well-behaved dogs welcome; please keep them off the beds. No smoking indoors.",
-    "max_guests": 5,
-    "nightly_price_pence": 13000,
-    "amenity_keys": [
-      "wifi",
-      "parking",
-      "pets"
-    ],
-    "photo_urls": [
-      "https://images.unsplash.com/photo-1578683010236-d716f9a3f461?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?w=1200&q=80&auto=format&fit=crop"
     ]
   }
 ]

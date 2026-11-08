@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link, Navigate, useParams } from 'react-router-dom';
-import { ChevronLeft, Users } from 'lucide-react';
+import { ChevronLeft, Play, Users } from 'lucide-react';
 
 import { api } from '@/utils/axios';
 import { formatPrice } from '@/utils/currency';
@@ -73,6 +73,15 @@ const PlacePage = () => {
             <Users aria-hidden strokeWidth={1.5} className="size-4" />
             Sleeps {place.max_guests}
           </span>
+          {place.videos?.length > 0 && (
+            <a
+              href="#videos"
+              className="inline-flex items-center gap-1.5 text-ink/75 underline decoration-ink/25 underline-offset-4 transition-colors hover:text-ink hover:decoration-ink"
+            >
+              <Play aria-hidden strokeWidth={1.5} className="size-4" />
+              {place.videos.length === 1 ? 'Video tour' : `${place.videos.length} videos`}
+            </a>
+          )}
         </div>
       </header>
 
@@ -86,6 +95,25 @@ const PlacePage = () => {
               {place.description}
             </p>
           </section>
+
+          {place.videos?.length > 0 && (
+            <section id="videos" className="scroll-mt-24 border-t border-ink/15 py-8">
+              <h2 className="font-serif text-3xl">{place.videos.length === 1 ? 'Video tour' : 'Videos'}</h2>
+              <div className="mt-5 grid gap-4">
+                {place.videos.map((src, i) => (
+                  <video
+                    key={src}
+                    src={src}
+                    controls
+                    preload="metadata"
+                    playsInline
+                    aria-label={`${place.title}, video ${i + 1} of ${place.videos.length}`}
+                    className="aspect-video w-full rounded-2xl bg-ink"
+                  />
+                ))}
+              </div>
+            </section>
+          )}
 
           <PerksWidget perks={place.amenities} />
 
@@ -107,7 +135,7 @@ const PlacePage = () => {
       {/* Phones: keep the price and a way to book in reach. */}
       <div className="fixed inset-x-0 bottom-0 z-30 flex items-center justify-between gap-4 border-t border-ink/15 bg-sand px-4 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] md:hidden">
         <p className="flex items-baseline gap-1.5">
-          <span className="tabular font-serif text-2xl leading-none">{formatPrice(place.nightly_price_pence)}</span>
+          <span className="tabular font-serif text-2xl leading-none">{formatPrice(place.nightly_price_cents, place.currency)}</span>
           <span className="text-sm text-ink/70">a night</span>
         </p>
         <button

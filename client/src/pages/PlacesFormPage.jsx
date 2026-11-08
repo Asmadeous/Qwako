@@ -3,12 +3,13 @@ import { Link, Navigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 import { api, errorMessageFrom, fieldErrorsFrom } from '@/utils/axios';
-import { penceToPounds, poundsToPence } from '@/utils/currency';
+import { amountToCents, centsToAmount, currencyForAddress } from '@/utils/currency';
 import { useAuth } from '../../hooks';
 
 import AccountNav from '@/components/ui/AccountNav';
 import Perks from '@/components/ui/Perks';
 import PhotosUploader from '@/components/ui/PhotosUploader';
+import VideosUploader from '@/components/ui/VideosUploader';
 import Spinner from '@/components/ui/Spinner';
 
 const EMPTY = {
@@ -17,8 +18,8 @@ const EMPTY = {
   description: '',
   house_rules: '',
   max_guests: 2,
-  price_pounds: 100,
-  cleaning_pounds: 0,
+  price: 10000,
+  cleaning: 0,
   status: 'published',
   amenities: [],
 };
@@ -29,8 +30,8 @@ const fromListing = (listing) => ({
   description: listing.description,
   house_rules: listing.house_rules,
   max_guests: listing.max_guests,
-  price_pounds: penceToPounds(listing.nightly_price_pence),
-  cleaning_pounds: penceToPounds(listing.cleaning_charge_pence),
+  price: centsToAmount(listing.nightly_price_cents),
+  cleaning: centsToAmount(listing.cleaning_charge_cents),
   status: listing.status,
   amenities: listing.amenities,
 });
@@ -42,6 +43,7 @@ const PlacesFormPage = () => {
   const [loading, setLoading] = useState(Boolean(id));
   const [saving, setSaving] = useState(false);
   const [photos, setPhotos] = useState([]);
+  const [videos, setVideos] = useState([]);
   const [form, setForm] = useState(EMPTY);
   const [errors, setErrors] = useState({});
   const [formError, setFormError] = useState('');
@@ -53,6 +55,7 @@ const PlacesFormPage = () => {
       .then(({ data }) => {
         setForm(fromListing(data.listing));
         setPhotos(data.listing.photos);
+        setVideos(data.listing.videos ?? []);
       })
       .catch((error) => setFormError(errorMessageFrom(error)))
       .finally(() => setLoading(false));
@@ -84,11 +87,12 @@ const PlacesFormPage = () => {
       description: form.description,
       house_rules: form.house_rules,
       max_guests: Number(form.max_guests),
-      nightly_price_pence: poundsToPence(form.price_pounds),
-      cleaning_charge_pence: poundsToPence(form.cleaning_pounds || 0),
+      nightly_price_cents: amountToCents(form.price),
+      cleaning_charge_cents: amountToCents(form.cleaning || 0),
       status: form.status,
       amenity_keys: form.amenities,
       photo_urls: photos,
+      video_urls: videos,
     };
     try {
       if (id) await api.patch(`/admin/listings/${id}`, { listing });
@@ -109,6 +113,10 @@ const PlacesFormPage = () => {
   if (auth.user.role !== 'admin') return <Navigate to="/account" />;
   if (redirect) return <Navigate to="/account/places" />;
   if (loading) return <Spinner />;
+
+  const currency = currencyForAddress(form.address);
+  const currencyLabel = currency === 'GBP' ? '£' : 'Ksh';
+  const currencyName = currency === 'GBP' ? 'pounds' : 'Kenyan shillings';
 
   const fieldError = (field) =>
     errors[field] && (
@@ -151,13 +159,19 @@ const PlacesFormPage = () => {
         )}
 
         {section('The basics', 'What guests see first on the stays page.', <>
-          {field('title', 'Name', <input id="listing-title" type="text" name="title" required maxLength={120} value={form.title} onChange={handleChange} {...invalid('title')} />, { hint: 'Short and clear, for example "Porthmeor Beach Cottage".' })}
-          {field('address', 'Area', <input id="listing-address" type="text" name="address" required maxLength={200} value={form.address} onChange={handleChange} {...invalid('address')} />, { hint: 'Town, county, nation. For example "St Ives, Cornwall, England".' })}
+          {field('title', 'Name', <input id="listing-title" type="text" name="title" required maxLength={120} value={form.title} onChange={handleChange} {...invalid('title')} />, { hint: 'Short and clear, for example "Diani Beach Villa".' })}
+          {field('address', 'Area', <input id="listing-address" type="text" name="address" required maxLength={200} value={form.address} onChange={handleChange} {...invalid('address')} />, { hint: 'Town, county, country. For example "Diani Beach, Kwale, Kenya". Stays in Kenya are priced in shillings, stays in England, Scotland, Wales or Northern Ireland in pounds.', error: 'country' })}
+          {fieldError('address')}
         </>)}
 
         {section('Photos', 'The first photo is the cover. Up to 30.', <>
           <PhotosUploader addedPhotos={photos} setAddedPhotos={setPhotos} />
           {fieldError('photos')}
+        </>)}
+
+        {section('Videos', 'Optional walkthroughs, shown on the listing in this order. Up to 10.', <>
+          <VideosUploader videos={videos} setVideos={setVideos} />
+          {fieldError('videos')}
         </>)}
 
         {section('Description', 'Tell guests what the stay is like and what is nearby.', <>
@@ -172,10 +186,10 @@ const PlacesFormPage = () => {
           </fieldset>
         ))}
 
-        {section('Price and guests', 'Prices are in pounds. Guests pay the nightly price plus one cleaning charge.', (
+        {section('Price and guests', `Prices are in ${currencyName}, set by the stay's country. Guests pay the nightly price plus one cleaning charge.`, (
           <div className="grid gap-6 sm:grid-cols-2">
-            {field('price_pounds', 'Price per night (£)', <input id="listing-price_pounds" type="number" name="price_pounds" min={1} step="0.01" required value={form.price_pounds} onChange={handleChange} {...invalid('nightly_price_pence')} className="tabular" />, { error: 'nightly_price_pence' })}
-            {field('cleaning_pounds', 'Cleaning charge per stay (£)', <input id="listing-cleaning_pounds" type="number" name="cleaning_pounds" min={0} step="0.01" value={form.cleaning_pounds} onChange={handleChange} {...invalid('cleaning_charge_pence')} className="tabular" />, { error: 'cleaning_charge_pence' })}
+            {field('price', `Price per night (${currencyLabel})`, <input id="listing-price" type="number" name="price" min={1} step="0.01" required value={form.price} onChange={handleChange} {...invalid('nightly_price_cents')} className="tabular" />, { error: 'nightly_price_cents' })}
+            {field('cleaning', `Cleaning charge per stay (${currencyLabel})`, <input id="listing-cleaning" type="number" name="cleaning" min={0} step="0.01" value={form.cleaning} onChange={handleChange} {...invalid('cleaning_charge_cents')} className="tabular" />, { error: 'cleaning_charge_cents' })}
             {field('max_guests', 'Sleeps up to', <input id="listing-max_guests" type="number" name="max_guests" min={1} max={16} required value={form.max_guests} onChange={handleChange} {...invalid('max_guests')} className="tabular" />)}
             {field('status', 'Visibility', (
               <select id="listing-status" name="status" value={form.status} onChange={handleChange} className="h-11 w-full rounded-xl border border-ink/25 bg-paper px-3 text-ink focus:border-ink focus:outline-none">

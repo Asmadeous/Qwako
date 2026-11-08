@@ -21,8 +21,8 @@ else
   warn "Skipping admin account: set SEED_ADMIN_EMAIL and SEED_ADMIN_PASSWORD."
 end
 
-# Demo UK holiday lets. Addresses end with the nation, which becomes the
-# listing's country (England, Scotland, Wales or Northern Ireland).
+# Demo Kenyan stays. Addresses end with the country, which sets the listing's
+# currency (Kenya prices in KES; England, Scotland, Wales and Northern Ireland in GBP).
 listings = JSON.parse(File.read(Rails.root.join("db/seeds/listings.json")))
 listings.each do |attrs|
   listing = Listing.find_or_initialize_by(title: attrs["title"])

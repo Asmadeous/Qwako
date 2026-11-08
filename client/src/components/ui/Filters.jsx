@@ -3,13 +3,13 @@ import { Search, SlidersHorizontal } from 'lucide-react';
 
 import {
   AMENITIES,
-  BUDGETS,
   CATEGORIES,
   DEFAULT_FILTERS,
-  REGIONS,
   SORTS,
   activeFilterCount,
+  budgetsFor,
   countiesIn,
+  countriesIn,
   moreFilterCount,
 } from '@/utils/listingFilters';
 
@@ -25,7 +25,11 @@ const Filters = ({ places, filters, setFilters, resultCount }) => {
   const [showMore, setShowMore] = useState(false);
   const set = (patch) => setFilters((f) => ({ ...f, ...patch }));
   const counties = countiesIn(places, filters.region);
-  const moreCount = moreFilterCount(filters);
+  const countries = countriesIn(places);
+  // With one country (Kenya at launch) the first choice is the county.
+  const manyCountries = countries.length > 1;
+  const budgets = budgetsFor(places, filters.region);
+  const moreCount = moreFilterCount(filters, manyCountries);
 
   const toggleAmenity = (id) =>
     set({
@@ -50,19 +54,35 @@ const Filters = ({ places, filters, setFilters, resultCount }) => {
         </label>
 
         <div className="-mx-4 flex gap-2 overflow-x-auto px-4 [scrollbar-width:none] md:contents">
-          <select
-            aria-label="Nation"
-            className={control}
-            value={filters.region}
-            onChange={(e) => set({ region: e.target.value, county: 'all' })}
-          >
-            <option value="all">All of the UK</option>
-            {REGIONS.map((r) => (
-              <option key={r} value={r}>
-                {r}
-              </option>
-            ))}
-          </select>
+          {manyCountries ? (
+            <select
+              aria-label="Country"
+              className={control}
+              value={filters.region}
+              onChange={(e) => set({ region: e.target.value, county: 'all', budget: 'any' })}
+            >
+              <option value="all">Everywhere</option>
+              {countries.map((c) => (
+                <option key={c} value={c}>
+                  {c}
+                </option>
+              ))}
+            </select>
+          ) : (
+            <select
+              aria-label="County"
+              className={control}
+              value={filters.county}
+              onChange={(e) => set({ county: e.target.value })}
+            >
+              <option value="all">All of {countries[0] ?? 'Kenya'}</option>
+              {counties.map((c) => (
+                <option key={c} value={c}>
+                  {c}
+                </option>
+              ))}
+            </select>
+          )}
 
           <select
             aria-label="Guests"
@@ -111,7 +131,7 @@ const Filters = ({ places, filters, setFilters, resultCount }) => {
 
       {showMore && (
         <div id="more-filters" className="grid gap-5 rounded-2xl border border-ink/15 bg-paper p-5 md:grid-cols-[auto_auto_1fr]">
-          {counties.length > 1 && (
+          {manyCountries && counties.length > 1 && (
             <label className="grid gap-1.5 text-sm font-medium">
               County
               <select
@@ -128,16 +148,18 @@ const Filters = ({ places, filters, setFilters, resultCount }) => {
               </select>
             </label>
           )}
-          <label className="grid gap-1.5 text-sm font-medium">
-            Price per night
-            <select className={control} value={filters.budget} onChange={(e) => set({ budget: e.target.value })}>
-              {BUDGETS.map((b) => (
-                <option key={b.id} value={b.id}>
-                  {b.label}
-                </option>
-              ))}
-            </select>
-          </label>
+          {budgets && (
+            <label className="grid gap-1.5 text-sm font-medium">
+              Price per night
+              <select className={control} value={filters.budget} onChange={(e) => set({ budget: e.target.value })}>
+                {budgets.map((b) => (
+                  <option key={b.id} value={b.id}>
+                    {b.label}
+                  </option>
+                ))}
+              </select>
+            </label>
+          )}
           <fieldset className="grid gap-1.5">
             <legend className="mb-1.5 text-sm font-medium">Must have</legend>
             <div className="flex flex-wrap gap-2">

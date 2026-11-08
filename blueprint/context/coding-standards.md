@@ -19,7 +19,7 @@
 - > TODO: settle pagination format in the first feature that returns a list.
 - Every table uses UUID primary and foreign keys (the generator default is set in
   `config/application.rb`). Use `t.references ..., type: :uuid`.
-- Money is integer pence (`*_pence` columns), never floats or decimals.
+- Money is integer cents (`*_cents` columns) of the stay's currency (`KES` or `GBP`, stored beside it), never floats or decimals.
 - Emails are `citext`. Booking overlap is prevented by a PostgreSQL exclusion
   constraint, not by application checks alone.
 - Schema changes only through migrations (`bin/rails g migration`), never by
@@ -68,7 +68,7 @@
   actions.
 - Mobile first: every page works at 360px; 44px touch targets; visible labels;
   WCAG 2.2 AA.
-- UK English and formats: GBP (`£`), `en-GB` dates, UK postcodes.
+- Prices formatted in the stay's currency (`Ksh`, `£`); dates as `5 Nov 2026`.
 - No inline styles except for values computed at runtime.
 
 ## Error Handling

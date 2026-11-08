@@ -1,13 +1,30 @@
-// All prices are stored and sent as integer pence in GBP.
+// Prices are integer cents (minor units) of the listing's own currency:
+// KES for stays in Kenya, GBP for stays in the UK.
 
-const GBP = new Intl.NumberFormat('en-GB', {
-  style: 'currency',
-  currency: 'GBP',
-  maximumFractionDigits: 0,
-});
+const LOCALES = { KES: 'en-KE', GBP: 'en-GB' };
+const formatters = {};
 
-export const formatPrice = (pence) => GBP.format((Number(pence) || 0) / 100);
+const formatterFor = (currency) => {
+  if (!formatters[currency]) {
+    formatters[currency] = new Intl.NumberFormat(LOCALES[currency] || 'en-KE', {
+      style: 'currency',
+      currency,
+      maximumFractionDigits: 0,
+    });
+  }
+  return formatters[currency];
+};
 
-export const poundsToPence = (pounds) => Math.round(Number(pounds) * 100);
+export const formatPrice = (cents, currency = 'KES') =>
+  formatterFor(currency).format((Number(cents) || 0) / 100);
 
-export const penceToPounds = (pence) => (Number(pence) || 0) / 100;
+// The country is the last part of an address; it sets the currency.
+const UK_NATIONS = ['England', 'Scotland', 'Wales', 'Northern Ireland'];
+export const currencyForAddress = (address = '') => {
+  const country = address.split(',').pop().trim();
+  return UK_NATIONS.includes(country) ? 'GBP' : 'KES';
+};
+
+export const amountToCents = (amount) => Math.round(Number(amount) * 100);
+
+export const centsToAmount = (cents) => (Number(cents) || 0) / 100;

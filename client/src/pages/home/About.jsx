@@ -29,9 +29,9 @@ const About = () => {
             style={{ transform: `scaleX(${inView ? 1 : 0})`, transitionDelay: '400ms' }}
           />
           <p className={`${r(600).className} mt-6 max-w-xs font-grotesk text-sm leading-snug`} style={r(600).style}>
-            T&amp;G BnB is a collection of hand-picked holiday lets across the UK:
-            seaside cottages, city flats and quiet cabins, each chosen for how it
-            feels to live in.
+            T&amp;G BnB is a collection of hand-picked holiday homes across Kenya:
+            beach villas on the coast, city apartments in Nairobi and quiet cabins
+            in the highlands, each chosen for how it feels to live in.
           </p>
         </div>
       </div>

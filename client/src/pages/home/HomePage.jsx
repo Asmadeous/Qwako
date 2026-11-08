@@ -15,7 +15,7 @@ import './home.css';
 
 const HomePage = () => {
   useEffect(() => {
-    document.title = 'T&G BnB | UK holiday lets';
+    document.title = 'T&G BnB | Holiday homes in Kenya';
     return () => {
       document.title = 'T&G BnB';
     };

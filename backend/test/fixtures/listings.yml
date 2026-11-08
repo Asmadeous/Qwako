@@ -2,28 +2,31 @@ cottage:
   title: Cotswolds Cottage
   slug: cotswolds-cottage
   description: Stone cottage.
-  address: Bourton-on-the-Water, UK
-  country: UK
+  address: Bourton-on-the-Water, Gloucestershire, England
+  country: England
+  currency: GBP
   max_guests: 4
-  nightly_price_pence: 21000
-  cleaning_charge_pence: 3000
+  nightly_price_cents: 21000
+  cleaning_charge_cents: 3000
   house_rules: No parties.
   status: published
 
 loft:
-  title: Le Marais Loft
-  slug: le-marais-loft
-  address: Le Marais, Paris, France
-  country: France
+  title: Kilimani Loft
+  slug: kilimani-loft
+  address: Kilimani, Nairobi, Kenya
+  country: Kenya
+  currency: KES
   max_guests: 2
-  nightly_price_pence: 19500
+  nightly_price_cents: 950000
   status: published
 
 hidden:
   title: Draft Barn
   slug: draft-barn
-  address: Somewhere, UK
-  country: UK
+  address: Somewhere, Devon, England
+  country: England
+  currency: GBP
   max_guests: 2
-  nightly_price_pence: 10000
+  nightly_price_cents: 10000
   status: draft

@@ -5,7 +5,7 @@ import { toast } from 'react-toastify';
 import { usePlaces } from '../../hooks';
 import PlaceCard, { PlaceCardSkeleton } from '@/components/ui/PlaceCard';
 import Filters from '@/components/ui/Filters';
-import { DEFAULT_FILTERS, applyFilters } from '@/utils/listingFilters';
+import { DEFAULT_FILTERS, applyFilters, areaLabel } from '@/utils/listingFilters';
 
 const IndexPage = () => {
   const location = useLocation();
@@ -27,7 +27,7 @@ const IndexPage = () => {
       <header className="mb-8 max-w-2xl">
         <h1 className="font-serif text-5xl leading-none md:text-7xl">Stays</h1>
         <p className="mt-3 text-ink/70">
-          Holiday lets across England, Scotland, Wales and Northern Ireland, booked directly with the owner.
+          Holiday homes across {areaLabel(places)}, booked directly with the owner.
         </p>
       </header>
 

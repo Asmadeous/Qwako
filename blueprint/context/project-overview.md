@@ -1,13 +1,13 @@
 # T&G BnB - Project Overview
 
-<!-- blueprint:source-hash ac0757bc2b9e0b4a59a6ac4de7e26c08ee4c6b0934d16aebd9aeb7231c481b59 -->
+<!-- blueprint:source-hash beb765fd233f03eccafee751f8a27ca382708c9e80b49e2f73641caaa667cffd -->
 
-> Direct-booking website for one owner's UK holiday lets: nightly stays with an
+> Direct-booking website for one owner's holiday homes, Kenya first and the UK later: nightly stays with an
 > Airbnb-style booking flow, plus guest and owner dashboards. Not a marketplace.
 
 ## Problem
 
-The owner needs his own site where guests see the full price up front in GBP and
+The owner needs his own site where guests see the full price up front in the stay's currency and
 book confirmed dates in a few steps, and where he manages properties,
 availability, bookings, guests and payments himself. The current React +
 Express/MongoDB prototype trusts client-sent prices, allows double bookings, has
@@ -22,15 +22,17 @@ replaces it (Rails backend) rather than patching it.
 | Guest | Signed in; every public sign-up is a guest | Book, pay, manage trips, wishlists, messages, reviews, profile and settings. |
 | Admin | Owner and staff; created by the owner, never by sign-up | Properties, calendar, prices, bookings, guests, payments, reviews, messages, occupancy and revenue. |
 
-Market: UK only. Locale `en-GB`, GBP, Europe/London, dates as `5 Nov 2026` /
-`05/11/2026`. Mostly phone users; every page works at 360px.
+Market: Kenya first, the UK later. The address's country sets the currency:
+Kenya in KES, UK nations in GBP. Dates as `5 Nov 2026`. Open for the Kenya
+launch: payment provider (M-Pesa expected), time zone rules, Kenyan law (Data
+Protection Act 2019, tourism levy). Mostly phone users; every page works at 360px.
 
 ## Usage model
 
 - Internet-facing, untrusted users, real payments.
 - Scale: one owner, small portfolio, hundreds to low thousands of guests a year;
   one server, one database.
-- Law: UK GDPR / DPA 2018 (privacy notice, data export, deletion); PECR (cookie
+- Law (Kenya to be confirmed): for UK stays, UK GDPR / DPA 2018 (privacy notice, data export, deletion); PECR (cookie
   and marketing consent, only essential cookies before consent); Consumer
   Contracts Regs and DMCC Act 2024 (total price incl. mandatory charges up front,
   clear cancellation terms); Scottish short-term let licence numbers; London
@@ -57,7 +59,7 @@ Milestone 1 - Accounts
 
 Milestone 2 - Properties and discovery
 
-4. **Property catalogue with seed data** - listings, photos, amenities, UK address, GBP; UK demo listings seeded.
+4. **Property catalogue with seed data** - listings, photos, videos, amenities, address with country, KES or GBP; Kenyan demo listings seeded.
 5. **Public listing page on Rails** - gallery, details, rules, policy, licence, total for chosen dates; area only until booked.
 6. **Stays search on Rails** - destination, date availability, guests, price, type, amenities, sort, pagination, shareable URL.
 
@@ -101,7 +103,7 @@ multi-language, mobile apps.
 ## Data model
 
 All tables: `id uuid` PK (`gen_random_uuid()`), UUID FKs, `created_at` /
-`updated_at`. Money is integer pence (`*_pence`). Field names below are the
+`updated_at`. Money is integer cents (`*_cents`) in the stay's `currency` (KES or GBP). Field names below are the
 working contract; each feature spec locks the ones it introduces.
 
 ### User (feature 1, 3)
@@ -123,7 +125,7 @@ working contract; each feature spec locks the ones it introduces.
 - `address_line1`, `address_line2`, `town`, `county`, `postcode`, `nation`
   (England, Scotland, Wales, Northern Ireland); `latitude`, `longitude` decimal
 - `max_guests`, `bedrooms`, `beds`, `bathrooms` integer
-- `nightly_price_pence`, `cleaning_charge_pence` integer
+- `nightly_price_cents`, `cleaning_charge_cents` integer, `currency` (KES, GBP)
 - `min_nights`, `max_nights` integer; `check_in_time`, `check_out_time` time
 - `booking_type` enum `instant | request`
 - `cancellation_policy` enum `flexible | moderate | strict`
@@ -146,7 +148,7 @@ working contract; each feature spec locks the ones it introduces.
 
 ### Booking (feature 8-11)
 - `listing_id`, `guest_id` (User); `check_in`, `check_out` date; `guests_count`
-- Snapshots: `nightly_price_pence`, `nights`, `cleaning_charge_pence`, `total_pence`
+- Snapshots: `currency`, `nightly_price_cents`, `nights`, `cleaning_charge_cents`, `total_cents`
 - `status` enum `pending_payment | requested | confirmed | declined | expired |
   cancelled_by_guest | cancelled_by_owner | completed`
 - `expires_at` datetime (15-min hold, 24h request window); cancellation fields
@@ -155,9 +157,9 @@ working contract; each feature spec locks the ones it introduces.
   active statuses (`btree_gist`). Quote = nights x nightly + cleaning; no fees.
 
 ### Payment, Refund, StripeEvent (feature 9, 11)
-- Payment: `booking_id`, `stripe_payment_intent_id` unique, `amount_pence`,
+- Payment: `booking_id`, `stripe_payment_intent_id` unique, `amount_cents`,
   `status`, `idempotency_key` unique
-- Refund: `payment_id`, `stripe_refund_id`, `amount_pence`, `status`
+- Refund: `payment_id`, `stripe_refund_id`, `amount_cents`, `status`
 - StripeEvent: `stripe_event_id` unique, `event_type`, `processed_at`
 
 ### Review (feature 16, 23)
@@ -210,7 +212,7 @@ Owner earns nightly rate plus cleaning charge. No platform or service fees.
   then stats, then lists/charts; admin tables with search, filters, sort,
   pagination; designed empty, skeleton and error states; text status badges;
   saving buttons disable with progress; 44px targets.
-- WCAG 2.2 AA, keyboard nav, focus rings, alt text, reduced motion. UK English.
+- WCAG 2.2 AA, keyboard nav, focus rings, alt text, reduced motion. English.
 - Current client routes: `/` home, `/stays` search, `/place/:id` listing,
   `/login`, `/register`, `/account`, `/account/places[/new|/:id]`,
   `/account/bookings[/:id]`. > TODO: dashboard and info-page routes are not named

@@ -16,6 +16,6 @@ class BookingTest < ActiveSupport::TestCase
 
   test "the database refuses a total that does not match the price" do
     booking = bookings(:grace_cottage)
-    assert_raises(ActiveRecord::StatementInvalid) { booking.update_column(:total_pence, 1) }
+    assert_raises(ActiveRecord::StatementInvalid) { booking.update_column(:total_cents, 1) }
   end
 end

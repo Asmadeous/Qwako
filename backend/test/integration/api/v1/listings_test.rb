@@ -11,12 +11,13 @@ class Api::V1::ListingsTest < ActionDispatch::IntegrationTest
     cottage = response.parsed_body["listings"].find { |listing| listing["title"] == "Cotswolds Cottage" }
     assert_equal %w[https://images.example.com/cottage-1.jpg https://images.example.com/cottage-2.jpg], cottage["photos"]
     assert_equal %w[parking wifi], cottage["amenities"].sort
-    assert_equal 21000, cottage["nightly_price_pence"]
+    assert_equal 21000, cottage["nightly_price_cents"]
+    assert_equal "GBP", cottage["currency"]
   end
 
   test "search matches title or address and treats wildcards literally" do
-    get api_v1_listings_path(q: "paris"), as: :json
-    assert_equal [ "Le Marais Loft" ], response.parsed_body["listings"].map { |listing| listing["title"] }
+    get api_v1_listings_path(q: "nairobi"), as: :json
+    assert_equal [ "Kilimani Loft" ], response.parsed_body["listings"].map { |listing| listing["title"] }
 
     get api_v1_listings_path(q: "%"), as: :json
     assert_empty response.parsed_body["listings"]

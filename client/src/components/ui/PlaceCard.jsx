@@ -4,7 +4,7 @@ import { formatPrice } from '@/utils/currency';
 import { countyOf } from '@/utils/listingFilters';
 
 const PlaceCard = ({ place }) => {
-  const { id, photos, title, max_guests: guests, nightly_price_pence: price } = place;
+  const { id, photos, title, max_guests: guests, nightly_price_cents: price } = place;
   const town = place.address.split(',')[0].trim();
   const county = countyOf(place);
 
@@ -26,7 +26,7 @@ const PlaceCard = ({ place }) => {
         {county && county !== town ? `, ${county}` : ''}
       </p>
       <p className="tabular mt-2 text-sm">
-        <span className="font-semibold">{formatPrice(price)}</span> a night
+        <span className="font-semibold">{formatPrice(price, place.currency)}</span> a night
         <span className="text-ink/40"> / </span>
         up to {guests} guests
       </p>

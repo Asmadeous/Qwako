@@ -21,7 +21,7 @@ const InfoCard = ({ place }) => {
           <h2 className="mt-1 font-serif text-2xl leading-tight md:text-3xl">{place.title}</h2>
         </div>
         <div className="flex items-center gap-3 font-grotesk text-sm">
-          <span>{formatPrice(place.nightly_price_pence)} / night</span>
+          <span>{formatPrice(place.nightly_price_cents, place.currency)} / night</span>
           <span className="text-ink/40">·</span>
           <span>Up to {place.max_guests} guests</span>
           {place.status !== 'published' && (

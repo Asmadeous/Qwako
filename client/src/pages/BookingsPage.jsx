@@ -62,7 +62,7 @@ const BookingsPage = () => {
                   <BookingDates booking={booking} className="mt-2 hidden items-center gap-1 text-sm text-ink/70 md:flex" />
                 </div>
                 <span className="font-grotesk text-sm">
-                  Total <strong className="font-semibold">{formatPrice(booking.total_pence)}</strong>
+                  Total <strong className="font-semibold">{formatPrice(booking.total_cents, booking.currency)}</strong>
                 </span>
               </div>
             </Link>

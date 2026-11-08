@@ -2,8 +2,8 @@ require "test_helper"
 
 class Api::V1::Admin::ListingsTest < ActionDispatch::IntegrationTest
   VALID = {
-    title: "Harbour Flat", address: "St Ives, Cornwall, UK", description: "Sea views.",
-    house_rules: "No smoking.", max_guests: 3, nightly_price_pence: 15000, cleaning_charge_pence: 2500,
+    title: "Harbour Flat", address: "Diani Beach, Kwale, Kenya", description: "Sea views.",
+    house_rules: "No smoking.", max_guests: 3, nightly_price_cents: 2_500_000, cleaning_charge_cents: 300_000,
     photo_urls: %w[https://images.example.com/a.jpg https://images.example.com/b.jpg], amenity_keys: %w[wifi]
   }.freeze
 
@@ -27,8 +27,33 @@ class Api::V1::Admin::ListingsTest < ActionDispatch::IntegrationTest
     listing = response.parsed_body["listing"]
     assert_equal VALID[:photo_urls], listing["photos"]
     assert_equal %w[wifi], listing["amenities"]
-    assert_equal "UK", listing["country"]
+    assert_equal "Kenya", listing["country"]
+    assert_equal "KES", listing["currency"]
     assert_equal "harbour-flat", listing["slug"]
+  end
+
+  test "a UK nation prices in pounds and other countries are refused" do
+    sign_in_as users(:owner)
+    post api_v1_admin_listings_path, params: { listing: VALID.merge(address: "St Ives, Cornwall, England") }, as: :json
+    assert_response :created
+    assert_equal "GBP", response.parsed_body.dig("listing", "currency")
+
+    post api_v1_admin_listings_path, params: { listing: VALID.merge(title: "Paris Loft", address: "Paris, France") }, as: :json
+    assert_error :unprocessable_content, "validation_failed"
+    assert response.parsed_body.dig("error", "details", "country").present?
+  end
+
+  test "videos are saved in order and checked like photos" do
+    sign_in_as users(:owner)
+    videos = %w[/rails/active_storage/blobs/redirect/abc/tour.mp4 https://videos.example.com/walk.mp4]
+    post api_v1_admin_listings_path, params: { listing: VALID.merge(video_urls: videos) }, as: :json
+    assert_response :created
+    assert_equal videos, response.parsed_body.dig("listing", "videos")
+
+    post api_v1_admin_listings_path,
+      params: { listing: VALID.merge(title: "Bad Video", video_urls: [ "http://insecure.example.com/a.mp4" ]) }, as: :json
+    assert_error :unprocessable_content, "validation_failed"
+    assert response.parsed_body.dig("error", "details", "videos").present?
   end
 
   test "admin index includes drafts" do
