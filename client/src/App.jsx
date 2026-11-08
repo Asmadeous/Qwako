@@ -14,6 +14,8 @@ import BookingsPage from './pages/BookingsPage';
 import PlacesFormPage from './pages/PlacesFormPage';
 import PlacePage from './pages/PlacePage';
 import SingleBookedPlace from './pages/SingleBookedPlace';
+import OwnerBookingsPage from './pages/OwnerBookingsPage';
+import OwnerBookingPage from './pages/OwnerBookingPage';
 import { UserProvider } from './providers/UserProvider';
 import { PlaceProvider } from './providers/PlaceProvider';
 import NotFoundPage from './pages/NotFoundPage';
@@ -37,6 +39,8 @@ function App() {
                 <Route path="/account/places/:id" element={<PlacesFormPage />} />
                 <Route path="/account/bookings" element={<BookingsPage />} />
                 <Route path="/account/bookings/:id" element={<SingleBookedPlace />} />
+                <Route path="/account/reservations" element={<OwnerBookingsPage />} />
+                <Route path="/account/reservations/:id" element={<OwnerBookingPage />} />
               </Route>
               <Route path="*" element={<NotFoundPage />} />
             </Route>

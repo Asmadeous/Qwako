@@ -54,6 +54,26 @@ class Booking < ApplicationRecord
     payment.update!(needs_refund: true)
   end
 
+  # The owner can cancel a stay that hasn't ended. Its dates free up at once;
+  # money already taken is flagged for the owner to refund.
+  def owner_can_cancel?
+    status.in?(ACTIVE_STATUSES) && check_out >= Time.zone.today
+  end
+
+  def cancel_by_owner!
+    with_lock do
+      return false unless owner_can_cancel?
+
+      update!(status: "cancelled_by_owner")
+      payments.succeeded.where(refunded_at: nil).update_all(needs_refund: true, updated_at: Time.current)
+    end
+    true
+  end
+
+  def refund_due?
+    payments.any?(&:refund_due?)
+  end
+
   private
     def price_from_listing
       return unless listing && check_in && check_out && check_out > check_in

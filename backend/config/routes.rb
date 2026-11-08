@@ -17,6 +17,12 @@ Rails.application.routes.draw do
       namespace :admin do
         resources :listings, only: %i[index create update]
         resources :uploads, only: :create
+        resources :bookings, only: %i[index show] do
+          member do
+            post :cancel
+            post :mark_refunded
+          end
+        end
       end
     end
   end

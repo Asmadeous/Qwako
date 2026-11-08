@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_11_08_000002) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_08_000003) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gist"
   enable_extension "citext"
@@ -70,12 +70,12 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_08_000002) do
     t.index ["guest_id"], name: "index_bookings_on_guest_id"
     t.index ["listing_id"], name: "index_bookings_on_listing_id"
     t.check_constraint "check_out > check_in", name: "bookings_dates_ordered"
-    t.check_constraint "currency::text = ANY (ARRAY['KES'::character varying, 'GBP'::character varying]::text[])", name: "bookings_currency_valid"
+    t.check_constraint "currency::text = ANY (ARRAY['KES'::character varying::text, 'GBP'::character varying::text])", name: "bookings_currency_valid"
     t.check_constraint "guests_count > 0", name: "bookings_guests_positive"
     t.check_constraint "nights = (check_out - check_in)", name: "bookings_nights_match"
-    t.check_constraint "status::text = ANY (ARRAY['pending_payment'::character varying, 'requested'::character varying, 'confirmed'::character varying, 'declined'::character varying, 'expired'::character varying, 'cancelled_by_guest'::character varying, 'cancelled_by_owner'::character varying, 'completed'::character varying]::text[])", name: "bookings_status_valid"
+    t.check_constraint "status::text = ANY (ARRAY['pending_payment'::character varying::text, 'requested'::character varying::text, 'confirmed'::character varying::text, 'declined'::character varying::text, 'expired'::character varying::text, 'cancelled_by_guest'::character varying::text, 'cancelled_by_owner'::character varying::text, 'completed'::character varying::text])", name: "bookings_status_valid"
     t.check_constraint "total_cents = (nights * nightly_price_cents + cleaning_charge_cents)", name: "bookings_total_matches"
-    t.exclusion_constraint "listing_id WITH =, daterange(check_in, check_out) WITH &&", where: "(status)::text = ANY ((ARRAY['pending_payment'::character varying, 'requested'::character varying, 'confirmed'::character varying])::text[])", using: :gist, name: "bookings_no_overlap"
+    t.exclusion_constraint "listing_id WITH =, daterange(check_in, check_out) WITH &&", where: "(status)::text = ANY (ARRAY[('pending_payment'::character varying)::text, ('requested'::character varying)::text, ('confirmed'::character varying)::text])", using: :gist, name: "bookings_no_overlap"
   end
 
   create_table "listing_amenities", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -125,10 +125,10 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_08_000002) do
     t.index ["slug"], name: "index_listings_on_slug", unique: true
     t.index ["status"], name: "index_listings_on_status"
     t.check_constraint "cleaning_charge_cents >= 0", name: "listings_cleaning_non_negative"
-    t.check_constraint "currency::text = ANY (ARRAY['KES'::character varying, 'GBP'::character varying]::text[])", name: "listings_currency_valid"
+    t.check_constraint "currency::text = ANY (ARRAY['KES'::character varying::text, 'GBP'::character varying::text])", name: "listings_currency_valid"
     t.check_constraint "max_guests > 0", name: "listings_max_guests_positive"
     t.check_constraint "nightly_price_cents > 0", name: "listings_price_positive"
-    t.check_constraint "status::text = ANY (ARRAY['draft'::character varying, 'published'::character varying, 'unlisted'::character varying]::text[])", name: "listings_status_valid"
+    t.check_constraint "status::text = ANY (ARRAY['draft'::character varying::text, 'published'::character varying::text, 'unlisted'::character varying::text])", name: "listings_status_valid"
   end
 
   create_table "payments", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -145,11 +145,12 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_08_000002) do
     t.boolean "needs_refund", default: false, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.datetime "refunded_at"
     t.index ["booking_id"], name: "index_payments_on_booking_id"
     t.index ["reference"], name: "index_payments_on_reference", unique: true
     t.check_constraint "amount_cents > 0", name: "payments_amount_positive"
-    t.check_constraint "currency::text = ANY (ARRAY['KES'::character varying, 'GBP'::character varying]::text[])", name: "payments_currency_valid"
-    t.check_constraint "status::text = ANY (ARRAY['pending'::character varying, 'succeeded'::character varying, 'failed'::character varying]::text[])", name: "payments_status_valid"
+    t.check_constraint "currency::text = ANY (ARRAY['KES'::character varying::text, 'GBP'::character varying::text])", name: "payments_currency_valid"
+    t.check_constraint "status::text = ANY (ARRAY['pending'::character varying::text, 'succeeded'::character varying::text, 'failed'::character varying::text])", name: "payments_status_valid"
   end
 
   create_table "sessions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -169,7 +170,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_08_000002) do
     t.datetime "updated_at", null: false
     t.string "role", default: "guest", null: false
     t.index ["email"], name: "index_users_on_email", unique: true
-    t.check_constraint "role::text = ANY (ARRAY['guest'::character varying, 'admin'::character varying]::text[])", name: "users_role_valid"
+    t.check_constraint "role::text = ANY (ARRAY['guest'::character varying::text, 'admin'::character varying::text])", name: "users_role_valid"
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"

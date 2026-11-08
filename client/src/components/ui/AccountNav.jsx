@@ -8,6 +8,8 @@ const titleFor = (pathname) => {
   if (pathname === '/account/places') return 'Your stays';
   if (pathname.startsWith('/account/bookings/')) return 'Your booking';
   if (pathname === '/account/bookings') return 'Your bookings';
+  if (pathname.startsWith('/account/reservations/')) return 'Booking';
+  if (pathname === '/account/reservations') return 'Bookings';
   return 'Your profile';
 };
 
@@ -17,11 +19,18 @@ const AccountNav = () => {
   const { user } = useAuth();
   const section = pathname.split('/')[2] || 'profile';
 
-  const tabs = [
-    { id: 'profile', label: 'PROFILE', to: '/account' },
-    { id: 'bookings', label: 'BOOKINGS', to: '/account/bookings' },
-    ...(user?.role === 'admin' ? [{ id: 'places', label: 'MANAGE STAYS', to: '/account/places' }] : []),
-  ];
+  // The owner's Bookings tab lists every guest's bookings, not their own trips.
+  const tabs =
+    user?.role === 'admin'
+      ? [
+          { id: 'profile', label: 'PROFILE', to: '/account' },
+          { id: 'reservations', label: 'BOOKINGS', to: '/account/reservations' },
+          { id: 'places', label: 'MANAGE STAYS', to: '/account/places' },
+        ]
+      : [
+          { id: 'profile', label: 'PROFILE', to: '/account' },
+          { id: 'bookings', label: 'BOOKINGS', to: '/account/bookings' },
+        ];
 
   return (
     <div className="mt-24 mb-10 w-full px-4">
