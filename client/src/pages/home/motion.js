@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 
+import { unsplashSrcSet } from '@/utils/images';
+
 export const clamp = (v, min = 0, max = 1) => Math.min(max, Math.max(min, v));
 export const lerp = (a, b, t) => a + (b - a) * t;
 // Progress of `p` through the window [start, end], clamped to 0..1
@@ -8,6 +10,12 @@ export const ease = (t) => 1 - Math.pow(1 - t, 3);
 
 export const photo = (id, w = 2000) =>
   `https://images.unsplash.com/photo-${id}?w=${w}&q=80&auto=format&fit=crop`;
+
+// Spread onto an <img>: <img {...photoProps(id, 2400)} />.
+export const photoProps = (id, maxW = 2000, sizes = '100vw') => {
+  const src = photo(id, maxW);
+  return { src, srcSet: unsplashSrcSet(src, maxW), sizes };
+};
 
 // 0 when a tall section's top reaches the top of the screen, 1 when its
 // bottom reaches the bottom. Used for sticky, scroll-driven scenes.

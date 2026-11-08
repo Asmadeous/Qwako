@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { toast } from 'react-toastify';
-import { Navigate, useParams } from 'react-router-dom';
+import { Navigate, useNavigate, useParams } from 'react-router-dom';
 
 import AccountNav from '@/components/ui/AccountNav';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -15,7 +15,7 @@ import EditProfileDialog from '@/components/ui/EditProfileDialog';
 const ProfilePage = () => {
   const auth = useAuth();
   const { user, logout } = auth;
-  const [redirect, setRedirect] = useState(null);
+  const navigate = useNavigate();
 
   let { subpage } = useParams();
   if (!subpage) {
@@ -23,26 +23,18 @@ const ProfilePage = () => {
   }
 
   const handleLogout = async () => {
+    // Leave the account pages first, so signing out doesn't bounce to sign-in.
+    navigate('/', { replace: true });
     const response = await logout();
-    if (response.success) {
-      toast.success(response.message);
-      setRedirect('/');
-    } else {
-      toast.error(response.message);
-    }
+    if (response.success) toast.success(response.message);
+    else toast.error(response.message);
   };
 
   if (auth.loading) {
     return <Spinner />;
   }
 
-  if (!user && !redirect) {
-    return <Navigate to={'/login'} />;
-  }
-
-  if (redirect) {
-    return <Navigate to={redirect} />;
-  }
+  if (!user) return <Navigate to="/login" />;
 
   return (
     <div>

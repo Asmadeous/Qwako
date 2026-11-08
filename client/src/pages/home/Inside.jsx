@@ -1,5 +1,5 @@
 import { IMG } from './images';
-import { photo, useSectionProgress } from './motion';
+import { photo, useSectionProgress, photoProps } from './motion';
 
 const ROOMS = [
   {
@@ -54,7 +54,7 @@ const Inside = () => {
             {ROOMS.map((room, i) => (
               <img
                 key={room.label}
-                src={photo(room.image, 1600)}
+                {...photoProps(room.image, 1600)}
                 alt={room.label.toLowerCase()}
                 className="absolute inset-0 h-full w-full object-cover transition-all duration-1000"
                 style={{ opacity: i === active ? 1 : 0, transform: `scale(${i === active ? 1 : 1.05})` }}

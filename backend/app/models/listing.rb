@@ -29,7 +29,8 @@ class Listing < ApplicationRecord
   # Minor units (cents) of the listing's currency.
   validates :nightly_price_cents, numericality: { only_integer: true, greater_than: 0, less_than_or_equal_to: 10_000_000 }
   validates :cleaning_charge_cents, numericality: { only_integer: true, in: 0..1_000_000 }
-  validates :country, inclusion: { in: CURRENCIES.keys, message: "must be Kenya, England, Scotland, Wales or Northern Ireland" }
+  validates :country, inclusion: { in: CURRENCIES.keys, message: "must end with Kenya, England, Scotland, Wales or Northern Ireland" },
+    if: -> { address.present? }
   validate :has_photos, :has_valid_videos
 
   scope :matching, ->(query) {
@@ -89,7 +90,7 @@ class Listing < ApplicationRecord
 
     def has_photos
       kept = current_photos
-      errors.add(:photos, "need at least one photo") if kept.empty?
+      errors.add(:photos, "must include at least one") if kept.empty?
       errors.add(:photos, "can be at most #{MAX_PHOTOS}") if kept.size > MAX_PHOTOS
       kept.each do |photo|
         next if photo.valid?

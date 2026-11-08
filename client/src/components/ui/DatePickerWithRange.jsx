@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { format, startOfToday } from 'date-fns';
+import { format, isSameDay, startOfToday } from 'date-fns';
 import { CalendarDays } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
@@ -11,6 +11,16 @@ const day = (date) => format(date, 'EEE d MMM yyyy');
 // Controlled range picker: the booking form owns the dates.
 export default function DatePickerWithRange({ id, value, onChange, className, invalid }) {
   const [open, setOpen] = useState(false);
+
+  // A click after a full range starts a new stay rather than stretching the old
+  // one; a full range closes the calendar.
+  const handleSelect = (range, clickedDay) => {
+    if (value?.from && value?.to) return onChange({ from: clickedDay, to: undefined });
+    const next = range ?? { from: undefined, to: undefined };
+    if (next.from && next.to && isSameDay(next.from, next.to)) return onChange({ from: next.from, to: undefined });
+    onChange(next);
+    if (next.from && next.to) setOpen(false);
+  };
 
   let label = 'Choose your dates';
   if (value?.from && value?.to) label = `${day(value.from)} to ${day(value.to)}`;
@@ -38,7 +48,7 @@ export default function DatePickerWithRange({ id, value, onChange, className, in
           mode="range"
           defaultMonth={value?.from}
           selected={value}
-          onSelect={(range) => onChange(range ?? { from: undefined, to: undefined })}
+          onSelect={handleSelect}
           numberOfMonths={1}
           weekStartsOn={1}
           disabled={{ before: startOfToday() }}

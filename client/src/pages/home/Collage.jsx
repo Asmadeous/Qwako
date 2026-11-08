@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 import { IMG } from './images';
-import { ease, lerp, photo, range, useSectionProgress } from './motion';
+import { ease, lerp, photo, range, useSectionProgress, photoProps } from './motion';
 
 // Scattered start positions (centre x/y and size in vw/vh, rotation in deg).
 // Card 0 grows into the full-width slider; the rest drift out and fade.
@@ -60,7 +60,7 @@ const Collage = () => {
                 images.map((id, k) => (
                   <img
                     key={id}
-                    src={photo(id, 2000)}
+                    {...photoProps(id, 2000)}
                     alt=""
                     className="absolute inset-0 h-full w-full object-cover transition-opacity duration-700"
                     style={{ opacity: k === slide ? 1 : 0 }}

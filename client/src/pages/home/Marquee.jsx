@@ -1,5 +1,5 @@
 import { IMG } from './images';
-import { ease, lerp, photo, range, useSectionProgress } from './motion';
+import { ease, lerp, range, useSectionProgress, photoProps } from './motion';
 
 const WORD = 'T&G / BNB';
 
@@ -32,7 +32,7 @@ const Marquee = () => {
             borderRadius: `${lerp(4, 0, t)}px`,
           }}
         >
-          <img src={photo(IMG.marquee, 2400)} alt="" className="h-full w-full object-cover" />
+          <img {...photoProps(IMG.marquee, 2400)} alt="" className="h-full w-full object-cover" />
         </div>
 
         <span

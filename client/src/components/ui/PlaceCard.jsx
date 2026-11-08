@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 
 import { formatPrice } from '@/utils/currency';
 import { countyOf } from '@/utils/listingFilters';
+import { unsplashSrcSet } from '@/utils/images';
 
 const PlaceCard = ({ place }) => {
   const { id, photos, title, max_guests: guests, nightly_price_cents: price } = place;
@@ -14,6 +15,8 @@ const PlaceCard = ({ place }) => {
         {photos?.[0] && (
           <img
             src={photos[0]}
+            srcSet={unsplashSrcSet(photos[0], 1080)}
+            sizes="(min-width: 1280px) 25vw, (min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
             alt={`${title}, ${town}`}
             loading="lazy"
             className="size-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.03] motion-reduce:transition-none"

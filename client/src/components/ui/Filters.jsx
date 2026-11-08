@@ -14,7 +14,7 @@ import {
 } from '@/utils/listingFilters';
 
 const control =
-  'h-11 rounded-full border border-ink/25 bg-paper px-4 text-sm text-ink transition-colors hover:border-ink/50 focus:border-ink focus:outline-none';
+  'h-11 w-full min-w-0 rounded-full md:w-auto border border-ink/25 bg-paper px-4 text-sm text-ink transition-colors hover:border-ink/50 focus:border-ink focus:outline-none';
 
 const chip = (active) =>
   `h-10 shrink-0 whitespace-nowrap rounded-full border px-4 text-sm transition-colors active:scale-[0.98] ${
@@ -53,7 +53,7 @@ const Filters = ({ places, filters, setFilters, resultCount }) => {
           />
         </label>
 
-        <div className="-mx-4 flex gap-2 overflow-x-auto px-4 [scrollbar-width:none] md:contents">
+        <div className="grid grid-cols-2 gap-2 md:contents">
           {manyCountries ? (
             <select
               aria-label="Country"

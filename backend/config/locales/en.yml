@@ -29,3 +29,12 @@
 
 en:
   hello: "Hello world"
+  activerecord:
+    attributes:
+      listing:
+        title: "Name"
+        address: "Area"
+        country: "Area"
+        max_guests: "Sleeps up to"
+        nightly_price_cents: "Price per night"
+        cleaning_charge_cents: "Cleaning charge"

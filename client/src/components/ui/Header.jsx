@@ -5,7 +5,7 @@ import { Avatar, AvatarImage, AvatarFallback } from '@radix-ui/react-avatar';
 import { useAuth } from '../../../hooks';
 
 const navClass = ({ isActive }) =>
-  `whitespace-nowrap font-grotesk text-[11px] tracking-[0.18em] hover:underline ${isActive ? 'underline underline-offset-4' : ''}`;
+  `inline-flex min-h-11 items-center whitespace-nowrap font-grotesk text-[11px] tracking-[0.18em] hover:underline ${isActive ? 'underline underline-offset-4' : ''}`;
 
 // Same wordmark, type and palette as the home page navigation.
 export const Header = () => {
@@ -25,8 +25,8 @@ export const Header = () => {
         scrolled ? 'border-b border-ink/20' : 'border-b border-transparent'
       }`}
     >
-      <div className="mx-auto flex max-w-screen-xl items-center justify-between gap-4 px-5 py-4 md:px-8">
-        <Link to="/" className="whitespace-nowrap font-grotesk text-sm font-medium tracking-tight">
+      <div className="mx-auto flex max-w-screen-xl items-center justify-between gap-4 px-5 py-2 md:px-8">
+        <Link to="/" className="inline-flex min-h-11 items-center whitespace-nowrap font-grotesk text-sm font-medium tracking-tight">
           T&amp;G / BNB
         </Link>
 
@@ -35,7 +35,7 @@ export const Header = () => {
             STAYS
           </NavLink>
           {user ? (
-            <Link to="/account" className="flex items-center gap-2 font-grotesk text-[11px] tracking-[0.18em]">
+            <Link to="/account" className="flex min-h-11 items-center gap-2 font-grotesk text-[11px] tracking-[0.18em]">
               <span className="hidden md:inline">ACCOUNT</span>
               <Avatar className="flex h-8 w-8 overflow-hidden rounded-full">
                 {user.avatar_url && (

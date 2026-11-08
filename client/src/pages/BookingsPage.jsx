@@ -7,6 +7,7 @@ import BookingDates from '@/components/ui/BookingDates';
 import Spinner from '@/components/ui/Spinner';
 import { api } from '@/utils/axios';
 import { formatPrice } from '@/utils/currency';
+import { bookingStatusLabel } from '@/utils/bookingStatus';
 
 const BookingsPage = () => {
   const [bookings, setBookings] = useState([]);
@@ -55,8 +56,8 @@ const BookingsPage = () => {
               </div>
               <div className="flex grow flex-col justify-between py-1 pr-2">
                 <div>
-                  <span className="font-grotesk text-[10px] tracking-[0.24em] text-ink/60">
-                    {booking.status.toUpperCase().replace('_', ' ')}
+                  <span className="font-grotesk text-[10px] uppercase tracking-[0.24em] text-ink/60">
+                    {bookingStatusLabel(booking.status)}
                   </span>
                   <h2 className="mt-1 font-serif text-2xl leading-tight md:text-4xl">{booking.listing.title}</h2>
                   <BookingDates booking={booking} className="mt-2 hidden items-center gap-1 text-sm text-ink/70 md:flex" />

@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 
 import { IMG } from './images';
-import { photo, reveal, useInView } from './motion';
+import { reveal, useInView, photoProps } from './motion';
 
 const KEYS = [
   { keys: ['S'], label: 'SEARCH' },
@@ -15,7 +15,7 @@ const StepInside = () => {
 
   return (
     <section ref={ref} className="relative h-[100svh] min-h-[560px] overflow-hidden text-white">
-      <img src={photo(IMG.stepInside, 2400)} alt="Brick house with gables under an evening sky" className="absolute inset-0 h-full w-full object-cover" />
+      <img {...photoProps(IMG.stepInside, 2400)} alt="Brick house with gables under an evening sky" className="absolute inset-0 h-full w-full object-cover" />
       <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/30" />
 
       <div className="relative flex h-full flex-col px-5 pt-14 pb-8 md:px-8">

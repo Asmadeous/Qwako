@@ -11,17 +11,7 @@ import PlaceGallery from '../components/ui/PlaceGallery';
 import Spinner from '../components/ui/Spinner';
 import { api, errorMessageFrom } from '../utils/axios';
 import { formatPrice } from '@/utils/currency';
-
-const STATUS_LABELS = {
-  confirmed: 'Confirmed',
-  pending_payment: 'Awaiting payment',
-  requested: 'Requested',
-  declined: 'Declined',
-  expired: 'Expired',
-  cancelled_by_guest: 'Cancelled by you',
-  cancelled_by_owner: 'Cancelled by the owner',
-  completed: 'Completed',
-};
+import { bookingStatusLabel } from '@/utils/bookingStatus';
 
 const SingleBookedPlace = () => {
   const { id } = useParams();
@@ -32,13 +22,16 @@ const SingleBookedPlace = () => {
   const [searchParams] = useSearchParams();
   const returnedFromPaystack = searchParams.has('reference');
   const timer = useRef(null);
+  const active = useRef(true);
 
   // Ask the server (which asks Paystack) whether a held booking has been paid.
   // After returning from Paystack, M-Pesa can take a few seconds, so retry briefly.
   const checkPayment = async (attempt = 0) => {
+    if (!active.current) return;
     setChecking(true);
     try {
       const { data } = await api.post(`/bookings/${id}/payment/verify`);
+      if (!active.current) return;
       setBooking(data.booking);
       if (data.booking.status === 'confirmed') {
         toast.success('Payment received. Your stay is confirmed.', { toastId: 'paid' });
@@ -47,12 +40,14 @@ const SingleBookedPlace = () => {
         return;
       }
     } catch (error) {
+      if (!active.current) return;
       toast.error(errorMessageFrom(error), { toastId: 'verify' });
     }
     setChecking(false);
   };
 
   useEffect(() => {
+    active.current = true;
     setLoading(true);
     api
       .get(`/bookings/${id}`)
@@ -62,7 +57,11 @@ const SingleBookedPlace = () => {
       })
       .catch(() => setBooking(null))
       .finally(() => setLoading(false));
-    return () => clearTimeout(timer.current);
+    return () => {
+      // Stop payment checks once the guest leaves this booking.
+      active.current = false;
+      clearTimeout(timer.current);
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
@@ -98,7 +97,7 @@ const SingleBookedPlace = () => {
             <div className="mt-2 grid gap-6 md:grid-cols-[minmax(0,1fr)_320px] md:items-start">
               <div>
                 <p className="inline-flex rounded-full border border-ink/20 px-3 py-1 text-sm">
-                  {STATUS_LABELS[booking.status] ?? booking.status}
+                  {bookingStatusLabel(booking.status)}
                 </p>
                 <h2 className="mt-3 font-serif text-4xl leading-tight md:text-5xl">
                   <Link to={`/place/${booking.listing.id}`} className="hover:underline hover:decoration-ink/30 hover:underline-offset-4">
@@ -166,7 +165,11 @@ const SingleBookedPlace = () => {
                   will confirm or refund it.
                 </p>
                 <Link
-                  to={`/place/${booking.listing.id}`}
+                  to={`/place/${booking.listing.id}?${new URLSearchParams({
+                    check_in: booking.check_in,
+                    check_out: booking.check_out,
+                    guests: String(booking.guests_count),
+                  })}`}
                   className="mt-4 inline-flex h-11 items-center rounded-full bg-ink px-6 text-sm font-medium text-sand transition-colors hover:bg-ink/90"
                 >
                   Book again

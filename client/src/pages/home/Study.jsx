@@ -1,5 +1,5 @@
 import { IMG } from './images';
-import { photo, useSectionProgress } from './motion';
+import { useSectionProgress, photoProps } from './motion';
 
 const SLIDES = [
   {
@@ -56,7 +56,7 @@ const Study = () => {
           );
           const image = (
             <div className="overflow-hidden rounded-2xl">
-              <img src={photo(s.image, 1600)} alt="" className="h-full w-full object-cover" />
+              <img {...photoProps(s.image, 1600)} alt="" className="h-full w-full object-cover" />
             </div>
           );
           return (

@@ -12,6 +12,14 @@ import PhotosUploader from '@/components/ui/PhotosUploader';
 import VideosUploader from '@/components/ui/VideosUploader';
 import Spinner from '@/components/ui/Spinner';
 
+// Form fields whose server errors are reported under other names.
+const ERROR_KEYS = {
+  address: ['address', 'country'],
+  price: ['nightly_price_cents'],
+  cleaning: ['cleaning_charge_cents'],
+  amenities: ['amenity_keys', 'amenities'],
+};
+
 const EMPTY = {
   title: '',
   address: '',
@@ -61,8 +69,18 @@ const PlacesFormPage = () => {
       .finally(() => setLoading(false));
   }, [id]);
 
+  // A field's error clears as soon as the owner edits it.
+  const clearErrors = (keys) =>
+    setErrors((current) => {
+      if (!keys.some((key) => current[key])) return current;
+      const next = { ...current };
+      keys.forEach((key) => delete next[key]);
+      return next;
+    });
+
   const handleChange = (e) => {
     const { name, value, type } = e.target;
+    clearErrors(ERROR_KEYS[type === 'checkbox' ? 'amenities' : name] ?? [name]);
     if (type === 'checkbox') {
       setForm((current) => ({
         ...current,
@@ -165,12 +183,24 @@ const PlacesFormPage = () => {
         </>)}
 
         {section('Photos', 'The first photo is the cover. Up to 30.', <>
-          <PhotosUploader addedPhotos={photos} setAddedPhotos={setPhotos} />
+          <PhotosUploader
+            addedPhotos={photos}
+            setAddedPhotos={(next) => {
+              clearErrors(['photos']);
+              setPhotos(next);
+            }}
+          />
           {fieldError('photos')}
         </>)}
 
         {section('Videos', 'Optional walkthroughs, shown on the listing in this order. Up to 10.', <>
-          <VideosUploader videos={videos} setVideos={setVideos} />
+          <VideosUploader
+            videos={videos}
+            setVideos={(next) => {
+              clearErrors(['videos']);
+              setVideos(next);
+            }}
+          />
           {fieldError('videos')}
         </>)}
 

@@ -19,6 +19,7 @@ const EditProfileDialog = () => {
   const { user, updateProfile } = useAuth();
   const uploadRef = useRef(null);
   const [picture, setPicture] = useState(null);
+  const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
   const [formError, setFormError] = useState('');
@@ -74,6 +75,7 @@ const EditProfileDialog = () => {
       setPicture(null);
       setUserData((current) => ({ ...current, current_password: '', password: '', confirm_password: '' }));
       toast.success('Profile updated.');
+      setOpen(false);
       return;
     }
     setErrors(res.fieldErrors || {});
@@ -92,11 +94,11 @@ const EditProfileDialog = () => {
   });
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button className="rounded-full bg-ink text-sand hover:bg-ink/90">
           <PenSquare className="mr-2 h-4 w-4" />
-          Edit Profile
+          Edit profile
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[500px]">

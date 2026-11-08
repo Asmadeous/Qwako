@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react';
-import { Navigate } from 'react-router-dom';
-import { addDays, differenceInCalendarDays, format, startOfToday } from 'date-fns';
+import { Navigate, useLocation, useSearchParams } from 'react-router-dom';
+import { addDays, differenceInCalendarDays, format, isValid, parseISO, startOfToday } from 'date-fns';
 import { toast } from 'react-toastify';
 
 import { useAuth } from '../../../hooks';
@@ -10,15 +10,32 @@ import { formatPrice } from '@/utils/currency';
 
 const toISODate = (date) => format(date, 'yyyy-MM-dd');
 
+// Dates and guests carried in the address (?check_in=&check_out=&guests=), so a
+// guest who signs in to book comes back to the same choice. Defaults to one
+// night from today.
+const initialChoice = (params, maxGuests) => {
+  const today = startOfToday();
+  const from = parseISO(params.get('check_in') || '');
+  const to = parseISO(params.get('check_out') || '');
+  const datesOk = isValid(from) && isValid(to) && from >= today && to > from;
+  const guests = Number(params.get('guests'));
+  return {
+    dateRange: datesOk ? { from, to } : { from: today, to: addDays(today, 1) },
+    guests: Number.isInteger(guests) && guests >= 1 && guests <= maxGuests ? guests : 1,
+  };
+};
+
 const BookingWidget = ({ place }) => {
   const { user } = useAuth();
-  // One night from today by default; guests change it in the calendar.
-  const [dateRange, setDateRange] = useState(() => ({ from: startOfToday(), to: addDays(startOfToday(), 1) }));
-  const [guests, setGuests] = useState(1);
+  const location = useLocation();
+  const [searchParams] = useSearchParams();
+  const [initial] = useState(() => initialChoice(searchParams, place.max_guests));
+  const [dateRange, setDateRange] = useState(initial.dateRange);
+  const [guests, setGuests] = useState(initial.guests);
   const [errors, setErrors] = useState({});
   const [formError, setFormError] = useState('');
   const [submitting, setSubmitting] = useState(false);
-  const [redirect, setRedirect] = useState('');
+  const [redirect, setRedirect] = useState(null);
   const inFlight = useRef(false);
 
   const nights =
@@ -27,7 +44,14 @@ const BookingWidget = ({ place }) => {
 
   const handleBooking = async (e) => {
     e.preventDefault();
-    if (!user) return setRedirect('/login');
+    if (!user) {
+      const choice = new URLSearchParams({ guests: String(guests) });
+      if (dateRange?.from && dateRange?.to) {
+        choice.set('check_in', toISODate(dateRange.from));
+        choice.set('check_out', toISODate(dateRange.to));
+      }
+      return setRedirect({ to: '/login', state: { from: `${location.pathname}?${choice}` } });
+    }
     if (inFlight.current) return;
     if (nights < 1) {
       setErrors({});
@@ -56,7 +80,7 @@ const BookingWidget = ({ place }) => {
         return;
       }
       toast.success('Booked. Your stay is confirmed.');
-      setRedirect(`/account/bookings/${data.booking.id}`);
+      setRedirect({ to: `/account/bookings/${data.booking.id}` });
     } catch (error) {
       setErrors(fieldErrorsFrom(error));
       setFormError(errorMessageFrom(error));
@@ -74,7 +98,7 @@ const BookingWidget = ({ place }) => {
   if (user) buttonLabel = paysOnline ? 'Book and pay' : 'Book this stay';
   if (submitting) buttonLabel = paysOnline ? 'Opening payment...' : 'Booking...';
 
-  if (redirect) return <Navigate to={redirect} />;
+  if (redirect) return <Navigate to={redirect.to} state={redirect.state} />;
 
   const dateErrors = [errors.base, errors.check_in, errors.check_out, errors.listing].filter(Boolean);
 

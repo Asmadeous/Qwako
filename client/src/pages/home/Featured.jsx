@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { usePlaces } from '../../../hooks';
 import { formatPrice } from '@/utils/currency';
 import { range, useSectionProgress } from './motion';
+import { unsplashSrcSet } from '@/utils/images';
 
 // The 3D "structure" walkthrough on the reference site becomes a full-screen
 // walk through seven featured stays, with the same numbering and progress UI.
@@ -32,6 +33,8 @@ const Featured = () => {
           <img
             key={s.id}
             src={s.photos?.[0]?.replace(/w=\d+/, 'w=2400')}
+            srcSet={unsplashSrcSet(s.photos?.[0], 2400)}
+            sizes="100vw"
             alt={s.title}
             className="absolute inset-0 h-full w-full object-cover transition-all duration-1000 ease-out"
             style={{

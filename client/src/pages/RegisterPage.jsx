@@ -1,15 +1,17 @@
 import { useEffect, useRef, useState } from 'react';
-import { Link, Navigate } from 'react-router-dom';
+import { Link, Navigate, useLocation } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 import AuthField from '@/components/ui/AuthField';
 import Spinner from '@/components/ui/Spinner';
 import { useAuth } from '../../hooks';
+import { returnPathFrom } from '@/utils';
 
 const FIELDS = ['name', 'email', 'password'];
 
 const RegisterPage = () => {
   const auth = useAuth();
+  const location = useLocation();
   const [formData, setFormData] = useState({ name: '', email: '', password: '' });
   const [fieldErrors, setFieldErrors] = useState({});
   const [formError, setFormError] = useState('');
@@ -55,7 +57,7 @@ const RegisterPage = () => {
     setFailedSubmits((count) => count + 1);
   };
 
-  if (redirect) return <Navigate to="/" />;
+  if (redirect) return <Navigate to={returnPathFrom(location.state)} replace />;
   if (auth.loading) return <Spinner />;
   if (auth.user) return <Navigate to="/account" />;
 
@@ -120,7 +122,7 @@ const RegisterPage = () => {
 
         <p className="mt-6 border-t border-ink/15 pt-6 text-ink/70">
           Already have an account?{' '}
-          <Link className="text-ink underline decoration-ink/40 underline-offset-4 hover:decoration-ink" to="/login">
+          <Link className="text-ink underline decoration-ink/40 underline-offset-4 hover:decoration-ink" to="/login" state={location.state}>
             Sign in
           </Link>
         </p>

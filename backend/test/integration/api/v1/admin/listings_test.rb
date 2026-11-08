@@ -70,6 +70,16 @@ class Api::V1::Admin::ListingsTest < ActionDispatch::IntegrationTest
     assert_equal %w[max_guests photos title], response.parsed_body.dig("error", "details").keys.sort
   end
 
+  test "field errors use the form's labels and a blank area gets one error" do
+    sign_in_as users(:owner)
+    post api_v1_admin_listings_path, params: { listing: VALID.merge(title: "", address: "", photo_urls: []) }, as: :json
+    details = response.parsed_body.dig("error", "details")
+    assert_equal [ "Name can't be blank" ], details["title"]
+    assert_equal [ "Area can't be blank" ], details["address"]
+    assert_equal [ "Photos must include at least one" ], details["photos"]
+    assert_nil details["country"]
+  end
+
   test "update replaces photos and amenities in order" do
     sign_in_as users(:owner)
     cottage = listings(:cottage)
