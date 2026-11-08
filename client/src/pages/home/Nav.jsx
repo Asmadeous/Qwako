@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
+import { useAuth } from '../../../hooks';
+
 const LINKS = [
   { label: 'Stays', to: '/stays' },
   { label: 'Featured', href: '#featured' },
@@ -9,6 +11,9 @@ const LINKS = [
 
 const Nav = () => {
   const [open, setOpen] = useState(false);
+  const { user } = useAuth();
+  // Signed-in visitors go to their account; everyone else to sign in.
+  const account = user ? { to: '/account', label: 'Account' } : { to: '/login', label: 'Sign in' };
 
   useEffect(() => {
     document.body.style.overflow = open ? 'hidden' : '';
@@ -26,18 +31,23 @@ const Nav = () => {
         <a href="#top" className="pointer-events-auto text-base font-extrabold tracking-tight">
           T&amp;G BnB
         </a>
-        <button
-          onClick={() => setOpen(true)}
-          className="pointer-events-auto flex items-center gap-2 bg-transparent text-sm font-medium"
-          aria-expanded={open}
-        >
+        <div className="pointer-events-auto flex items-center gap-6">
+          <Link to={account.to} className="inline-flex min-h-11 items-center text-sm font-medium hover:underline">
+            {account.label}
+          </Link>
+          <button
+            onClick={() => setOpen(true)}
+            className="flex min-h-11 items-center gap-2 bg-transparent text-sm font-medium"
+            aria-expanded={open}
+          >
           Menu
           <span className="grid grid-cols-2 gap-[2px]">
             {[0, 1, 2, 3].map((i) => (
-              <span key={i} className="h-[3px] w-[3px] rounded-full bg-current" />
-            ))}
-          </span>
-        </button>
+                <span key={i} className="h-[3px] w-[3px] rounded-full bg-current" />
+              ))}
+            </span>
+          </button>
+        </div>
       </nav>
 
       <div
@@ -82,7 +92,7 @@ const Nav = () => {
         </ul>
         <div className="flex justify-between text-sm font-medium text-ink/60">
           <span>Stays, considered.</span>
-          <Link to="/login">Sign in</Link>
+          <Link to={account.to} className="hover:underline">{account.label}</Link>
         </div>
       </div>
     </>
