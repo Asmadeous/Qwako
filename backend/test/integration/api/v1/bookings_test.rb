@@ -34,6 +34,7 @@ class Api::V1::BookingsTest < ActionDispatch::IntegrationTest
     booking = response.parsed_body["booking"]
     assert_equal "KES", booking["currency"]
     assert_equal 3 * 950000, booking["total_cents"]
+    assert_equal "pending_payment", booking["status"]
   end
 
   test "overlapping dates are refused, back-to-back stays are fine" do

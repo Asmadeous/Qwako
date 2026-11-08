@@ -35,6 +35,7 @@ const BookingWidget = ({ place }) => {
       return;
     }
 
+    let leaving = false;
     inFlight.current = true;
     setSubmitting(true);
     setErrors({});
@@ -48,16 +49,30 @@ const BookingWidget = ({ place }) => {
           guests_count: Number(guests),
         },
       });
+      if (data.checkout_url) {
+        // Paystack's page takes M-Pesa or card, then returns to the booking.
+        leaving = true;
+        window.location.assign(data.checkout_url);
+        return;
+      }
       toast.success('Booked. Your stay is confirmed.');
       setRedirect(`/account/bookings/${data.booking.id}`);
     } catch (error) {
       setErrors(fieldErrorsFrom(error));
       setFormError(errorMessageFrom(error));
     } finally {
-      inFlight.current = false;
-      setSubmitting(false);
+      // Keep the button busy while the browser leaves for Paystack.
+      if (!leaving) {
+        inFlight.current = false;
+        setSubmitting(false);
+      }
     }
   };
+
+  const paysOnline = place.currency === 'KES';
+  let buttonLabel = 'Sign in to book';
+  if (user) buttonLabel = paysOnline ? 'Book and pay' : 'Book this stay';
+  if (submitting) buttonLabel = paysOnline ? 'Opening payment...' : 'Booking...';
 
   if (redirect) return <Navigate to={redirect} />;
 
@@ -146,8 +161,13 @@ const BookingWidget = ({ place }) => {
       )}
 
       <button className="primary mt-5 !mb-0 min-h-12" disabled={submitting} aria-busy={submitting}>
-        {submitting ? 'Booking...' : user ? 'Book this stay' : 'Sign in to book'}
+        {buttonLabel}
       </button>
+      {paysOnline && (
+        <p className="mt-3 text-center text-sm text-ink/60">
+          Pay by M-Pesa or card on Paystack. Your dates are held for 15 minutes while you pay.
+        </p>
+      )}
     </form>
   );
 };

@@ -3,6 +3,9 @@ require_relative "../config/environment"
 require "rails/test_help"
 require_relative "test_helpers"
 
+# Webhook signatures are checked against this key; no request leaves the test.
+ENV["PAYSTACK_SECRET_KEY"] = "sk_test_tgbnb"
+
 module ActiveSupport
   class TestCase
     # Run tests in parallel with specified workers
@@ -20,6 +23,10 @@ module ActionDispatch
     include ApiTestHelpers
 
     # Rate-limit counters live in Rails.cache; start each test from zero.
-    setup { Rails.cache.clear }
+    setup do
+      Rails.cache.clear
+      Paystack.client = FakePaystack.new
+    end
+    teardown { Paystack.client = nil }
   end
 end

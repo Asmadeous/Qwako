@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_11_08_000001) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_08_000002) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gist"
   enable_extension "citext"
@@ -131,6 +131,27 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_08_000001) do
     t.check_constraint "status::text = ANY (ARRAY['draft'::character varying, 'published'::character varying, 'unlisted'::character varying]::text[])", name: "listings_status_valid"
   end
 
+  create_table "payments", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "booking_id", null: false
+    t.string "provider", default: "paystack", null: false
+    t.string "reference", null: false
+    t.integer "amount_cents", null: false
+    t.string "currency", null: false
+    t.string "status", default: "pending", null: false
+    t.string "authorization_url"
+    t.string "channel"
+    t.string "provider_transaction_id"
+    t.datetime "paid_at"
+    t.boolean "needs_refund", default: false, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["booking_id"], name: "index_payments_on_booking_id"
+    t.index ["reference"], name: "index_payments_on_reference", unique: true
+    t.check_constraint "amount_cents > 0", name: "payments_amount_positive"
+    t.check_constraint "currency::text = ANY (ARRAY['KES'::character varying, 'GBP'::character varying]::text[])", name: "payments_currency_valid"
+    t.check_constraint "status::text = ANY (ARRAY['pending'::character varying, 'succeeded'::character varying, 'failed'::character varying]::text[])", name: "payments_status_valid"
+  end
+
   create_table "sessions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "user_id", null: false
     t.string "ip_address"
@@ -159,5 +180,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_08_000001) do
   add_foreign_key "listing_amenities", "listings", on_delete: :cascade
   add_foreign_key "listing_photos", "listings", on_delete: :cascade
   add_foreign_key "listing_videos", "listings", on_delete: :cascade
+  add_foreign_key "payments", "bookings"
   add_foreign_key "sessions", "users", on_delete: :cascade
 end

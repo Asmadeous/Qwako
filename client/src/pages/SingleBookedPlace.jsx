@@ -1,5 +1,7 @@
-import { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { useEffect, useRef, useState } from 'react';
+import { Link, useParams, useSearchParams } from 'react-router-dom';
+import { format, parseISO } from 'date-fns';
+import { toast } from 'react-toastify';
 import { ChevronLeft, Users } from 'lucide-react';
 
 import AccountNav from '../components/ui/AccountNav';
@@ -7,7 +9,7 @@ import AddressLink from '../components/ui/AddressLink';
 import BookingDates from '../components/ui/BookingDates';
 import PlaceGallery from '../components/ui/PlaceGallery';
 import Spinner from '../components/ui/Spinner';
-import { api } from '../utils/axios';
+import { api, errorMessageFrom } from '../utils/axios';
 import { formatPrice } from '@/utils/currency';
 
 const STATUS_LABELS = {
@@ -25,15 +27,57 @@ const SingleBookedPlace = () => {
   const { id } = useParams();
   const [booking, setBooking] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [checking, setChecking] = useState(false);
+  const [paying, setPaying] = useState(false);
+  const [searchParams] = useSearchParams();
+  const returnedFromPaystack = searchParams.has('reference');
+  const timer = useRef(null);
+
+  // Ask the server (which asks Paystack) whether a held booking has been paid.
+  // After returning from Paystack, M-Pesa can take a few seconds, so retry briefly.
+  const checkPayment = async (attempt = 0) => {
+    setChecking(true);
+    try {
+      const { data } = await api.post(`/bookings/${id}/payment/verify`);
+      setBooking(data.booking);
+      if (data.booking.status === 'confirmed') {
+        toast.success('Payment received. Your stay is confirmed.', { toastId: 'paid' });
+      } else if (data.booking.status === 'pending_payment' && returnedFromPaystack && attempt < 6) {
+        timer.current = setTimeout(() => checkPayment(attempt + 1), 4000);
+        return;
+      }
+    } catch (error) {
+      toast.error(errorMessageFrom(error), { toastId: 'verify' });
+    }
+    setChecking(false);
+  };
 
   useEffect(() => {
     setLoading(true);
     api
       .get(`/bookings/${id}`)
-      .then(({ data }) => setBooking(data.booking))
+      .then(({ data }) => {
+        setBooking(data.booking);
+        if (data.booking.status === 'pending_payment') checkPayment();
+      })
       .catch(() => setBooking(null))
       .finally(() => setLoading(false));
+    return () => clearTimeout(timer.current);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
+
+  const payNow = async () => {
+    setPaying(true);
+    try {
+      const { data } = await api.post(`/bookings/${id}/payment`);
+      window.location.assign(data.checkout_url);
+    } catch (error) {
+      toast.error(errorMessageFrom(error));
+      setPaying(false);
+      const { data } = await api.get(`/bookings/${id}`).catch(() => ({ data: null }));
+      if (data) setBooking(data.booking);
+    }
+  };
 
   if (loading) return <Spinner label="Loading booking" />;
 
@@ -91,6 +135,44 @@ const SingleBookedPlace = () => {
                 </div>
               </dl>
             </div>
+
+
+            {booking.status === 'pending_payment' && (
+              <section aria-live="polite" className="mt-6 rounded-2xl border border-ink/15 bg-paper p-5 md:max-w-xl">
+                <h3 className="font-serif text-2xl">
+                  {checking ? 'Checking your payment...' : 'Waiting for your payment'}
+                </h3>
+                <p className="mt-1 text-sm text-ink/70">
+                  Your dates are held until{' '}
+                  <span className="tabular">{format(parseISO(booking.hold_expires_at), 'HH:mm')}</span>. Pay by M-Pesa or card
+                  on Paystack to confirm the stay.
+                </p>
+                <button
+                  type="button"
+                  onClick={payNow}
+                  disabled={paying || checking}
+                  className="mt-4 h-11 rounded-full bg-ink px-6 text-sm font-medium text-sand transition-colors hover:bg-ink/90 active:scale-[0.98] disabled:opacity-60"
+                >
+                  {paying ? 'Opening payment...' : 'Pay now'}
+                </button>
+              </section>
+            )}
+
+            {booking.status === 'expired' && booking.pay_online && (
+              <section className="mt-6 rounded-2xl border border-ink/15 bg-paper p-5 md:max-w-xl">
+                <h3 className="font-serif text-2xl">The hold on these dates ended</h3>
+                <p className="mt-1 text-sm text-ink/70">
+                  Payment didn't arrive within 15 minutes, so the dates were released. If you were charged, the owner
+                  will confirm or refund it.
+                </p>
+                <Link
+                  to={`/place/${booking.listing.id}`}
+                  className="mt-4 inline-flex h-11 items-center rounded-full bg-ink px-6 text-sm font-medium text-sand transition-colors hover:bg-ink/90"
+                >
+                  Book again
+                </Link>
+              </section>
+            )}
 
             <div className="mt-10">
               <PlaceGallery place={booking.listing} />

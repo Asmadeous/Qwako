@@ -16,6 +16,10 @@ module JsonRenderers
       booking.slice(
         :id, :status, :check_in, :check_out, :nights, :guests_count, :currency,
         :nightly_price_cents, :cleaning_charge_cents, :total_cents, :created_at
-      ).merge(listing: listing_json(booking.listing))
+      ).merge(
+        listing: listing_json(booking.listing),
+        pay_online: booking.pay_online?,
+        hold_expires_at: booking.hold_expires_at
+      )
     end
 end

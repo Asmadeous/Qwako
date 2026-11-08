@@ -51,8 +51,7 @@ replaces rather than patches:
 Market: Kenya first, the UK later. Each stay's country is the last part of its
 address and sets its currency: Kenya prices in KES (`Ksh 9,500`), England,
 Scotland, Wales and Northern Ireland in GBP. English, dates shown as
-`5 Nov 2026`. Open questions for the Kenya launch: the payment provider (M-Pesa
-and cards in KES; see Booking and payments), Kenya time zone for check-in rules,
+`5 Nov 2026`. Open questions for the Kenya launch: Kenya time zone for check-in rules,
 and Kenyan legal requirements (Data Protection Act 2019, tourism levy). Most guests use a phone; every page
 must work at 360px wide.
 
@@ -90,8 +89,10 @@ must work at 360px wide.
   **Request to Book** (card authorised at request; the owner has 24 hours to
   accept; captured on acceptance, released on decline or expiry).
 - Double bookings are impossible at the database level.
-- Payments (provider for KES to be confirmed for the Kenya launch; M-Pesa is
-  expected). For UK stays, **Stripe** paid straight into the client's Stripe account:
+- Payments for Kenyan stays with **Paystack** in KES (M-Pesa and cards on
+  Paystack's checkout), confirmed from the guest's return and a signed webhook;
+  dates are held for 15 minutes. For UK stays (later), **Stripe** paid straight
+  into the client's Stripe account:
   cards with 3-D Secure, Apple Pay and Google Pay. Unpaid holds expire after
   15 minutes and free the dates.
 - Receipts for every payment.

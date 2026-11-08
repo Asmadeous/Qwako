@@ -1,6 +1,6 @@
 # T&G BnB - Project Overview
 
-<!-- blueprint:source-hash beb765fd233f03eccafee751f8a27ca382708c9e80b49e2f73641caaa667cffd -->
+<!-- blueprint:source-hash 34b5c155489ca31474409642b3a21b115601a40df05957cfd6832d54561ed4bd -->
 
 > Direct-booking website for one owner's holiday homes, Kenya first and the UK later: nightly stays with an
 > Airbnb-style booking flow, plus guest and owner dashboards. Not a marketplace.
@@ -23,8 +23,8 @@ replaces it (Rails backend) rather than patching it.
 | Admin | Owner and staff; created by the owner, never by sign-up | Properties, calendar, prices, bookings, guests, payments, reviews, messages, occupancy and revenue. |
 
 Market: Kenya first, the UK later. The address's country sets the currency:
-Kenya in KES, UK nations in GBP. Dates as `5 Nov 2026`. Open for the Kenya
-launch: payment provider (M-Pesa expected), time zone rules, Kenyan law (Data
+Kenya in KES, UK nations in GBP. Dates as `5 Nov 2026`. Kenyan stays are paid
+through Paystack (M-Pesa or card). Open for the Kenya launch: time zone rules, Kenyan law (Data
 Protection Act 2019, tourism levy). Mostly phone users; every page works at 360px.
 
 ## Usage model

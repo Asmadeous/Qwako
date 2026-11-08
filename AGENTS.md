@@ -104,6 +104,11 @@ Backend (`backend/`):
 - Lint: `bin/rubocop`
 - Security scans: `bin/brakeman --no-pager` and `bin/bundler-audit`
 - Background jobs (when needed outside Puma): `bin/jobs`
+- Payments (Kenyan stays, KES): Paystack. Set `PAYSTACK_SECRET_KEY` (use an
+  `sk_test_...` key outside production) and, in production, `APP_URL` (where
+  Paystack returns guests). Set the Paystack dashboard webhook URL to
+  `<site>/api/v1/webhooks/paystack`. Without a key, Kenyan bookings show "We
+  couldn't start the payment". Tests use a fake client and never call Paystack.
 
 Client (`client/`):
 

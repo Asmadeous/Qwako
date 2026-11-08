@@ -5,7 +5,14 @@ Rails.application.routes.draw do
       resource :session, only: %i[show create destroy]
       resource :profile, only: :update
       resources :listings, only: %i[index show]
-      resources :bookings, only: %i[index show create]
+      resources :bookings, only: %i[index show create] do
+        resource :payment, only: :create do
+          post :verify
+        end
+      end
+      namespace :webhooks do
+        resource :paystack, only: :create, controller: "paystack"
+      end
 
       namespace :admin do
         resources :listings, only: %i[index create update]
