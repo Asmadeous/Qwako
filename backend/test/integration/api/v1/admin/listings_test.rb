@@ -103,4 +103,34 @@ class Api::V1::Admin::ListingsTest < ActionDispatch::IntegrationTest
     assert_equal 2, cottage.photos.count
     assert_equal 2, cottage.amenities.count
   end
+
+  test "the owner deletes a home nobody has booked, with its photos" do
+    sign_in_as users(:owner)
+    listing = listings(:loft)
+    listing.bookings.delete_all
+    get api_v1_admin_listing_path(listing), as: :json
+    assert_equal false, response.parsed_body.dig("listing", "has_bookings")
+    assert_difference({ "Listing.count" => -1, "ListingPhoto.count" => -listing.photos.count }) do
+      delete api_v1_admin_listing_path(listing), as: :json
+    end
+    assert_response :no_content
+  end
+
+  test "a home with bookings can't be deleted, and guests can't delete" do
+    listing = listings(:loft)
+    Booking.create!(listing:, guest: users(:ada), check_in: Date.current + 50, check_out: Date.current + 52,
+      guests_count: 1, status: "cancelled_by_guest")
+
+    sign_in_as users(:ada)
+    delete api_v1_admin_listing_path(listing), as: :json
+    assert_response :forbidden
+
+    sign_in_as users(:owner)
+    get api_v1_admin_listing_path(listing), as: :json
+    assert response.parsed_body.dig("listing", "has_bookings")
+    assert_no_difference "Listing.count" do
+      delete api_v1_admin_listing_path(listing), as: :json
+    end
+    assert_error :unprocessable_content, "has_bookings"
+  end
 end

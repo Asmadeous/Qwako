@@ -70,6 +70,22 @@ class Booking < ApplicationRecord
     true
   end
 
+  # A guest can cancel until their check-in day. Its dates free up at once;
+  # money already paid is flagged for the owner to refund.
+  def guest_can_cancel?
+    status.in?(ACTIVE_STATUSES) && check_in > Time.zone.today
+  end
+
+  def cancel_by_guest!
+    with_lock do
+      return false unless guest_can_cancel?
+
+      update!(status: "cancelled_by_guest")
+      payments.succeeded.where(refunded_at: nil).update_all(needs_refund: true, updated_at: Time.current)
+    end
+    true
+  end
+
   def refund_due?
     payments.any?(&:refund_due?)
   end
@@ -92,7 +108,7 @@ class Booking < ApplicationRecord
     def guests_fit
       return unless listing && guests_count.to_i > listing.max_guests
 
-      errors.add(:guests_count, "must be #{listing.max_guests} or fewer for this stay")
+      errors.add(:guests_count, "must be #{listing.max_guests} or fewer for this home")
     end
 
     def listing_is_bookable

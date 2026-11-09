@@ -10,7 +10,7 @@ const InfoCard = ({ place }) => {
       to={`/account/places/${place.id}`}
       className="flex flex-col gap-5 rounded-2xl border border-ink/20 p-3 transition-colors hover:bg-paper sm:flex-row"
     >
-      <div className="h-40 w-full shrink-0 overflow-hidden rounded-xl bg-gray-200 sm:h-32 sm:w-44">
+      <div className="h-40 w-full shrink-0 overflow-hidden rounded-xl bg-ink/10 sm:h-32 sm:w-44">
         <PlaceImg place={place} className="h-full w-full object-cover" />
       </div>
       <div className="flex grow flex-col justify-between gap-2 py-1 pr-2">

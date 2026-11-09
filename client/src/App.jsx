@@ -1,4 +1,4 @@
-import { Routes, Route } from 'react-router-dom';
+import { Navigate, Routes, Route } from 'react-router-dom';
 import { Slide, ToastContainer } from 'react-toastify';
 import { AlertCircle, CheckCircle2, Info } from 'lucide-react';
 import 'react-toastify/dist/ReactToastify.css';
@@ -8,6 +8,8 @@ import RequireSignIn from './components/ui/RequireSignIn';
 import IndexPage from './pages/IndexPage';
 import HomePage from './pages/home/HomePage';
 import RegisterPage from './pages/RegisterPage';
+import ForgotPasswordPage from './pages/ForgotPasswordPage';
+import ResetPasswordPage from './pages/ResetPasswordPage';
 import LoginPage from './pages/LoginPage';
 import ProfilePage from './pages/ProfilePage';
 import PlacesPage from './pages/PlacesPage';
@@ -36,9 +38,12 @@ function App() {
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route element={<Layout />}>
-              <Route path="/stays" element={<IndexPage />} />
+              <Route path="/homes" element={<IndexPage />} />
+              <Route path="/stays" element={<Navigate to="/homes" replace />} />
               <Route path="/login" element={<LoginPage />} />
               <Route path="/register" element={<RegisterPage />} />
+              <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+              <Route path="/reset-password" element={<ResetPasswordPage />} />
               <Route path="/place/:id" element={<PlacePage />} />
               <Route element={<RequireSignIn />}>
                 <Route path="/account" element={<ProfilePage />} />

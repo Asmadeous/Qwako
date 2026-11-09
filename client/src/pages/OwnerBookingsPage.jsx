@@ -8,6 +8,7 @@ import { useAuth } from '../../hooks';
 import { api, errorMessageFrom } from '@/utils/axios';
 import { formatPrice } from '@/utils/currency';
 import { bookingStatusLabel, paymentSummary } from '@/utils/bookingStatus';
+import { Button } from '@/components/ui/button';
 
 const VIEWS = [
   { id: 'upcoming', label: 'Upcoming', empty: 'No upcoming bookings. New bookings appear here as soon as guests book.' },
@@ -151,13 +152,13 @@ const OwnerBookingsPageContent = () => {
             ))}
           </div>
           <label className="relative block md:w-80">
-            <span className="sr-only">Search by guest or stay</span>
+            <span className="sr-only">Search by guest or home</span>
             <Search aria-hidden className="pointer-events-none absolute left-4 top-1/2 size-4 -translate-y-1/2 text-ink/50" />
             <input
               type="search"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search by guest or stay"
+              placeholder="Search by guest or home"
               className="!my-0 h-11 !rounded-full !pl-10"
             />
           </label>
@@ -174,7 +175,7 @@ const OwnerBookingsPageContent = () => {
 
         <div className="mt-6 hidden gap-x-6 px-4 pb-2 text-xs text-ink/55 md:grid md:grid-cols-[11rem_minmax(0,1fr)_minmax(0,1fr)_8rem_10rem]" aria-hidden>
           <span>Dates</span>
-          <span>Stay</span>
+          <span>Home</span>
           <span>Guest</span>
           <span className="text-right">Total</span>
           <span className="text-right">Status</span>
@@ -189,9 +190,9 @@ const OwnerBookingsPageContent = () => {
         ) : error ? (
           <div role="alert" className="mt-6 rounded-2xl border border-ink/15 bg-paper p-5">
             <p>{error}</p>
-            <button type="button" onClick={() => setAttempt((n) => n + 1)} className="mt-3 h-11 rounded-full bg-ink px-6 text-sm text-sand">
+            <Button className="mt-3" onClick={() => setAttempt((n) => n + 1)}>
               Try again
-            </button>
+            </Button>
           </div>
         ) : bookings.length === 0 ? (
           <div className="mt-6 rounded-2xl border border-dashed border-ink/25 p-8 text-center">
@@ -210,15 +211,15 @@ const OwnerBookingsPageContent = () => {
               ))}
             </ul>
             {nextPage && (
-              <button
-                type="button"
+              <Button
+                variant="outline"
                 onClick={loadMore}
                 disabled={loadingMore}
                 aria-busy={loadingMore}
-                className="mx-auto mt-6 flex h-11 items-center rounded-full border border-ink/25 px-6 text-sm hover:border-ink/60"
+                className="mx-auto mt-6 flex"
               >
                 {loadingMore ? 'Loading...' : 'Show more bookings'}
-              </button>
+              </Button>
             )}
           </>
         )}

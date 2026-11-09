@@ -9,13 +9,13 @@ const SiteFooter = () => {
     <div className="rounded-3xl border border-ink/20 px-5 py-6 md:px-8">
       <div className="flex justify-between border-b border-ink/20 pb-6 text-sm font-medium">
         <span className="font-bold">T&amp;G BnB</span>
-        <span>Stays, considered.</span>
+        <span>Homes, considered.</span>
       </div>
 
       <div className="grid gap-10 py-14 md:grid-cols-[2fr_1fr_1fr]">
         <div>
           <h2 className="font-bold tracking-tight text-5xl leading-[0.95] sm:text-6xl md:text-8xl">
-            Stays,
+            Homes,
             <br />
             considered.
           </h2>
@@ -24,9 +24,9 @@ const SiteFooter = () => {
         <div>
           <span className="text-sm font-medium text-ink/60">Explore</span>
           <ul className="mt-4 space-y-2 text-sm">
-            <li><Link to="/stays" className="hover:underline">All stays</Link></li>
+            <li><Link to="/homes" className="hover:underline">All homes</Link></li>
             <li><a href="/#featured" className="hover:underline">Featured</a></li>
-            <li><a href="/#inside" className="hover:underline">Inside a stay</a></li>
+            <li><a href="/#inside" className="hover:underline">Inside a home</a></li>
           </ul>
         </div>
         <div>

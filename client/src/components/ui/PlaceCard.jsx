@@ -11,7 +11,7 @@ const PlaceCard = ({ place }) => {
 
   return (
     <Link to={`/place/${id}`} className="group block rounded-2xl">
-      <div className="aspect-[4/3] overflow-hidden rounded-2xl bg-gray-200">
+      <div className="aspect-[4/3] overflow-hidden rounded-2xl bg-ink/10">
         {photos?.[0] && (
           <img
             src={photos[0]}
@@ -39,10 +39,10 @@ const PlaceCard = ({ place }) => {
 
 export const PlaceCardSkeleton = () => (
   <div aria-hidden className="animate-pulse motion-reduce:animate-none">
-    <div className="aspect-[4/3] rounded-2xl bg-gray-200" />
-    <div className="mt-3 h-6 w-3/4 rounded bg-gray-200" />
-    <div className="mt-2 h-4 w-1/2 rounded bg-gray-200" />
-    <div className="mt-3 h-4 w-1/3 rounded bg-gray-200" />
+    <div className="aspect-[4/3] rounded-2xl bg-ink/10" />
+    <div className="mt-3 h-6 w-3/4 rounded bg-ink/10" />
+    <div className="mt-2 h-4 w-1/2 rounded bg-ink/10" />
+    <div className="mt-3 h-4 w-1/3 rounded bg-ink/10" />
   </div>
 );
 

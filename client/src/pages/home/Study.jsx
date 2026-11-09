@@ -4,7 +4,7 @@ import { useSectionProgress, photoProps } from './motion';
 const SLIDES = [
   {
     title: ['A study in', 'place, light', 'and calm.'],
-    text: 'Every stay is chosen for its setting, its natural light and the quiet way it fits into the day.',
+    text: 'Every home is chosen for its setting, its natural light and the quiet way it fits into the day.',
     image: IMG.evening,
     dark: true,
   },

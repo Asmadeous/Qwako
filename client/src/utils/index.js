@@ -23,8 +23,8 @@ export const removeItemFromLocalStorage = (key) => {
 };
 
 // Where to send someone after they sign in or sign up: the page that sent them
-// to sign in (passed in router state), or the home page. Only same-site paths.
-export const returnPathFrom = (state) => {
+// to sign in (passed in router state), or the fallback. Only same-site paths.
+export const returnPathFrom = (state, fallback = '/') => {
   const from = state?.from;
-  return typeof from === 'string' && from.startsWith('/') && !from.startsWith('//') ? from : '/';
+  return typeof from === 'string' && from.startsWith('/') && !from.startsWith('//') ? from : fallback;
 };

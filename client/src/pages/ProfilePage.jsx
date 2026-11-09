@@ -62,8 +62,8 @@ const ProfilePage = () => {
 
             <div className="flex flex-wrap gap-3">
               <EditProfileDialog />
-              <Button variant="outline" onClick={handleLogout} className="rounded-full border-ink bg-transparent text-ink hover:bg-ink/5">
-                <LogOut className="mr-2 h-4 w-4" />
+              <Button variant="outline" onClick={handleLogout}>
+                <LogOut aria-hidden className="size-4" />
                 Sign out
               </Button>
             </div>

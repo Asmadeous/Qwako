@@ -8,6 +8,8 @@ import Spinner from '@/components/ui/Spinner';
 import { api } from '@/utils/axios';
 import { formatPrice } from '@/utils/currency';
 import { bookingStatusLabel } from '@/utils/bookingStatus';
+import { buttonVariants } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 
 const BookingsPage = () => {
   const [bookings, setBookings] = useState([]);
@@ -46,21 +48,21 @@ const BookingsPage = () => {
           bookings.map((booking) => (
             <Link
               to={`/account/bookings/${booking.id}`}
-              className="group flex gap-5 overflow-hidden rounded-2xl border border-ink/20 p-3 transition-colors hover:bg-paper"
+              className="group flex flex-col gap-4 overflow-hidden rounded-2xl border border-ink/20 p-3 transition-colors hover:bg-paper sm:flex-row sm:gap-5"
               key={booking.id}
             >
-              <div className="h-28 w-32 shrink-0 overflow-hidden rounded-xl bg-gray-200 md:h-36 md:w-52">
+              <div className="h-40 w-full shrink-0 overflow-hidden rounded-xl bg-ink/10 sm:h-36 sm:w-52">
                 {booking.listing.photos[0] && (
                   <PlaceImg place={booking.listing} className="h-full w-full object-cover" />
                 )}
               </div>
-              <div className="flex grow flex-col justify-between py-1 pr-2">
+              <div className="flex grow flex-col justify-between gap-3 px-1 pb-1 sm:py-1 sm:pr-2">
                 <div>
                   <span className="text-sm font-medium text-ink/60">
                     {bookingStatusLabel(booking.status)}
                   </span>
                   <h2 className="mt-1 font-bold tracking-tight text-2xl leading-tight md:text-4xl">{booking.listing.title}</h2>
-                  <BookingDates booking={booking} className="mt-2 hidden items-center gap-1 text-sm text-ink/70 md:flex" />
+                  <BookingDates booking={booking} className="mt-2 text-sm text-ink/70" />
                 </div>
                 <span className="text-sm">
                   Total <strong className="font-semibold">{formatPrice(booking.total_cents, booking.currency)}</strong>
@@ -72,13 +74,10 @@ const BookingsPage = () => {
           <div className="rounded-3xl border border-ink/20 p-8 md:p-12">
             <h2 className="font-bold tracking-tight text-4xl md:text-5xl">No trips booked yet.</h2>
             <p className="mt-3 max-w-md text-sm text-ink/70">
-              Browse the cottages, cabins and city flats and pick your dates.
+              Pick a home and your dates. Your bookings will show up here.
             </p>
-            <Link
-              to="/stays"
-              className="mt-6 inline-block border-b border-ink pb-0.5 text-sm font-medium"
-            >
-              Browse stays <span className="ml-2">→</span>
+            <Link to="/homes" className={cn(buttonVariants(), 'mt-6')}>
+              Browse homes
             </Link>
           </div>
         )}

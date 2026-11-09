@@ -4,26 +4,22 @@ import { cva } from 'class-variance-authority';
 
 import { cn } from '@/lib/utils';
 
+// The site's only button style: a pill in the site's font. Use it for every
+// button and for links that look like buttons (asChild, or buttonVariants()).
+// size "lg" is for the one main action that ends a form (sign in, book, save).
 const buttonVariants = cva(
-  'inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50',
+  'inline-flex shrink-0 items-center justify-center gap-2 whitespace-nowrap rounded-full text-sm font-medium transition-[background-color,border-color,transform] duration-150 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink focus-visible:ring-offset-2 focus-visible:ring-offset-sand disabled:pointer-events-none disabled:opacity-60 motion-reduce:active:scale-100',
   {
     variants: {
       variant: {
-        default: 'bg-primary text-primary-foreground hover:bg-primary/90',
-        destructive:
-          'bg-destructive text-destructive-foreground hover:bg-destructive/90',
-        outline:
-          'border border-input bg-background hover:bg-accent hover:text-accent-foreground',
-        secondary:
-          'bg-secondary text-secondary-foreground hover:bg-secondary/80',
-        ghost: 'hover:bg-accent hover:text-accent-foreground',
-        link: 'text-primary underline-offset-4 hover:underline',
+        default: 'bg-ink text-sand hover:bg-ink/90',
+        outline: 'border border-ink/25 bg-transparent text-ink hover:border-ink/60',
+        danger: 'bg-red-800 text-white hover:bg-red-900',
+        'danger-outline': 'border border-red-800/40 bg-transparent text-red-800 hover:border-red-800',
       },
       size: {
-        default: 'h-10 px-4 py-2',
-        sm: 'h-9 rounded-md px-3',
-        lg: 'h-11 rounded-md px-8',
-        icon: 'h-10 w-10',
+        default: 'h-11 px-6',
+        lg: 'h-12 px-8',
       },
     },
     defaultVariants: {
@@ -33,18 +29,17 @@ const buttonVariants = cva(
   },
 );
 
-const Button = React.forwardRef(
-  ({ className, variant, size, asChild = false, ...props }, ref) => {
-    const Comp = asChild ? Slot : 'button';
-    return (
-      <Comp
-        className={cn(buttonVariants({ variant, size, className }))}
-        ref={ref}
-        {...props}
-      />
-    );
-  },
-);
+const Button = React.forwardRef(({ className, variant, size, asChild = false, type, ...props }, ref) => {
+  const Comp = asChild ? Slot : 'button';
+  return (
+    <Comp
+      className={cn(buttonVariants({ variant, size }), className)}
+      ref={ref}
+      type={asChild ? undefined : type ?? 'button'}
+      {...props}
+    />
+  );
+});
 Button.displayName = 'Button';
 
 export { Button, buttonVariants };

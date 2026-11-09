@@ -10,6 +10,10 @@ import BookingDates from '../components/ui/BookingDates';
 import PlaceGallery from '../components/ui/PlaceGallery';
 import PriceBreakdown from '../components/ui/PriceBreakdown';
 import Spinner from '../components/ui/Spinner';
+import { Button, buttonVariants } from '@/components/ui/button';
+import ConfirmDialog from '@/components/ui/ConfirmDialog';
+import { formatPrice } from '@/utils/currency';
+import { cn } from '@/lib/utils';
 import { api, errorMessageFrom } from '../utils/axios';
 import { bookingStatusLabel } from '@/utils/bookingStatus';
 
@@ -19,6 +23,9 @@ const SingleBookedPlace = () => {
   const [loading, setLoading] = useState(true);
   const [checking, setChecking] = useState(false);
   const [paying, setPaying] = useState(false);
+  const [confirmCancel, setConfirmCancel] = useState(false);
+  const [cancelling, setCancelling] = useState(false);
+  const [cancelError, setCancelError] = useState('');
   const [searchParams] = useSearchParams();
   const returnedFromPaystack = searchParams.has('reference');
   const timer = useRef(null);
@@ -78,6 +85,23 @@ const SingleBookedPlace = () => {
     }
   };
 
+  const cancelBooking = async () => {
+    setCancelling(true);
+    setCancelError('');
+    try {
+      const { data } = await api.post(`/bookings/${id}/cancel`);
+      active.current = false;
+      clearTimeout(timer.current);
+      setBooking(data.booking);
+      setConfirmCancel(false);
+      toast.success('Booking cancelled.');
+    } catch (error) {
+      setCancelError(errorMessageFrom(error));
+    } finally {
+      setCancelling(false);
+    }
+  };
+
   if (loading) return <Spinner label="Loading booking" />;
 
   return (
@@ -128,14 +152,9 @@ const SingleBookedPlace = () => {
                   <span className="tabular">{format(parseISO(booking.hold_expires_at), 'HH:mm')}</span>. Pay by M-Pesa or card
                   on Paystack to confirm the stay.
                 </p>
-                <button
-                  type="button"
-                  onClick={payNow}
-                  disabled={paying || checking}
-                  className="mt-4 h-11 rounded-full bg-ink px-6 text-sm font-medium text-sand transition-colors hover:bg-ink/90 active:scale-[0.98] disabled:opacity-60"
-                >
+                <Button className="mt-4" onClick={payNow} disabled={paying || checking}>
                   {paying ? 'Opening payment...' : 'Pay now'}
-                </button>
+                </Button>
               </section>
             )}
 
@@ -152,16 +171,70 @@ const SingleBookedPlace = () => {
                     check_out: booking.check_out,
                     guests: String(booking.guests_count),
                   })}`}
-                  className="mt-4 inline-flex h-11 items-center rounded-full bg-ink px-6 text-sm font-medium text-sand transition-colors hover:bg-ink/90"
+                  className={cn(buttonVariants(), 'mt-4')}
                 >
                   Book again
                 </Link>
               </section>
             )}
 
+            {booking.status === 'cancelled_by_guest' && booking.paid_cents > 0 && (
+              <section className="mt-6 rounded-2xl border border-ink/15 bg-paper p-5 md:max-w-xl">
+                <h3 className="font-bold tracking-tight text-2xl">Your refund</h3>
+                <p className="mt-1 text-sm text-ink/70">
+                  You paid {formatPrice(booking.paid_cents, booking.currency)}. This shows on the owner's bookings as a refund due, and they
+                  will refund you through Paystack, to the M-Pesa number or card you paid with.
+                </p>
+              </section>
+            )}
+
             <div className="mt-10">
               <PlaceGallery place={booking.listing} />
             </div>
+
+            {booking.guest_can_cancel && (
+              <section className="mt-10 border-t border-ink/15 pt-6">
+                <h3 className="font-bold tracking-tight text-2xl">Cancel this booking</h3>
+                <p className="mt-1 max-w-prose text-sm text-ink/70">
+                  You can cancel until the day before check-in. The dates are released straight away.
+                  {booking.paid_cents > 0 && ' The owner will refund what you paid.'}
+                </p>
+                <Button
+                  variant="danger-outline"
+                  className="mt-4"
+                  onClick={() => {
+                    setCancelError('');
+                    setConfirmCancel(true);
+                  }}
+                >
+                  Cancel booking
+                </Button>
+              </section>
+            )}
+
+            <ConfirmDialog
+              open={confirmCancel}
+              onOpenChange={setConfirmCancel}
+              title="Cancel this booking?"
+              confirmLabel="Cancel booking"
+              busyLabel="Cancelling..."
+              cancelLabel="Keep booking"
+              busy={cancelling}
+              error={cancelError}
+              tone="danger"
+              onConfirm={cancelBooking}
+            >
+              <p>
+                {booking.listing.title}, <BookingDates booking={booking} className="inline-flex" />
+              </p>
+              {booking.paid_cents > 0 && (
+                <p>
+                  You paid {formatPrice(booking.paid_cents, booking.currency)}. The owner will refund it to the M-Pesa
+                  number or card you paid with.
+                </p>
+              )}
+              <p>You can't undo this. To stay on these dates again you'd need to book again.</p>
+            </ConfirmDialog>
           </>
         ) : (
           <div className="mt-4 rounded-2xl border border-ink/15 px-6 py-14">
@@ -169,7 +242,7 @@ const SingleBookedPlace = () => {
             <p className="mt-2 text-ink/70">It may belong to another account. Your bookings are listed on the bookings tab.</p>
             <Link
               to="/account/bookings"
-              className="mt-6 inline-flex h-11 items-center rounded-full bg-ink px-6 text-sm font-medium text-sand transition-colors hover:bg-ink/90"
+              className={cn(buttonVariants(), 'mt-6')}
             >
               View your bookings
             </Link>

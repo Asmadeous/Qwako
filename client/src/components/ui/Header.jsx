@@ -46,8 +46,8 @@ export const Header = () => {
         </Link>
 
         <nav className="flex items-center gap-5 md:gap-7" aria-label="Main">
-          <NavLink to="/stays" className={navClass}>
-            Stays
+          <NavLink to="/homes" className={navClass}>
+            Homes
           </NavLink>
           {user ? (
             <Link to="/account" className="flex min-h-11 items-center gap-2 text-sm font-medium hover:underline">

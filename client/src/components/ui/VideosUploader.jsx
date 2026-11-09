@@ -19,7 +19,7 @@ const VideosUploader = ({ videos, setVideos }) => {
     e.target.value = '';
     if (files.length === 0) return;
     if (videos.length + files.length > MAX_VIDEOS) {
-      toast.error(`A stay can have at most ${MAX_VIDEOS} videos.`);
+      toast.error(`A home can have at most ${MAX_VIDEOS} videos.`);
       return;
     }
     const tooBig = files.find((file) => file.size > MAX_MB * 1024 * 1024);

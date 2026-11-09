@@ -110,6 +110,10 @@ Backend (`backend/`):
   Paystack returns guests). Set the Paystack dashboard webhook URL to
   `<site>/api/v1/webhooks/paystack`. Without a key, Kenyan bookings show "We
   couldn't start the payment". Tests use a fake client and never call Paystack.
+- Email (password resets): in development, emails are written to
+  `backend/tmp/mails` instead of being sent. In production set `SMTP_ADDRESS`,
+  `SMTP_PORT` (default 587), `SMTP_USERNAME`, `SMTP_PASSWORD` and `MAIL_FROM`
+  for any SMTP provider; without them "Forgot password" sends nothing.
 
 Client (`client/`):
 

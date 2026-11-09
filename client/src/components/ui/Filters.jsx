@@ -39,7 +39,7 @@ const Filters = ({ places, filters, setFilters, resultCount }) => {
     });
 
   return (
-    <section aria-label="Search and filter stays" className="space-y-4">
+    <section aria-label="Search and filter homes" className="space-y-4">
       <div className="grid gap-3 md:grid-cols-[minmax(0,1fr)_auto_auto_auto_auto]">
         <label className="relative block">
           <span className="sr-only">Search by name or place</span>
@@ -179,9 +179,9 @@ const Filters = ({ places, filters, setFilters, resultCount }) => {
         </div>
       )}
 
-      <div className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none]" role="group" aria-label="Type of stay">
+      <div className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none]" role="group" aria-label="Type of home">
         <button type="button" className={chip(filters.category === 'all')} aria-pressed={filters.category === 'all'} onClick={() => set({ category: 'all' })}>
-          All stays
+          All homes
         </button>
         {CATEGORIES.map((c) => (
           <button
@@ -198,7 +198,7 @@ const Filters = ({ places, filters, setFilters, resultCount }) => {
 
       <div className="flex items-center justify-between border-t border-ink/15 pt-4 text-sm">
         <p aria-live="polite" className="tabular text-ink/70">
-          {resultCount} {resultCount === 1 ? 'stay' : 'stays'}
+          {resultCount} {resultCount === 1 ? 'home' : 'homes'}
         </p>
         {activeFilterCount(filters) > 0 && (
           <button

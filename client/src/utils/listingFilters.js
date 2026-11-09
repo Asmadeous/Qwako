@@ -24,7 +24,7 @@ export const CATEGORIES = [
   { id: 'wildlife', label: 'Near the parks', words: ['national park', 'conservancy', 'reserve', 'safari', 'giraffe'] },
   { id: 'mountain', label: 'Highlands', words: ['mountain', 'mount', 'highlands', 'hillside'] },
   { id: 'lake', label: 'Lakes', words: ['lake', 'loch', 'river'] },
-  { id: 'city', label: 'City stays', words: ['city', 'town', 'centre', 'restaurants'] },
+  { id: 'city', label: 'City homes', words: ['city', 'town', 'centre', 'restaurants'] },
 ];
 
 // Nightly price bands in cents, per currency.

@@ -81,7 +81,7 @@ input[type='tel'],
 input[type='url'],
 input[type='search'],
 textarea {
-  @apply my-2 w-full rounded-xl border border-ink/25 bg-paper py-2 px-3 text-ink placeholder:text-ink/40 focus:border-ink focus:outline-none focus:ring-2 focus:ring-ink/15;
+  @apply my-2 min-h-11 w-full rounded-xl border border-ink/25 bg-paper py-2 px-3 text-ink placeholder:text-ink/40 focus:border-ink focus:outline-none focus:ring-2 focus:ring-ink/15;
 }
 
 select {
@@ -90,18 +90,6 @@ select {
 
 textarea {
   height: 140px;
-}
-
-button.primary {
-  @apply w-full rounded-full bg-ink p-3 text-sm font-semibold text-sand hover:bg-ink/90 disabled:opacity-60;
-}
-
-button.social {
-  @apply w-full rounded-full border border-ink bg-transparent p-3 font-semibold text-ink hover:bg-ink/5;
-}
-
-.card {
-  @apply h-[410px] w-[327px] sm:h-[500px] sm:w-[435px] md:h-[400px] md:w-[350px] lg:h-[400px] lg:w-[330px] xl:h-[350px] xl:w-[300px];
 }
 
 /* Toasts: an ink card with sand text, like the site's buttons and panels. */

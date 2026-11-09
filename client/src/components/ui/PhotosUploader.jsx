@@ -3,6 +3,7 @@ import { toast } from 'react-toastify';
 import { ImagePlus, Star, Trash2 } from 'lucide-react';
 
 import { api, errorMessageFrom } from '../../utils/axios';
+import { Button } from '@/components/ui/button';
 
 const iconButton =
   'grid size-9 place-items-center rounded-full bg-ink/70 text-sand transition-colors hover:bg-ink';
@@ -47,7 +48,7 @@ const PhotosUploader = ({ addedPhotos, setAddedPhotos }) => {
     <div className="grid gap-4">
       <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4">
         {addedPhotos.map((link, index) => (
-          <figure key={link} className="relative aspect-[4/3] overflow-hidden rounded-xl bg-gray-200">
+          <figure key={link} className="relative aspect-[4/3] overflow-hidden rounded-xl bg-ink/10">
             <img className="size-full object-cover" src={link} alt={`Photo ${index + 1}`} />
             {index === 0 && (
               <figcaption className="absolute left-2 top-2 rounded-full bg-paper px-2.5 py-1 text-xs font-medium">
@@ -95,13 +96,9 @@ const PhotosUploader = ({ addedPhotos, setAddedPhotos }) => {
           placeholder="Or paste a photo link (https://...)"
           className="!my-0 h-11"
         />
-        <button
-          type="button"
-          onClick={addPhotoByLink}
-          className="h-11 shrink-0 rounded-full border border-ink/25 px-5 text-sm transition-colors hover:border-ink"
-        >
+        <Button variant="outline" onClick={addPhotoByLink}>
           Add link
-        </button>
+        </Button>
       </div>
     </div>
   );

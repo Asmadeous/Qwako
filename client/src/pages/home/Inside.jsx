@@ -44,7 +44,7 @@ const Inside = () => {
               className="ml-auto h-24 w-20 animate-[fadeUp_0.7s_ease-out_both] rounded-lg object-cover"
             />
             <span className="text-sm font-medium">
-              Inside the stay &nbsp; {String(active + 1).padStart(2, '0')}{' '}
+              Inside the home &nbsp; {String(active + 1).padStart(2, '0')}{' '}
               <span className="text-ink/40">/ {String(ROOMS.length).padStart(2, '0')}</span>
             </span>
           </div>

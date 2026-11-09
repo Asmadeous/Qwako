@@ -35,6 +35,13 @@ class ApplicationController < ActionController::API
       render_error(:validation_failed, "Check the highlighted fields.", status: :unprocessable_content, details: details)
     end
 
+    # The site's public address, for links in Paystack returns and emails.
+    # Production serves the client from Rails; in development the Vite server
+    # is the first allowed origin.
+    def app_url
+      ENV["APP_URL"].presence || CorsOrigins.allowed.first || request.base_url
+    end
+
     def render_rate_limited
       render_error(:rate_limited, "Too many attempts. Try again in a few minutes.", status: :too_many_requests)
     end

@@ -19,7 +19,9 @@ module JsonRenderers
       ).merge(
         listing: listing_json(booking.listing),
         pay_online: booking.pay_online?,
-        hold_expires_at: booking.hold_expires_at
+        hold_expires_at: booking.hold_expires_at,
+        guest_can_cancel: booking.guest_can_cancel?,
+        paid_cents: booking.payments.select { |payment| payment.succeeded? && payment.refunded_at.nil? }.sum(&:amount_cents)
       )
     end
 end

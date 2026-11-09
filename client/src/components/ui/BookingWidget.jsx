@@ -7,6 +7,7 @@ import { useAuth } from '../../../hooks';
 import { api, errorMessageFrom, fieldErrorsFrom } from '@/utils/axios';
 import DatePickerWithRange from './DatePickerWithRange';
 import { formatPrice } from '@/utils/currency';
+import { Button } from '@/components/ui/button';
 
 const toISODate = (date) => format(date, 'yyyy-MM-dd');
 
@@ -95,7 +96,7 @@ const BookingWidget = ({ place }) => {
 
   const paysOnline = place.currency === 'KES';
   let buttonLabel = 'Sign in to book';
-  if (user) buttonLabel = paysOnline ? 'Book and pay' : 'Book this stay';
+  if (user) buttonLabel = paysOnline ? 'Book and pay' : 'Book this home';
   if (submitting) buttonLabel = paysOnline ? 'Opening payment...' : 'Booking...';
 
   if (redirect) return <Navigate to={redirect.to} state={redirect.state} />;
@@ -184,9 +185,9 @@ const BookingWidget = ({ place }) => {
         </dl>
       )}
 
-      <button className="primary mt-5 !mb-0 min-h-12" disabled={submitting} aria-busy={submitting}>
+      <Button type="submit" size="lg" className="mt-5 w-full" disabled={submitting} aria-busy={submitting}>
         {buttonLabel}
-      </button>
+      </Button>
       {paysOnline && (
         <p className="mt-3 text-center text-sm text-ink/60">
           Pay by M-Pesa or card on Paystack. Your dates are held for 15 minutes while you pay.

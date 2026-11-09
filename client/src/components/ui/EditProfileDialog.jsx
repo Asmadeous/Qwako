@@ -96,16 +96,16 @@ const EditProfileDialog = () => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="rounded-full bg-ink text-sand hover:bg-ink/90">
-          <PenSquare className="mr-2 h-4 w-4" />
+        <Button>
+          <PenSquare aria-hidden className="size-4" />
           Edit profile
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[500px]">
         <div className="flex justify-center">
-          <div className="relative h-40 w-40 cursor-pointer overflow-hidden rounded-full bg-gray-200">
+          <div className="relative h-40 w-40 cursor-pointer overflow-hidden rounded-full bg-ink/10">
             <div
-              className="absolute flex h-full w-full items-center justify-center bg-gray-200 hover:z-10"
+              className="absolute flex h-full w-full items-center justify-center bg-ink/10 hover:z-10"
               onClick={handleImageClick}
             >
               <input
@@ -205,13 +205,8 @@ const EditProfileDialog = () => {
           </div>
         </form>
         <DialogFooter>
-          <Button
-            disabled={loading}
-            type="submit"
-            form="edit-profile-form"
-            className="w-full"
-          >
-            {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+          <Button disabled={loading} type="submit" size="lg" form="edit-profile-form" className="w-full">
+            {loading && <Loader2 aria-hidden className="size-4 animate-spin" />}
             Save changes
           </Button>
         </DialogFooter>

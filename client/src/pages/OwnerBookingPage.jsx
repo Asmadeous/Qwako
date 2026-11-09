@@ -10,7 +10,8 @@ import AddressLink from '@/components/ui/AddressLink';
 import BookingDates from '@/components/ui/BookingDates';
 import PriceBreakdown from '@/components/ui/PriceBreakdown';
 import Spinner from '@/components/ui/Spinner';
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogTitle } from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
+import ConfirmDialog from '@/components/ui/ConfirmDialog';
 import { api, errorMessageFrom } from '@/utils/axios';
 import { formatPrice } from '@/utils/currency';
 import { bookingStatusLabel, channelName } from '@/utils/bookingStatus';
@@ -22,33 +23,6 @@ const PAYMENT_STATUS = {
   pending: 'Started, not paid',
   failed: 'Failed',
 };
-
-const primary =
-  'inline-flex h-11 items-center justify-center rounded-full bg-ink px-6 text-sm font-medium text-sand transition-colors hover:bg-ink/90 disabled:opacity-60';
-const secondary =
-  'inline-flex h-11 items-center justify-center rounded-full border border-ink/25 px-6 text-sm transition-colors hover:border-ink/60';
-const danger =
-  'inline-flex h-11 items-center justify-center rounded-full bg-red-800 px-6 text-sm font-medium text-white transition-colors hover:bg-red-900 disabled:opacity-60';
-
-// Asks before an action the owner can't undo.
-const ConfirmDialog = ({ open, onOpenChange, title, children, confirmLabel, busyLabel, busy, onConfirm, tone = 'primary' }) => (
-  <Dialog open={open} onOpenChange={(next) => !busy && onOpenChange(next)}>
-    <DialogContent className="max-w-md rounded-2xl border-ink/15 bg-paper text-ink">
-      <DialogTitle className="font-bold tracking-tight text-3xl leading-tight">{title}</DialogTitle>
-      <DialogDescription asChild>
-        <div className="grid gap-2 text-sm text-ink/75">{children}</div>
-      </DialogDescription>
-      <DialogFooter className="mt-2 gap-2">
-        <button type="button" className={secondary} onClick={() => onOpenChange(false)} disabled={busy}>
-          Go back
-        </button>
-        <button type="button" className={tone === 'danger' ? danger : primary} onClick={onConfirm} disabled={busy} aria-busy={busy}>
-          {busy ? busyLabel : confirmLabel}
-        </button>
-      </DialogFooter>
-    </DialogContent>
-  </Dialog>
-);
 
 const OwnerBookingPageContent = () => {
   const { id } = useParams();
@@ -132,9 +106,9 @@ const OwnerBookingPageContent = () => {
                   <span className="tabular rounded bg-white/70 px-1.5 py-0.5 text-xs">{payment.reference}</span>. Then
                   record it here.
                 </p>
-                <button type="button" className={`${primary} mt-4`} onClick={() => openConfirm(payment)}>
+                <Button className="mt-4" onClick={() => openConfirm(payment)}>
                   Mark as refunded
-                </button>
+                </Button>
               </section>
             ))}
 
@@ -180,7 +154,7 @@ const OwnerBookingPageContent = () => {
                   <h3 className="font-bold tracking-tight text-2xl">Payments</h3>
                   {booking.payments.length === 0 ? (
                     <p className="mt-2 text-sm text-ink/70">
-                      {booking.pay_online ? 'The guest has not started paying.' : 'This stay is not paid online.'}
+                      {booking.pay_online ? 'The guest has not started paying.' : 'This booking is not paid online.'}
                     </p>
                   ) : (
                     <ul className="mt-3 grid gap-3">
@@ -208,9 +182,9 @@ const OwnerBookingPageContent = () => {
                       The dates open up for other guests straight away.
                       {paidTotal > 0 && ' The guest has paid, so the booking will be marked as needing a refund.'}
                     </p>
-                    <button type="button" className={`${secondary} mt-4 border-red-800/40 text-red-800 hover:border-red-800`} onClick={() => openConfirm('cancel')}>
+                    <Button variant="danger-outline" className="mt-4" onClick={() => openConfirm('cancel')}>
                       Cancel booking
-                    </button>
+                    </Button>
                   </section>
                 )}
               </div>
@@ -223,6 +197,7 @@ const OwnerBookingPageContent = () => {
               confirmLabel="Cancel booking"
               busyLabel="Cancelling..."
               busy={busy}
+              error={actionError}
               tone="danger"
               onConfirm={cancelBooking}
             >
@@ -236,7 +211,6 @@ const OwnerBookingPageContent = () => {
               )}
               <p>The guest isn't emailed. Let them know at {booking.guest.email}.</p>
               <p>You can't undo this.</p>
-              {actionError && <p role="alert" className="font-semibold text-red-800">{actionError}</p>}
             </ConfirmDialog>
 
             <ConfirmDialog
@@ -246,6 +220,7 @@ const OwnerBookingPageContent = () => {
               confirmLabel="Mark as refunded"
               busyLabel="Saving..."
               busy={busy}
+              error={actionError}
               onConfirm={() => markRefunded(confirm)}
             >
               <p>
@@ -253,7 +228,6 @@ const OwnerBookingPageContent = () => {
                 {confirm && confirm !== 'cancel' && formatPrice(confirm.amount_cents, confirm.currency)} in your Paystack
                 dashboard. This site doesn't send the money back itself.
               </p>
-              {actionError && <p role="alert" className="font-semibold text-red-800">{actionError}</p>}
             </ConfirmDialog>
           </>
         )}

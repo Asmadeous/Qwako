@@ -3,9 +3,9 @@ import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../../../hooks';
 
 const titleFor = (pathname) => {
-  if (pathname === '/account/places/new') return 'Add a stay';
-  if (pathname.startsWith('/account/places/')) return 'Edit stay';
-  if (pathname === '/account/places') return 'Your stays';
+  if (pathname === '/account/places/new') return 'Add a home';
+  if (pathname.startsWith('/account/places/')) return 'Edit home';
+  if (pathname === '/account/places') return 'Your homes';
   if (pathname.startsWith('/account/bookings/')) return 'Your booking';
   if (pathname === '/account/bookings') return 'Your bookings';
   if (pathname.startsWith('/account/reservations/')) return 'Booking';
@@ -25,7 +25,7 @@ const AccountNav = () => {
       ? [
           { id: 'profile', label: 'Profile', to: '/account' },
           { id: 'reservations', label: 'Bookings', to: '/account/reservations' },
-          { id: 'places', label: 'Manage stays', to: '/account/places' },
+          { id: 'places', label: 'Manage homes', to: '/account/places' },
         ]
       : [
           { id: 'profile', label: 'Profile', to: '/account' },
@@ -33,13 +33,13 @@ const AccountNav = () => {
         ];
 
   return (
-    <div className="mt-24 mb-10 w-full px-4">
+    <div className="mt-24 mb-10 w-full px-4 md:mt-28">
       <div className="flex items-end justify-between border-b border-ink/20 pb-6">
         <div>
           <span className="text-sm font-medium text-ink/60">
             {user?.role === 'admin' ? 'Owner dashboard' : 'Your account'}
           </span>
-          <h1 className="mt-3 font-bold tracking-tight text-5xl leading-[0.9] md:text-7xl">{titleFor(pathname)}</h1>
+          <h1 className="mt-3 font-bold tracking-tight text-5xl leading-[1.05] md:text-6xl">{titleFor(pathname)}</h1>
         </div>
       </div>
       <nav className="flex gap-6 pt-4 text-sm font-medium" aria-label="Account">

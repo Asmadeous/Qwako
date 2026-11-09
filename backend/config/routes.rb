@@ -4,8 +4,10 @@ Rails.application.routes.draw do
       resources :registrations, only: :create
       resource :session, only: %i[show create destroy]
       resource :profile, only: :update
+      resource :password_reset, only: %i[create update]
       resources :listings, only: %i[index show]
       resources :bookings, only: %i[index show create] do
+        post :cancel, on: :member
         resource :payment, only: :create do
           post :verify
         end
@@ -15,7 +17,7 @@ Rails.application.routes.draw do
       end
 
       namespace :admin do
-        resources :listings, only: %i[index create update]
+        resources :listings, only: %i[index show create update destroy]
         resources :uploads, only: :create
         resources :bookings, only: %i[index show] do
           member do

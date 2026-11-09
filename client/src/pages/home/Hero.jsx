@@ -14,21 +14,21 @@ const Hero = () => (
 
     <div className="relative flex h-full flex-col px-5 pt-20 pb-6 md:px-8">
       <h1 className="animate-[fadeUp_1.2s_ease-out_0.2s_both] font-bold tracking-tight text-[15vw] leading-[0.9] md:text-[8.5vw]">
-        Stays,
+        Homes,
         <br />
         considered.
       </h1>
       <div className="mt-6 flex animate-[fadeUp_1.2s_ease-out_0.5s_both] flex-wrap gap-6 text-sm font-medium">
-        <Link to="/stays" className="border-b border-white/80 pb-0.5 hover:border-white">
-          Browse stays <span className="ml-2">→</span>
+        <Link to="/homes" className="border-b border-white/80 pb-0.5 hover:border-white">
+          Browse homes <span className="ml-2">→</span>
         </Link>
         <a href="#featured" className="border-b border-white/80 pb-0.5 hover:border-white">
-          See featured stays <span className="ml-2">→</span>
+          See featured homes <span className="ml-2">→</span>
         </a>
       </div>
 
       <div className="mt-auto grid animate-[fadeUp_1.2s_ease-out_0.8s_both] grid-cols-2 gap-y-3 text-sm font-medium md:mt-[14vh] md:grid-cols-4">
-        <span>Featured stays</span>
+        <span>Featured homes</span>
         <span className="text-right md:text-center">Across Kenya</span>
         <span className="md:text-center">2026</span>
         <a href="#featured" className="text-right">Explore</a>

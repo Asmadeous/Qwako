@@ -62,7 +62,7 @@ const Featured = () => {
             <div className="flex items-end justify-between gap-6">
               <div key={active} className="animate-[fadeUp_0.8s_ease-out_both]">
                 <span className="flex items-center gap-2 text-sm font-medium text-white/70">
-                  <span className="h-px w-5 bg-white/70" /> Featured stay
+                  <span className="h-px w-5 bg-white/70" /> Featured home
                 </span>
                 <Link to={`/place/${stays[active].id}`} className="mt-2 block text-3xl font-bold tracking-tight hover:underline md:text-5xl">
                   {stays[active].title}

@@ -8,7 +8,7 @@ module Api
       before_action -> { Booking.expire_stale_holds! }
 
       def index
-        bookings = Current.user.bookings.includes(listing: %i[photos videos amenities]).order(check_in: :desc)
+        bookings = Current.user.bookings.includes(:payments, listing: %i[photos videos amenities]).order(check_in: :desc)
         render json: { bookings: bookings.map { |booking| booking_json(booking) } }
       end
 
@@ -30,6 +30,16 @@ module Api
         Rails.logger.error("Paystack checkout failed for booking #{booking.id}: #{error.message}")
         booking.update_columns(status: "expired", updated_at: Time.current)
         render_payment_unavailable
+      end
+
+      def cancel
+        booking = Current.user.bookings.find(params[:id])
+        unless booking.cancel_by_guest!
+          return render_error("not_cancellable", "This booking can no longer be cancelled. Contact the owner.",
+                              status: :unprocessable_content)
+        end
+
+        render json: { booking: booking_json(booking.reload) }
       end
 
       private

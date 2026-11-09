@@ -7,6 +7,7 @@ import { useAuth } from '../../hooks';
 import AccountNav from '@/components/ui/AccountNav';
 import InfoCard from '@/components/ui/InfoCard';
 import Spinner from '@/components/ui/Spinner';
+import { buttonVariants } from '@/components/ui/button';
 
 const PlacesPage = () => {
   const [places, setPlaces] = useState([]);
@@ -20,7 +21,7 @@ const PlacesPage = () => {
     api
       .get('/admin/listings')
       .then(({ data }) => setPlaces(data.listings))
-      .catch(() => setError('We could not load your stays. Please try again.'))
+      .catch(() => setError('We could not load your homes. Please try again.'))
       .finally(() => setLoading(false));
   }, [isAdmin]);
 
@@ -34,13 +35,10 @@ const PlacesPage = () => {
       <AccountNav />
       <div className="mx-4 flex items-center justify-between">
         <span className="text-sm text-ink/70">
-          {places.length} {places.length === 1 ? 'stay' : 'stays'}
+          {places.length} {places.length === 1 ? 'home' : 'homes'}
         </span>
-        <Link
-          className="rounded-full bg-ink px-6 py-3 text-sm font-medium text-sand hover:bg-ink/90"
-          to={'/account/places/new'}
-        >
-          Add a stay
+        <Link className={buttonVariants()} to="/account/places/new">
+          Add a home
         </Link>
       </div>
       <div className="mx-4 mt-4 grid gap-3">

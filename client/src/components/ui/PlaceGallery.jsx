@@ -6,7 +6,7 @@ const Photo = ({ src, alt, className = '', onOpen }) => (
   <button
     type="button"
     onClick={onOpen}
-    className={`group relative block overflow-hidden bg-gray-200 ${className}`}
+    className={`group relative block overflow-hidden bg-ink/10 ${className}`}
     aria-label={`${alt}. Show all photos`}
   >
     <img
@@ -23,7 +23,7 @@ const PlaceGallery = ({ place }) => {
   const alt = (i) => `${place.title}, photo ${i + 1} of ${photos.length}`;
 
   if (photos.length === 0) {
-    return <div className="aspect-[16/9] rounded-2xl bg-gray-200" aria-hidden />;
+    return <div className="aspect-[16/9] rounded-2xl bg-ink/10" aria-hidden />;
   }
 
   return (
@@ -66,7 +66,7 @@ const PlaceGallery = ({ place }) => {
         <Dialog.Content className="fixed inset-0 z-50 overflow-y-auto bg-paper focus:outline-none">
           <div className="sticky top-0 z-10 flex items-center justify-between gap-4 border-b border-ink/10 bg-paper/95 px-4 py-3 md:px-8">
             <Dialog.Title className="truncate font-bold tracking-tight text-2xl">{place.title}</Dialog.Title>
-            <Dialog.Description className="sr-only">All photos of this stay</Dialog.Description>
+            <Dialog.Description className="sr-only">All photos of this home</Dialog.Description>
             <Dialog.Close
               aria-label="Close photos"
               className="grid size-11 shrink-0 place-items-center rounded-full border border-ink/15 transition-colors hover:bg-sand"
@@ -76,7 +76,7 @@ const PlaceGallery = ({ place }) => {
           </div>
           <div className="mx-auto grid max-w-4xl gap-3 px-4 py-6 md:px-8">
             {photos.map((src, i) => (
-              <img key={src} src={src} alt={alt(i)} loading="lazy" className="w-full rounded-2xl bg-gray-200" />
+              <img key={src} src={src} alt={alt(i)} loading="lazy" className="w-full rounded-2xl bg-ink/10" />
             ))}
           </div>
         </Dialog.Content>

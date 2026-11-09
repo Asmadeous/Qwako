@@ -6,6 +6,7 @@ import AuthField from '@/components/ui/AuthField';
 import Spinner from '@/components/ui/Spinner';
 import { useAuth } from '../../hooks';
 import { returnPathFrom } from '@/utils';
+import { Button } from '@/components/ui/button';
 
 const LoginPage = () => {
   const auth = useAuth();
@@ -51,15 +52,15 @@ const LoginPage = () => {
     }
   };
 
-  if (redirect) return <Navigate to={returnPathFrom(location.state)} replace />;
+  if (redirect) return <Navigate to={returnPathFrom(location.state, '/account')} replace />;
   if (auth.loading) return <Spinner />;
   if (auth.user) return <Navigate to="/account" />;
 
   return (
-    <div className="flex grow justify-center px-4 pt-32 pb-24 md:pt-40">
+    <div className="flex grow justify-center px-4 pt-24 pb-24 md:pt-28">
       <div className="w-full max-w-md">
-        <h1 className="font-bold tracking-tight text-5xl leading-none md:text-6xl">Sign in</h1>
-        <p className="mt-3 mb-8 text-ink/70">Welcome back. Sign in to book a stay or see your bookings.</p>
+        <h1 className="font-bold tracking-tight text-5xl leading-[1.05] md:text-6xl">Sign in</h1>
+        <p className="mt-3 mb-8 text-ink/70">Welcome back. Sign in to book a home or see your bookings.</p>
         <form onSubmit={handleSubmit}>
           {formError && (
             <p role="alert" className="mb-4 rounded-xl border border-red-700/40 bg-red-50 p-3 text-sm text-red-800">
@@ -88,13 +89,15 @@ const LoginPage = () => {
             value={formData.password}
             onChange={handleChange}
           />
-          <button
-            className="primary mt-4 mb-0 min-h-12"
-            disabled={submitting}
-            aria-busy={submitting}
+          <Link
+            to="/forgot-password"
+            className="-mt-1 inline-flex min-h-11 items-center text-sm text-ink/70 underline decoration-ink/30 underline-offset-4 hover:text-ink hover:decoration-ink"
           >
+            Forgot your password?
+          </Link>
+          <Button type="submit" size="lg" className="mt-4 w-full" disabled={submitting} aria-busy={submitting}>
             {submitting ? 'Signing in...' : 'Sign in'}
-          </button>
+          </Button>
         </form>
 
         <p className="mt-6 border-t border-ink/15 pt-6 text-ink/70">

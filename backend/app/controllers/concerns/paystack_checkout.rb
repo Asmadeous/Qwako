@@ -13,12 +13,6 @@ module PaystackCheckout
       payment
     end
 
-    # Where Paystack sends the guest back to. Production serves the client from
-    # Rails; in development the Vite server is the first allowed origin.
-    def app_url
-      ENV["APP_URL"].presence || CorsOrigins.allowed.first || request.base_url
-    end
-
     def render_payment_unavailable
       render_error(:payment_unavailable, "We couldn't start the payment. Please try again in a moment.",
         status: :bad_gateway)
