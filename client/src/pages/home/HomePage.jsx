@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 
-import Nav from './Nav';
+import { Header } from '@/components/ui/Header';
 import Hero from './Hero';
 import Collage from './Collage';
 import About from './About';
@@ -23,7 +23,7 @@ const HomePage = () => {
 
   return (
     <main className="home bg-sand antialiased">
-      <Nav />
+      <Header />
       <Hero />
       <Collage />
       <About />

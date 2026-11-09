@@ -99,7 +99,8 @@ Backend (`backend/`):
 - Migrate: `bin/rails db:migrate`
 - Seed: `bin/rails db:seed` (amenities, 12 Kenyan demo listings, and an admin from
   `SEED_ADMIN_EMAIL`/`SEED_ADMIN_PASSWORD`; dev default `admin@tgbnb.test` /
-  `admin-dev-password`; no admin is seeded in production without both vars)
+  `admin-dev-password`; no admin is seeded in production without both vars; dev
+  also gets a guest `guest@tgbnb.test` / `guest-dev-password`)
 - Test: `bin/rails test` (Minitest)
 - Lint: `bin/rubocop`
 - Security scans: `bin/brakeman --no-pager` and `bin/bundler-audit`

@@ -2,6 +2,7 @@
 #
 # Admin account: SEED_ADMIN_EMAIL / SEED_ADMIN_PASSWORD. Outside production they
 # default to the development-only values below; production requires both.
+# Outside production a guest account (guest@tgbnb.test) is also seeded.
 
 AMENITIES = {
   "wifi" => "Wi-Fi", "parking" => "Free parking", "tv" => "TV",
@@ -19,6 +20,12 @@ if admin_email && admin_password
   admin.update!(name: admin.name.presence || "T&G Owner", password: admin_password, role: "admin")
 else
   warn "Skipping admin account: set SEED_ADMIN_EMAIL and SEED_ADMIN_PASSWORD."
+end
+
+# A guest account for trying the booking flow locally. Never created in production.
+unless Rails.env.production?
+  guest = User.find_or_initialize_by(email: "guest@tgbnb.test")
+  guest.update!(name: guest.name.presence || "Test Guest", password: "guest-dev-password", role: "guest")
 end
 
 # Demo Kenyan stays. Addresses end with the country, which sets the listing's

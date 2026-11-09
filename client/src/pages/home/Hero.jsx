@@ -12,7 +12,7 @@ const Hero = () => (
     />
     <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/10 to-black/40" />
 
-    <div className="relative flex h-full flex-col px-5 pt-14 pb-6 md:px-8">
+    <div className="relative flex h-full flex-col px-5 pt-20 pb-6 md:px-8">
       <h1 className="animate-[fadeUp_1.2s_ease-out_0.2s_both] font-bold tracking-tight text-[15vw] leading-[0.9] md:text-[8.5vw]">
         Stays,
         <br />
