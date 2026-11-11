@@ -3,11 +3,13 @@ import { Link, Navigate, useSearchParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 import AuthField from '@/components/ui/AuthField';
+import AuthLayout, { FormError } from '@/components/ui/AuthLayout';
 import { Button } from '@/components/ui/button';
 import { api, errorMessageFrom } from '@/utils/axios';
 import { useAuth } from '../../hooks';
 
-const linkClass = 'text-ink underline decoration-ink/40 underline-offset-4 hover:decoration-ink';
+const linkClass =
+  'text-ink underline decoration-ink/40 underline-offset-4 hover:decoration-ink';
 
 const ResetPasswordPage = () => {
   const [searchParams] = useSearchParams();
@@ -44,49 +46,55 @@ const ResetPasswordPage = () => {
   if (done) return <Navigate to="/account" replace />;
 
   return (
-    <div className="flex grow justify-center px-4 pt-24 pb-24 md:pt-28">
-      <div className="w-full max-w-md">
-        <h1 className="font-bold tracking-tight text-5xl leading-[1.05] md:text-6xl">Choose a new password</h1>
-        {expired ? (
-          <div role="alert">
-            <p className="mt-3 text-ink/70">
-              This reset link has expired or was already used. Links work for 15 minutes and only once.
-            </p>
-            <Link to="/forgot-password" className={`${linkClass} mt-6 inline-block`}>
-              Send a new link
-            </Link>
-          </div>
-        ) : (
-          <>
-            <p className="mt-3 mb-8 text-ink/70">
-              Use at least 8 characters. You'll be signed out on other devices.
-            </p>
-            <form onSubmit={handleSubmit}>
-              {formError && (
-                <p role="alert" className="mb-4 rounded-xl border border-red-700/40 bg-red-50 p-3 text-sm text-red-800">
-                  {formError}
-                </p>
-              )}
-              <AuthField
-                id="reset-password"
-                label="New password"
-                name="password"
-                type="password"
-                autoComplete="new-password"
-                minLength={8}
-                required
-                value={password}
-                error={fieldError}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-              <Button type="submit" size="lg" className="mt-4 w-full" disabled={submitting} aria-busy={submitting}>
-                {submitting ? 'Saving...' : 'Save new password'}
-              </Button>
-            </form>
-          </>
-        )}
-      </div>
-    </div>
+    <AuthLayout
+      title="Choose a new password"
+      intro={
+        expired
+          ? null
+          : "Use at least 8 characters. You'll be signed out on other devices."
+      }
+      photo="bedroom"
+    >
+      {expired ? (
+        <div role="alert">
+          <p className="text-ink/70">
+            This reset link has expired or was already used. Links work for 15
+            minutes and only once.
+          </p>
+          <Link
+            to="/forgot-password"
+            className={`${linkClass} mt-6 inline-block`}
+          >
+            Send a new link
+          </Link>
+        </div>
+      ) : (
+        <form onSubmit={handleSubmit}>
+          <FormError>{formError}</FormError>
+          <AuthField
+            id="reset-password"
+            label="New password"
+            name="password"
+            type="password"
+            autoComplete="new-password"
+            minLength={8}
+            required
+            value={password}
+            error={fieldError}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          <Button
+            type="submit"
+            size="lg"
+            className="mt-4 w-full"
+            disabled={submitting}
+            aria-busy={submitting}
+          >
+            {submitting ? 'Saving...' : 'Save new password'}
+          </Button>
+        </form>
+      )}
+    </AuthLayout>
   );
 };
 
