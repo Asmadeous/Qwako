@@ -135,7 +135,8 @@ Deploy:
   deletes free databases after 30 days unless upgraded). Env: `DATABASE_URL`,
   `RAILS_MASTER_KEY`, `SOLID_QUEUE_IN_PUMA=1` (jobs run inside Puma), `APP_URL`
   (the Vercel site). The first boot loads the schema and seeds the demo homes.
-- Client: Vercel project from `client/`. `client/vercel.json` rewrites `/api/v1`
+- Client: Vercel project `tg-bnb` (https://tg-bnb-lake.vercel.app), deployed
+  with `vercel deploy --prod` from `client/` (not yet connected to Git). `client/vercel.json` rewrites `/api/v1`
   and `/rails` to the Render API, so the browser stays same-origin and sign-in
   cookies work. If the Render URL changes, update `vercel.json`.
 - Free-plan limits: the API sleeps after 15 idle minutes (first request then
