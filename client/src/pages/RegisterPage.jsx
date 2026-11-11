@@ -1,11 +1,13 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link, Navigate, useLocation } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { Check } from 'lucide-react';
 
 import AuthField from '@/components/ui/AuthField';
 import AuthLayout, {
   FormError,
   authLinkClass,
+  checkField,
 } from '@/components/ui/AuthLayout';
 import Spinner from '@/components/ui/Spinner';
 import { useAuth } from '../../hooks';
@@ -13,6 +15,11 @@ import { returnPathFrom } from '@/utils';
 import { Button } from '@/components/ui/button';
 
 const FIELDS = ['name', 'email', 'password'];
+const check = {
+  name: checkField.name,
+  email: checkField.email,
+  password: checkField.newPassword,
+};
 
 const RegisterPage = () => {
   const auth = useAuth();
@@ -32,42 +39,63 @@ const RegisterPage = () => {
     email: useRef(null),
     password: useRef(null),
   };
+  const [focusField, setFocusField] = useState(null);
 
-  const [failedSubmits, setFailedSubmits] = useState(0);
-
-  // Move focus only after a failed submit, not while the user edits fields.
   useEffect(() => {
-    const firstInvalid = FIELDS.find((field) => fieldErrors[field]);
-    if (firstInvalid) fieldRefs[firstInvalid].current?.focus();
-  }, [failedSubmits]);
+    if (focusField) fieldRefs[focusField].current?.focus();
+  }, [focusField]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((current) => ({ ...current, [name]: value }));
-    if (fieldErrors[name]) {
-      setFieldErrors(({ [name]: _cleared, ...rest }) => rest);
-    }
+    if (fieldErrors[name])
+      setFieldErrors((current) => ({ ...current, [name]: check[name](value) }));
+  };
+
+  // Only flag a field once the guest has typed in it and moved on.
+  const handleBlur = (e) => {
+    const { name, value } = e.target;
+    if (value)
+      setFieldErrors((current) => ({ ...current, [name]: check[name](value) }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (inFlight.current) return;
+    setFormError('');
+    setFocusField(null);
+
+    const errors = Object.fromEntries(
+      FIELDS.map((field) => [field, check[field](formData[field])]),
+    );
+    setFieldErrors(errors);
+    const firstInvalid = FIELDS.find((field) => errors[field]);
+    if (firstInvalid) {
+      setFocusField(firstInvalid);
+      return;
+    }
+
     inFlight.current = true;
     setSubmitting(true);
-    setFormError('');
-
-    const response = await auth.register(formData);
-
+    const response = await auth.register({
+      ...formData,
+      name: formData.name.trim(),
+      email: formData.email.trim(),
+    });
     inFlight.current = false;
     setSubmitting(false);
+
     if (response.success) {
       toast.success(response.message);
       setRedirect(true);
       return;
     }
-    setFieldErrors(response.fieldErrors);
-    setFormError(response.message);
-    setFailedSubmits((count) => count + 1);
+    const serverErrors = response.fieldErrors || {};
+    setFieldErrors(serverErrors);
+    const firstServerError = FIELDS.find((field) => serverErrors[field]);
+    // Field problems show under their field; anything else shows at the top.
+    if (firstServerError) setFocusField(firstServerError);
+    else setFormError(response.message);
   };
 
   if (redirect)
@@ -75,11 +103,12 @@ const RegisterPage = () => {
   if (auth.loading) return <Spinner />;
   if (auth.user) return <Navigate to="/account" />;
 
+  const longEnough = formData.password.length >= 8;
+
   return (
     <AuthLayout
       title="Create an account"
       intro="Book homes directly with the owner. It takes a minute."
-      photo="evening"
       footer={
         <>
           Already have an account?{' '}
@@ -89,7 +118,7 @@ const RegisterPage = () => {
         </>
       }
     >
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} noValidate>
         <FormError>{formError}</FormError>
         <AuthField
           id="register-name"
@@ -98,11 +127,13 @@ const RegisterPage = () => {
           name="name"
           type="text"
           autoComplete="name"
+          autoFocus
           required
           maxLength={100}
           value={formData.name}
           error={fieldErrors.name}
           onChange={handleChange}
+          onBlur={handleBlur}
         />
         <AuthField
           id="register-email"
@@ -110,30 +141,46 @@ const RegisterPage = () => {
           label="Email"
           name="email"
           type="email"
+          inputMode="email"
           autoComplete="email"
           required
           value={formData.email}
           error={fieldErrors.email}
           onChange={handleChange}
+          onBlur={handleBlur}
         />
         <AuthField
           id="register-password"
           ref={fieldRefs.password}
-          label="Password (at least 8 characters)"
+          label="Password"
           name="password"
           type="password"
           autoComplete="new-password"
           required
-          minLength={8}
           maxLength={72}
           value={formData.password}
           error={fieldErrors.password}
+          hint={
+            <span
+              className={`inline-flex items-center gap-1.5 ${longEnough ? 'font-medium text-ink' : ''}`}
+            >
+              {longEnough && (
+                <Check
+                  aria-hidden
+                  strokeWidth={2.5}
+                  className="size-4 text-emerald-700"
+                />
+              )}
+              At least 8 characters
+            </span>
+          }
           onChange={handleChange}
+          onBlur={handleBlur}
         />
         <Button
           type="submit"
           size="lg"
-          className="mt-4 w-full"
+          className="mt-2 w-full"
           disabled={submitting}
           aria-busy={submitting}
         >

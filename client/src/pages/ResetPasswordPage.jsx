@@ -53,7 +53,6 @@ const ResetPasswordPage = () => {
           ? null
           : "Use at least 8 characters. You'll be signed out on other devices."
       }
-      photo="bedroom"
     >
       {expired ? (
         <div role="alert">

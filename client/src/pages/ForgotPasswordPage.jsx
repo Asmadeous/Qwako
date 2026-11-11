@@ -38,7 +38,6 @@ const ForgotPasswordPage = () => {
           ? null
           : "Enter the email you signed up with and we'll send you a reset link."
       }
-      photo="bedroom"
       footer={
         <>
           Remembered it?{' '}

@@ -6,16 +6,21 @@ import AuthField from '@/components/ui/AuthField';
 import AuthLayout, {
   FormError,
   authLinkClass,
+  checkField,
 } from '@/components/ui/AuthLayout';
 import Spinner from '@/components/ui/Spinner';
 import { useAuth } from '../../hooks';
 import { returnPathFrom } from '@/utils';
 import { Button } from '@/components/ui/button';
 
+const FIELDS = ['email', 'password'];
+const check = { email: checkField.email, password: checkField.password };
+
 const LoginPage = () => {
   const auth = useAuth();
   const location = useLocation();
   const [formData, setFormData] = useState({ email: '', password: '' });
+  const [fieldErrors, setFieldErrors] = useState({});
   const [formError, setFormError] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [redirect, setRedirect] = useState(false);
@@ -30,20 +35,42 @@ const LoginPage = () => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((current) => ({ ...current, [name]: value }));
+    if (fieldErrors[name])
+      setFieldErrors((current) => ({ ...current, [name]: check[name](value) }));
+  };
+
+  // Only flag a field once the guest has typed in it and moved on.
+  const handleBlur = (e) => {
+    const { name, value } = e.target;
+    if (value)
+      setFieldErrors((current) => ({ ...current, [name]: check[name](value) }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (inFlight.current) return;
-    inFlight.current = true;
-    setSubmitting(true);
     setFormError('');
     setFocusField(null);
 
-    const response = await auth.login(formData);
+    const errors = Object.fromEntries(
+      FIELDS.map((field) => [field, check[field](formData[field])]),
+    );
+    setFieldErrors(errors);
+    const firstInvalid = FIELDS.find((field) => errors[field]);
+    if (firstInvalid) {
+      setFocusField(firstInvalid);
+      return;
+    }
 
+    inFlight.current = true;
+    setSubmitting(true);
+    const response = await auth.login({
+      ...formData,
+      email: formData.email.trim(),
+    });
     inFlight.current = false;
     setSubmitting(false);
+
     if (response.success) {
       toast.success(response.message);
       setRedirect(true);
@@ -67,14 +94,14 @@ const LoginPage = () => {
       intro="Welcome back. Sign in to book a home or see your bookings."
       footer={
         <>
-          New here?{' '}
+          New to T&amp;G BnB?{' '}
           <Link className={authLinkClass} to="/register" state={location.state}>
             Create an account
           </Link>
         </>
       }
     >
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} noValidate>
         <FormError>{formError}</FormError>
         <AuthField
           id="login-email"
@@ -82,34 +109,40 @@ const LoginPage = () => {
           label="Email"
           name="email"
           type="email"
+          inputMode="email"
           autoComplete="email"
+          autoFocus
           required
           value={formData.email}
+          error={fieldErrors.email}
           onChange={handleChange}
+          onBlur={handleBlur}
         />
         <AuthField
           id="login-password"
           ref={fieldRefs.password}
           label="Password"
+          labelAside={
+            <Link
+              to="/forgot-password"
+              className="text-sm font-medium text-ink/75 underline decoration-ink/30 underline-offset-4 hover:text-ink hover:decoration-ink"
+            >
+              Forgot password?
+            </Link>
+          }
           name="password"
           type="password"
           autoComplete="current-password"
           required
           value={formData.password}
+          error={fieldErrors.password}
           onChange={handleChange}
+          onBlur={handleBlur}
         />
-        <div className="-mt-2 flex justify-end">
-          <Link
-            to="/forgot-password"
-            className="inline-flex min-h-11 items-center text-sm text-ink/70 underline decoration-ink/30 underline-offset-4 hover:text-ink hover:decoration-ink"
-          >
-            Forgot your password?
-          </Link>
-        </div>
         <Button
           type="submit"
           size="lg"
-          className="mt-4 w-full"
+          className="mt-2 w-full"
           disabled={submitting}
           aria-busy={submitting}
         >
