@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // Rails API. Same origin by default: Vite proxies /api/v1 in development and
-// Rails serves the client in production. VITE_API_URL overrides the host.
+// Vercel rewrites it to Render in production (vercel.json). VITE_API_URL overrides the host.
 export const api = axios.create({
   baseURL: `${import.meta.env.VITE_API_URL || ''}/api/v1`,
   withCredentials: true,

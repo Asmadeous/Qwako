@@ -1,5 +1,7 @@
 {
   "rewrites": [
+    { "source": "/api/v1/:path*", "destination": "https://tg-bnb-api.onrender.com/api/v1/:path*" },
+    { "source": "/rails/:path*", "destination": "https://tg-bnb-api.onrender.com/rails/:path*" },
     { "source": "/(.*)", "destination": "/index.html" }
   ]
 }

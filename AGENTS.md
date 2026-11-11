@@ -127,6 +127,23 @@ The Vite dev server proxies `/api/v1` and `/rails` (Active Storage files) to
 Rails (`RAILS_API_URL`, default http://localhost:3000), so the client calls Rails
 same-origin. `VITE_API_URL` overrides the Rails host if needed.
 
+Deploy:
+
+- API: Render web service `tg-bnb-api` (https://tg-bnb-api.onrender.com,
+  Frankfurt, free plan), built from `backend/Dockerfile` on every push to `main`
+  that touches `backend/`. Database: Render Postgres `tg-bnb-db` (free; Render
+  deletes free databases after 30 days unless upgraded). Env: `DATABASE_URL`,
+  `RAILS_MASTER_KEY`, `SOLID_QUEUE_IN_PUMA=1` (jobs run inside Puma), `APP_URL`
+  (the Vercel site). The first boot loads the schema and seeds the demo homes.
+- Client: Vercel project from `client/`. `client/vercel.json` rewrites `/api/v1`
+  and `/rails` to the Render API, so the browser stays same-origin and sign-in
+  cookies work. If the Render URL changes, update `vercel.json`.
+- Free-plan limits: the API sleeps after 15 idle minutes (first request then
+  takes about a minute), and photos uploaded by the owner are stored on the
+  service's temporary disk, so they disappear on each deploy or restart. Use
+  https photo links, or add a Render disk or S3-style storage before relying on
+  uploads.
+
 Backend CI runs from `.github/workflows/backend.yml` (brakeman, bundler-audit,
 rubocop, tests) on changes under `backend/`. There is no combined Verify command.
 
