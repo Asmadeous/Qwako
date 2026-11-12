@@ -5,14 +5,22 @@ module Api
         before_action :require_admin
 
         def index
-          listings = Listing.includes(:photos, :videos, :amenities).order(:created_at)
-          render json: { listings: listings.map { |listing| listing_json(listing) } }
+          listings = Listing.kept.includes(:photos, :videos, :amenities, :category).order(:created_at)
+          bookings = Booking.group(:listing_id).count
+          upcoming = Booking.active.where(check_out: Time.zone.today..).group(:listing_id).count
+          render json: {
+            listings: listings.map { |listing|
+              listing_json(listing).merge(bookings_count: bookings.fetch(listing.id, 0), upcoming_count: upcoming.fetch(listing.id, 0))
+            }
+          }
         end
 
-        # For the edit form: says whether the home can still be deleted.
+        # For the edit form: says what deleting the home would do.
         def show
-          listing = Listing.includes(:photos, :videos, :amenities).find(params[:id])
-          render json: { listing: listing_json(listing).merge(has_bookings: listing.bookings.exists?) }
+          listing = Listing.kept.includes(:photos, :videos, :amenities, :category).find(params[:id])
+          render json: {
+            listing: listing_json(listing).merge(bookings_count: listing.bookings.count, upcoming_count: listing.upcoming_stays.count)
+          }
         end
 
         def create
@@ -21,16 +29,17 @@ module Api
         end
 
         def update
-          save(Listing.find(params[:id]), status: :ok)
+          save(Listing.kept.find(params[:id]), status: :ok)
         end
 
-        # Only a home nobody has booked can be deleted, so booking history and
-        # payments always keep their home. Others can be unlisted instead.
+        # Removes a home nobody has booked; hides a booked one for good while
+        # keeping its bookings and payments. Refused while stays are still to come.
         def destroy
-          listing = Listing.find(params[:id])
-          return head :no_content if listing.destroy
+          listing = Listing.kept.find(params[:id])
+          return head :no_content if listing.delete_or_archive!
 
-          render_error(:has_bookings, "This home has bookings, so it can't be deleted. Unlist it to hide it from guests.",
+          render_error(:has_upcoming_stays,
+            "Guests are still due to stay in this home. Cancel those bookings first, or hide the home instead.",
             status: :unprocessable_content)
         end
 
@@ -51,7 +60,7 @@ module Api
 
             raw.permit(
               :title, :address, :description, :house_rules, :max_guests, :nightly_price_cents,
-              :cleaning_charge_cents, :status, :featured, photo_urls: [], video_urls: [], amenity_keys: []
+              :cleaning_charge_cents, :status, :featured, :category_id, photo_urls: [], video_urls: [], amenity_keys: []
             )
           end
       end

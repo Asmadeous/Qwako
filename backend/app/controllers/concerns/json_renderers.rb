@@ -8,8 +8,17 @@ module JsonRenderers
       ).merge(
         photos: listing.current_photos.map(&:url),
         videos: listing.current_videos.map(&:url),
-        amenities: listing.amenities.map(&:key)
+        amenities: listing.amenities.sort_by(&:name).map { |amenity| amenity_json(amenity) },
+        category: listing.category && category_json(listing.category)
       )
+    end
+
+    def amenity_json(amenity)
+      amenity.slice(:id, :key, :name)
+    end
+
+    def category_json(category)
+      category.slice(:id, :name, :slug)
     end
 
     def booking_json(booking)

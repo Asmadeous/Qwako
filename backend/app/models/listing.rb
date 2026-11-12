@@ -15,6 +15,7 @@ class Listing < ApplicationRecord
   has_many :listing_amenities, dependent: :delete_all
   has_many :amenities, through: :listing_amenities
   has_many :bookings, dependent: :restrict_with_error
+  belongs_to :category, optional: true
 
   enum :status, { draft: "draft", published: "published", unlisted: "unlisted" }, default: "published", validate: true
 
@@ -31,7 +32,10 @@ class Listing < ApplicationRecord
   validates :cleaning_charge_cents, numericality: { only_integer: true, in: 0..1_000_000 }
   validates :country, inclusion: { in: CURRENCIES.keys, message: "must end with Kenya, England, Scotland, Wales or Northern Ireland" },
     if: -> { address.present? }
+  validates :category, presence: { message: "must be one of your categories" }, if: :category_id?
   validate :has_photos, :has_valid_videos
+
+  scope :kept, -> { where(deleted_at: nil) }
 
   scope :matching, ->(query) {
     next all if query.blank?
@@ -39,6 +43,26 @@ class Listing < ApplicationRecord
     pattern = "%#{sanitize_sql_like(query.strip)}%"
     where("listings.title ILIKE :pattern OR listings.address ILIKE :pattern", pattern:)
   }
+
+  def deleted? = deleted_at.present?
+
+  # Guests with a stay still to come keep their home; it can't be deleted yet.
+  def upcoming_stays
+    bookings.active.where(check_out: Time.zone.today..)
+  end
+
+  # A home nobody has booked is removed for good. A booked one is hidden from
+  # guests and from the owner's list, and stays in the records of its bookings.
+  # Returns false while guests still have stays to come.
+  def delete_or_archive!
+    with_lock do
+      return false if upcoming_stays.exists?
+      return destroy! unless bookings.exists?
+
+      update_columns(deleted_at: Time.current, status: "unlisted", featured: false, updated_at: Time.current)
+    end
+    true
+  end
 
   # Stages a new photo list in the given order (first is the cover). Old rows
   # are destroyed and new ones inserted when the listing saves, in one go.

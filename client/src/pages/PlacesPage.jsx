@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, Navigate } from 'react-router-dom';
+import { Plus } from 'lucide-react';
 
 import { api } from '@/utils/axios';
 import { useAuth } from '../../hooks';
@@ -16,13 +17,15 @@ const PlacesPage = () => {
   const auth = useAuth();
   const isAdmin = auth.user?.role === 'admin';
 
-  useEffect(() => {
-    if (!isAdmin) return;
+  const loadPlaces = () =>
     api
       .get('/admin/listings')
       .then(({ data }) => setPlaces(data.listings))
       .catch(() => setError('We could not load your homes. Please try again.'))
       .finally(() => setLoading(false));
+
+  useEffect(() => {
+    if (isAdmin) loadPlaces();
   }, [isAdmin]);
 
   if (auth.loading) return <Spinner />;
@@ -32,21 +35,22 @@ const PlacesPage = () => {
 
   return (
     <div>
-      <AccountNav />
-      <div className="mx-4 flex items-center justify-between">
-        <span className="text-sm text-ink/70">
-          {places.length} {places.length === 1 ? 'home' : 'homes'}
-        </span>
-        <Link className={buttonVariants()} to="/account/places/new">
-          Add a home
-        </Link>
-      </div>
-      <div className="mx-4 mt-4 grid gap-3">
+      <AccountNav
+        description={`${places.length} ${places.length === 1 ? 'home' : 'homes'}. Open one to edit its details, photos and prices.`}
+        actions={
+          <Link className={buttonVariants()} to="/account/places/new">
+            <Plus aria-hidden className="size-4" />
+            Add a home
+          </Link>
+        }
+      />
+      <div className="mx-4 grid gap-3">
         {error && <p role="alert">{error}</p>}
         {places.map((place) => (
-          <InfoCard place={place} key={place.id} />
+          <InfoCard place={place} key={place.id} onChange={loadPlaces} />
         ))}
       </div>
+      <div className="mb-24" />
     </div>
   );
 };

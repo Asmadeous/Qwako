@@ -56,7 +56,7 @@ const Study = () => {
           );
           const image = (
             <div className="overflow-hidden rounded-2xl">
-              <img {...photoProps(s.image, 1600)} alt="" className="h-full w-full object-cover" />
+              <img {...photoProps(s.image, 1600, '(min-width: 768px) 50vw, 100vw')} alt="" className="h-full w-full object-cover" />
             </div>
           );
           return (

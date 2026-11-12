@@ -5,6 +5,9 @@ import 'react-toastify/dist/ReactToastify.css';
 
 import Layout from './components/ui/Layout';
 import RequireSignIn from './components/ui/RequireSignIn';
+import DashboardLayout from './components/ui/DashboardLayout';
+import AccountHome from './pages/AccountHome';
+import FinancesPage from './pages/FinancesPage';
 import IndexPage from './pages/IndexPage';
 import HomePage from './pages/home/HomePage';
 import RegisterPage from './pages/RegisterPage';
@@ -46,7 +49,10 @@ function App() {
               <Route path="/reset-password" element={<ResetPasswordPage />} />
               <Route path="/place/:id" element={<PlacePage />} />
               <Route element={<RequireSignIn />}>
-                <Route path="/account" element={<ProfilePage />} />
+                <Route element={<DashboardLayout />}>
+                <Route path="/account" element={<AccountHome />} />
+                <Route path="/account/profile" element={<ProfilePage />} />
+                <Route path="/account/finances" element={<FinancesPage />} />
                 <Route path="/account/places" element={<PlacesPage />} />
                 <Route path="/account/places/new" element={<PlacesFormPage />} />
                 <Route path="/account/places/:id" element={<PlacesFormPage />} />
@@ -54,6 +60,7 @@ function App() {
                 <Route path="/account/bookings/:id" element={<SingleBookedPlace />} />
                 <Route path="/account/reservations" element={<OwnerBookingsPage />} />
                 <Route path="/account/reservations/:id" element={<OwnerBookingPage />} />
+                </Route>
               </Route>
               <Route path="*" element={<NotFoundPage />} />
             </Route>

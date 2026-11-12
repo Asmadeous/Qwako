@@ -18,6 +18,9 @@ Rails.application.routes.draw do
 
       namespace :admin do
         resources :listings, only: %i[index show create update destroy]
+        resources :categories, only: %i[index create update destroy]
+        resources :amenities, only: %i[index create update destroy]
+        resource :finances, only: :show
         resources :uploads, only: :create
         resources :bookings, only: %i[index show] do
           member do

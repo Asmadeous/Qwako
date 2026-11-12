@@ -6,7 +6,7 @@ import { photoProps } from './motion';
 const Hero = () => (
   <section id="top" className="relative h-[100svh] min-h-[560px] overflow-hidden bg-ink text-white">
     <img
-      {...photoProps(IMG.hero, 2400)}
+      {...photoProps(IMG.hero, 2400, '100vw', { eager: true })}
       alt="Modern house in the evening light"
       className="absolute inset-0 h-full w-full animate-[heroZoom_2.4s_ease-out_both] object-cover"
     />

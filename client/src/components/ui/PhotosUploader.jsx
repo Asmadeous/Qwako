@@ -4,6 +4,7 @@ import { ImagePlus, Star, Trash2 } from 'lucide-react';
 
 import { api, errorMessageFrom } from '../../utils/axios';
 import { Button } from '@/components/ui/button';
+import { listingPhotoProps } from '@/utils/images';
 
 const iconButton =
   'grid size-9 place-items-center rounded-full bg-ink/70 text-sand transition-colors hover:bg-ink';
@@ -41,15 +42,27 @@ const PhotosUploader = ({ addedPhotos, setAddedPhotos }) => {
     }
   };
 
-  const removePhoto = (link) => setAddedPhotos(addedPhotos.filter((photo) => photo !== link));
-  const makeCover = (link) => setAddedPhotos([link, ...addedPhotos.filter((photo) => photo !== link)]);
+  const removePhoto = (link) =>
+    setAddedPhotos(addedPhotos.filter((photo) => photo !== link));
+  const makeCover = (link) =>
+    setAddedPhotos([link, ...addedPhotos.filter((photo) => photo !== link)]);
 
   return (
     <div className="grid gap-4">
       <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4">
         {addedPhotos.map((link, index) => (
-          <figure key={link} className="relative aspect-[4/3] overflow-hidden rounded-xl bg-ink/10">
-            <img className="size-full object-cover" src={link} alt={`Photo ${index + 1}`} />
+          <figure
+            key={link}
+            className="relative aspect-[4/3] overflow-hidden rounded-xl bg-ink/10"
+          >
+            <img
+              className="size-full object-cover"
+              {...listingPhotoProps(link, {
+                sizes: '(min-width: 1024px) 200px, 50vw',
+                width: 400,
+              })}
+              alt={`Photo ${index + 1}`}
+            />
             {index === 0 && (
               <figcaption className="absolute left-2 top-2 rounded-full bg-paper px-2.5 py-1 text-xs font-medium">
                 Cover
@@ -57,11 +70,21 @@ const PhotosUploader = ({ addedPhotos, setAddedPhotos }) => {
             )}
             <div className="absolute bottom-2 right-2 flex gap-1.5">
               {index !== 0 && (
-                <button type="button" aria-label={`Make photo ${index + 1} the cover`} onClick={() => makeCover(link)} className={iconButton}>
+                <button
+                  type="button"
+                  aria-label={`Make photo ${index + 1} the cover`}
+                  onClick={() => makeCover(link)}
+                  className={iconButton}
+                >
                   <Star aria-hidden className="size-4" />
                 </button>
               )}
-              <button type="button" aria-label={`Remove photo ${index + 1}`} onClick={() => removePhoto(link)} className={iconButton}>
+              <button
+                type="button"
+                aria-label={`Remove photo ${index + 1}`}
+                onClick={() => removePhoto(link)}
+                className={iconButton}
+              >
                 <Trash2 aria-hidden className="size-4" />
               </button>
             </div>

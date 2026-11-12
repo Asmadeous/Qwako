@@ -61,7 +61,7 @@ const BookingsPage = () => {
                   <span className="text-sm font-medium text-ink/60">
                     {bookingStatusLabel(booking.status)}
                   </span>
-                  <h2 className="mt-1 font-bold tracking-tight text-2xl leading-tight md:text-4xl">{booking.listing.title}</h2>
+                  <h2 className="mt-1 text-2xl font-bold leading-tight tracking-tight">{booking.listing.title}</h2>
                   <BookingDates booking={booking} className="mt-2 text-sm text-ink/70" />
                 </div>
                 <span className="text-sm">
@@ -72,7 +72,7 @@ const BookingsPage = () => {
           ))
         ) : (
           <div className="rounded-3xl border border-ink/20 p-8 md:p-12">
-            <h2 className="font-bold tracking-tight text-4xl md:text-5xl">No trips booked yet.</h2>
+            <h2 className="text-2xl font-bold tracking-tight">No trips booked yet.</h2>
             <p className="mt-3 max-w-md text-sm text-ink/70">
               Pick a home and your dates. Your bookings will show up here.
             </p>

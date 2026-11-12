@@ -112,7 +112,7 @@ class Booking < ApplicationRecord
     end
 
     def listing_is_bookable
-      errors.add(:listing, "is not available to book") if listing && !listing.published?
+      errors.add(:listing, "is not available to book") if listing && (!listing.published? || listing.deleted?)
     end
 
     # Friendly early check; the bookings_no_overlap constraint is the guarantee.

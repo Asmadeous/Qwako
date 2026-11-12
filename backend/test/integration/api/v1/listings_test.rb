@@ -10,7 +10,7 @@ class Api::V1::ListingsTest < ActionDispatch::IntegrationTest
 
     cottage = response.parsed_body["listings"].find { |listing| listing["title"] == "Cotswolds Cottage" }
     assert_equal %w[https://images.example.com/cottage-1.jpg https://images.example.com/cottage-2.jpg], cottage["photos"]
-    assert_equal %w[parking wifi], cottage["amenities"].sort
+    assert_equal [ { "key" => "parking", "name" => "Free parking" }, { "key" => "wifi", "name" => "Wi-Fi" } ], cottage["amenities"].map { |a| a.slice("key", "name") }
     assert_equal 21000, cottage["nightly_price_cents"]
     assert_equal "GBP", cottage["currency"]
   end

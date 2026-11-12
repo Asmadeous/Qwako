@@ -8,7 +8,7 @@ module Api
       before_action -> { Booking.expire_stale_holds! }
 
       def index
-        bookings = Current.user.bookings.includes(:payments, listing: %i[photos videos amenities]).order(check_in: :desc)
+        bookings = Current.user.bookings.includes(:payments, listing: %i[photos videos amenities category]).order(check_in: :desc)
         render json: { bookings: bookings.map { |booking| booking_json(booking) } }
       end
 

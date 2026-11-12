@@ -1,10 +1,17 @@
-
 // Listings store their country (the last part of the address): Kenya, or a
 // UK nation. Kenyan stays are priced in KES, UK stays in GBP.
-const COUNTRY_ORDER = ['Kenya', 'England', 'Scotland', 'Wales', 'Northern Ireland'];
-const byCountryOrder = (a, b) => COUNTRY_ORDER.indexOf(a) - COUNTRY_ORDER.indexOf(b) || a.localeCompare(b);
+const COUNTRY_ORDER = [
+  'Kenya',
+  'England',
+  'Scotland',
+  'Wales',
+  'Northern Ireland',
+];
+const byCountryOrder = (a, b) =>
+  COUNTRY_ORDER.indexOf(a) - COUNTRY_ORDER.indexOf(b) || a.localeCompare(b);
 
-export const countriesIn = (places) => [...new Set(places.map((p) => p.country))].sort(byCountryOrder);
+export const countriesIn = (places) =>
+  [...new Set(places.map((p) => p.country))].sort(byCountryOrder);
 
 // "Kenya", "the UK" or "Kenya and the UK", for page copy.
 export const areaLabel = (places) => {
@@ -15,25 +22,31 @@ export const areaLabel = (places) => {
   return names.join(' and ') || 'Kenya';
 };
 
-// Category chips, matched against the listing's title and description
-export const CATEGORIES = [
-  { id: 'coast', label: 'Beach & Coast', words: ['beach', 'sea', 'coast', 'ocean', 'creek', 'harbour', 'cove', 'marine'] },
-  { id: 'apartment', label: 'Apartments', words: ['apartment', 'loft', 'flat'] },
-  { id: 'house', label: 'Houses & Villas', words: ['house', 'villa', 'home', 'cottage', 'townhouse', 'farmhouse'] },
-  { id: 'cabin', label: 'Cabins & Lodges', words: ['cabin', 'lodge', 'cottage'] },
-  { id: 'wildlife', label: 'Near the parks', words: ['national park', 'conservancy', 'reserve', 'safari', 'giraffe'] },
-  { id: 'mountain', label: 'Highlands', words: ['mountain', 'mount', 'highlands', 'hillside'] },
-  { id: 'lake', label: 'Lakes', words: ['lake', 'loch', 'river'] },
-  { id: 'city', label: 'City homes', words: ['city', 'town', 'centre', 'restaurants'] },
-];
+// Categories the owner has given to the homes in view, by name. Only
+// categories with at least one listed home appear as filters.
+export const categoriesIn = (places) => {
+  const bySlug = new Map();
+  places.forEach((p) => p.category && bySlug.set(p.category.slug, p.category));
+  return [...bySlug.values()].sort((a, b) => a.name.localeCompare(b.name));
+};
 
 // Nightly price bands in cents, per currency.
 export const BUDGETS = {
   KES: [
     { id: 'any', label: 'Any price', min: 0, max: Infinity },
     { id: 'kes-lt10k', label: 'Under Ksh 10,000', min: 0, max: 1000000 },
-    { id: 'kes-10-20k', label: 'Ksh 10,000 to 20,000', min: 1000000, max: 2000000 },
-    { id: 'kes-20-30k', label: 'Ksh 20,000 to 30,000', min: 2000000, max: 3000000 },
+    {
+      id: 'kes-10-20k',
+      label: 'Ksh 10,000 to 20,000',
+      min: 1000000,
+      max: 2000000,
+    },
+    {
+      id: 'kes-20-30k',
+      label: 'Ksh 20,000 to 30,000',
+      min: 2000000,
+      max: 3000000,
+    },
     { id: 'kes-gt30k', label: 'Ksh 30,000+', min: 3000000, max: Infinity },
   ],
   GBP: [
@@ -47,21 +60,28 @@ export const BUDGETS = {
 
 // Price bands only make sense when the stays in view share one currency.
 export const budgetsFor = (places, region) => {
-  const currencies = new Set(places.filter((p) => region === 'all' || p.country === region).map((p) => p.currency));
+  const currencies = new Set(
+    places
+      .filter((p) => region === 'all' || p.country === region)
+      .map((p) => p.currency),
+  );
   return currencies.size === 1 ? BUDGETS[[...currencies][0]] ?? null : null;
 };
 
-const findBudgetCurrency = (id) => Object.keys(BUDGETS).find((c) => BUDGETS[c].some((b) => b.id === id));
+const findBudgetCurrency = (id) =>
+  Object.keys(BUDGETS).find((c) => BUDGETS[c].some((b) => b.id === id));
 
-const findBudget = (id) => Object.values(BUDGETS).flat().find((b) => b.id === id);
+const findBudget = (id) =>
+  Object.values(BUDGETS)
+    .flat()
+    .find((b) => b.id === id);
 
-export const AMENITIES = [
-  { id: 'wifi', label: 'Wi-Fi' },
-  { id: 'parking', label: 'Free parking' },
-  { id: 'tv', label: 'TV' },
-  { id: 'pets', label: 'Pets allowed' },
-  { id: 'entrance', label: 'Private entrance' },
-];
+// Amenities offered by at least one home in view, by name.
+export const amenitiesIn = (places) => {
+  const byKey = new Map();
+  places.forEach((p) => (p.amenities || []).forEach((a) => byKey.set(a.key, a)));
+  return [...byKey.values()].sort((a, b) => a.name.localeCompare(b.name));
+};
 
 export const SORTS = [
   { id: 'recommended', label: 'Recommended' },
@@ -89,17 +109,17 @@ export const countyOf = (place) => {
   return parts.length > 1 ? parts[parts.length - 2] : '';
 };
 
-const hasWord = (text, word) => new RegExp(`\\b${word}`, 'i').test(text);
-
-export const matchesCategory = (place, categoryId) => {
-  const cat = CATEGORIES.find((c) => c.id === categoryId);
-  if (!cat) return true;
-  const text = `${place.title} ${place.description || ''}`;
-  return cat.words.some((w) => hasWord(text, w));
-};
+export const matchesCategory = (place, slug) => place.category?.slug === slug;
 
 export const countiesIn = (places, region) =>
-  [...new Set(places.filter((p) => region === 'all' || regionOf(p) === region).map(countyOf).filter(Boolean))].sort();
+  [
+    ...new Set(
+      places
+        .filter((p) => region === 'all' || regionOf(p) === region)
+        .map(countyOf)
+        .filter(Boolean),
+    ),
+  ].sort();
 
 export const applyFilters = (places, f) => {
   const budget = findBudget(f.budget) || BUDGETS.KES[0];
@@ -112,21 +132,32 @@ export const applyFilters = (places, f) => {
       (f.region === 'all' || regionOf(p) === f.region) &&
       (f.county === 'all' || countyOf(p) === f.county) &&
       p.max_guests >= f.guests &&
-      (budget.id === 'any' || (price >= budget.min && price < budget.max && (findBudgetCurrency(budget.id) === p.currency))) &&
-      f.amenities.every((a) => (p.amenities || []).includes(a))
+      (budget.id === 'any' ||
+        (price >= budget.min &&
+          price < budget.max &&
+          findBudgetCurrency(budget.id) === p.currency)) &&
+      f.amenities.every((key) => (p.amenities || []).some((a) => a.key === key))
     );
   });
   const byPrice = (p) => p.nightly_price_cents;
   if (f.sort === 'price-asc') list.sort((a, b) => byPrice(a) - byPrice(b));
   if (f.sort === 'price-desc') list.sort((a, b) => byPrice(b) - byPrice(a));
-  if (f.sort === 'guests-desc') list.sort((a, b) => b.max_guests - a.max_guests);
+  if (f.sort === 'guests-desc')
+    list.sort((a, b) => b.max_guests - a.max_guests);
   return list;
 };
 
 export const activeFilterCount = (f) =>
-  (f.query.trim() !== '') + (f.category !== 'all') + (f.region !== 'all') + (f.county !== 'all') +
-  (f.guests > 0) + (f.budget !== 'any') + f.amenities.length;
+  (f.query.trim() !== '') +
+  (f.category !== 'all') +
+  (f.region !== 'all') +
+  (f.county !== 'all') +
+  (f.guests > 0) +
+  (f.budget !== 'any') +
+  f.amenities.length;
 
 // Filters that live behind the "More filters" toggle.
 export const moreFilterCount = (f, countyInPanel = true) =>
-  (countyInPanel && f.county !== 'all') + (f.budget !== 'any') + f.amenities.length;
+  (countyInPanel && f.county !== 'all') +
+  (f.budget !== 'any') +
+  f.amenities.length;

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_11_11_000001) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_12_000003) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gist"
   enable_extension "citext"
@@ -78,6 +78,15 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_11_000001) do
     t.exclusion_constraint "listing_id WITH =, daterange(check_in, check_out) WITH &&", where: "(status)::text = ANY ((ARRAY['pending_payment'::character varying, 'requested'::character varying, 'confirmed'::character varying])::text[])", using: :gist, name: "bookings_no_overlap"
   end
 
+  create_table "categories", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.citext "name", null: false
+    t.string "slug", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["name"], name: "index_categories_on_name", unique: true
+    t.index ["slug"], name: "index_categories_on_slug", unique: true
+  end
+
   create_table "listing_amenities", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "listing_id", null: false
     t.uuid "amenity_id", null: false
@@ -122,6 +131,10 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_11_000001) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "currency", default: "GBP", null: false
+    t.uuid "category_id"
+    t.datetime "deleted_at"
+    t.index ["category_id"], name: "index_listings_on_category_id"
+    t.index ["deleted_at"], name: "index_listings_on_deleted_at"
     t.index ["slug"], name: "index_listings_on_slug", unique: true
     t.index ["status"], name: "index_listings_on_status"
     t.check_constraint "cleaning_charge_cents >= 0", name: "listings_cleaning_non_negative"
@@ -342,6 +355,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_11_000001) do
   add_foreign_key "listing_amenities", "listings", on_delete: :cascade
   add_foreign_key "listing_photos", "listings", on_delete: :cascade
   add_foreign_key "listing_videos", "listings", on_delete: :cascade
+  add_foreign_key "listings", "categories", on_delete: :nullify
   add_foreign_key "payments", "bookings"
   add_foreign_key "sessions", "users", on_delete: :cascade
   add_foreign_key "solid_queue_batch_executions", "solid_queue_batches", column: "batch_id", on_delete: :cascade

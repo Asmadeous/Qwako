@@ -2,7 +2,9 @@ import { useState } from 'react';
 import * as Dialog from '@radix-ui/react-dialog';
 import { LayoutGrid, X } from 'lucide-react';
 
-const Photo = ({ src, alt, className = '', onOpen }) => (
+import { listingPhotoProps } from '@/utils/images';
+
+const Photo = ({ src, alt, className = '', onOpen, sizes, eager }) => (
   <button
     type="button"
     onClick={onOpen}
@@ -10,7 +12,7 @@ const Photo = ({ src, alt, className = '', onOpen }) => (
     aria-label={`${alt}. Show all photos`}
   >
     <img
-      src={src}
+      {...listingPhotoProps(src, { sizes, width: 1080, eager })}
       alt=""
       className="size-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.02] motion-reduce:transition-none"
     />
@@ -37,6 +39,8 @@ const PlaceGallery = ({ place }) => {
               src={src}
               alt={alt(i)}
               onOpen={() => setOpen(true)}
+              sizes="88vw"
+              eager={i === 0}
               className={`aspect-[4/3] shrink-0 snap-center rounded-2xl ${photos.length > 1 ? 'w-[88%]' : 'w-full'}`}
             />
           ))}
@@ -45,12 +49,37 @@ const PlaceGallery = ({ place }) => {
         {/* Larger screens: one lead photo, up to two beside it. */}
         <div
           className={`hidden h-[min(62dvh,540px)] gap-2 overflow-hidden rounded-2xl md:grid ${
-            photos.length >= 3 ? 'grid-cols-[2fr_1fr] grid-rows-2' : photos.length === 2 ? 'grid-cols-2' : ''
+            photos.length >= 3
+              ? 'grid-cols-[2fr_1fr] grid-rows-2'
+              : photos.length === 2
+                ? 'grid-cols-2'
+                : ''
           }`}
         >
-          <Photo src={photos[0]} alt={alt(0)} onOpen={() => setOpen(true)} className={photos.length >= 3 ? 'row-span-2' : ''} />
+          <Photo
+            src={photos[0]}
+            alt={alt(0)}
+            onOpen={() => setOpen(true)}
+            sizes={
+              photos.length >= 3
+                ? '(min-width: 1280px) 820px, 64vw'
+                : photos.length === 2
+                  ? '50vw'
+                  : '100vw'
+            }
+            eager
+            className={photos.length >= 3 ? 'row-span-2' : ''}
+          />
           {photos.slice(1, 3).map((src, i) => (
-            <Photo key={src} src={src} alt={alt(i + 1)} onOpen={() => setOpen(true)} />
+            <Photo
+              key={src}
+              src={src}
+              alt={alt(i + 1)}
+              onOpen={() => setOpen(true)}
+              sizes={
+                photos.length >= 3 ? '(min-width: 1280px) 410px, 32vw' : '50vw'
+              }
+            />
           ))}
         </div>
 
@@ -65,8 +94,12 @@ const PlaceGallery = ({ place }) => {
       <Dialog.Portal>
         <Dialog.Content className="fixed inset-0 z-50 overflow-y-auto bg-paper focus:outline-none">
           <div className="sticky top-0 z-10 flex items-center justify-between gap-4 border-b border-ink/10 bg-paper/95 px-4 py-3 md:px-8">
-            <Dialog.Title className="truncate font-bold tracking-tight text-2xl">{place.title}</Dialog.Title>
-            <Dialog.Description className="sr-only">All photos of this home</Dialog.Description>
+            <Dialog.Title className="truncate text-2xl font-bold tracking-tight">
+              {place.title}
+            </Dialog.Title>
+            <Dialog.Description className="sr-only">
+              All photos of this home
+            </Dialog.Description>
             <Dialog.Close
               aria-label="Close photos"
               className="grid size-11 shrink-0 place-items-center rounded-full border border-ink/15 transition-colors hover:bg-sand"
@@ -76,7 +109,15 @@ const PlaceGallery = ({ place }) => {
           </div>
           <div className="mx-auto grid max-w-4xl gap-3 px-4 py-6 md:px-8">
             {photos.map((src, i) => (
-              <img key={src} src={src} alt={alt(i)} loading="lazy" className="w-full rounded-2xl bg-ink/10" />
+              <img
+                key={src}
+                {...listingPhotoProps(src, {
+                  sizes: '(min-width: 960px) 832px, 100vw',
+                  width: 1080,
+                })}
+                alt={alt(i)}
+                className="w-full rounded-2xl bg-ink/10"
+              />
             ))}
           </div>
         </Dialog.Content>

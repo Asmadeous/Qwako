@@ -2,12 +2,12 @@ import { useState } from 'react';
 import { Search, SlidersHorizontal } from 'lucide-react';
 
 import {
-  AMENITIES,
-  CATEGORIES,
   DEFAULT_FILTERS,
+  amenitiesIn,
   SORTS,
   activeFilterCount,
   budgetsFor,
+  categoriesIn,
   countiesIn,
   countriesIn,
   moreFilterCount,
@@ -18,13 +18,17 @@ const control =
 
 const chip = (active) =>
   `h-10 shrink-0 whitespace-nowrap rounded-full border px-4 text-sm transition-colors active:scale-[0.98] ${
-    active ? 'border-ink bg-ink text-sand' : 'border-ink/25 bg-transparent text-ink hover:border-ink/60'
+    active
+      ? 'border-ink bg-ink text-sand'
+      : 'border-ink/25 bg-transparent text-ink hover:border-ink/60'
   }`;
 
 const Filters = ({ places, filters, setFilters, resultCount }) => {
   const [showMore, setShowMore] = useState(false);
   const set = (patch) => setFilters((f) => ({ ...f, ...patch }));
   const counties = countiesIn(places, filters.region);
+  const categories = categoriesIn(places);
+  const amenities = amenitiesIn(places);
   const countries = countriesIn(places);
   // With one country (Kenya at launch) the first choice is the county.
   const manyCountries = countries.length > 1;
@@ -43,7 +47,10 @@ const Filters = ({ places, filters, setFilters, resultCount }) => {
       <div className="grid gap-3 md:grid-cols-[minmax(0,1fr)_auto_auto_auto_auto]">
         <label className="relative block">
           <span className="sr-only">Search by name or place</span>
-          <Search aria-hidden className="pointer-events-none absolute left-4 top-1/2 size-4 -translate-y-1/2 text-ink/50" />
+          <Search
+            aria-hidden
+            className="pointer-events-none absolute left-4 top-1/2 size-4 -translate-y-1/2 text-ink/50"
+          />
           <input
             type="search"
             value={filters.query}
@@ -59,7 +66,9 @@ const Filters = ({ places, filters, setFilters, resultCount }) => {
               aria-label="Country"
               className={control}
               value={filters.region}
-              onChange={(e) => set({ region: e.target.value, county: 'all', budget: 'any' })}
+              onChange={(e) =>
+                set({ region: e.target.value, county: 'all', budget: 'any' })
+              }
             >
               <option value="all">Everywhere</option>
               {countries.map((c) => (
@@ -130,7 +139,10 @@ const Filters = ({ places, filters, setFilters, resultCount }) => {
       </div>
 
       {showMore && (
-        <div id="more-filters" className="grid gap-5 rounded-2xl border border-ink/15 bg-paper p-5 md:grid-cols-[auto_auto_1fr]">
+        <div
+          id="more-filters"
+          className="grid gap-5 rounded-2xl border border-ink/15 bg-paper p-5 md:grid-cols-[auto_auto_1fr]"
+        >
           {manyCountries && counties.length > 1 && (
             <label className="grid gap-1.5 text-sm font-medium">
               County
@@ -151,7 +163,11 @@ const Filters = ({ places, filters, setFilters, resultCount }) => {
           {budgets && (
             <label className="grid gap-1.5 text-sm font-medium">
               Price per night
-              <select className={control} value={filters.budget} onChange={(e) => set({ budget: e.target.value })}>
+              <select
+                className={control}
+                value={filters.budget}
+                onChange={(e) => set({ budget: e.target.value })}
+              >
                 {budgets.map((b) => (
                   <option key={b.id} value={b.id}>
                     {b.label}
@@ -160,41 +176,56 @@ const Filters = ({ places, filters, setFilters, resultCount }) => {
               </select>
             </label>
           )}
-          <fieldset className="grid gap-1.5">
-            <legend className="mb-1.5 text-sm font-medium">Must have</legend>
-            <div className="flex flex-wrap gap-2">
-              {AMENITIES.map((a) => (
-                <button
-                  key={a.id}
-                  type="button"
-                  className={chip(filters.amenities.includes(a.id))}
-                  onClick={() => toggleAmenity(a.id)}
-                  aria-pressed={filters.amenities.includes(a.id)}
-                >
-                  {a.label}
-                </button>
-              ))}
-            </div>
-          </fieldset>
+          {amenities.length > 0 && (
+            <fieldset className="grid gap-1.5">
+              <legend className="mb-1.5 text-sm font-medium">Must have</legend>
+              <div className="flex flex-wrap gap-2">
+                {amenities.map((a) => (
+                  <button
+                    key={a.key}
+                    type="button"
+                    className={chip(filters.amenities.includes(a.key))}
+                    onClick={() => toggleAmenity(a.key)}
+                    aria-pressed={filters.amenities.includes(a.key)}
+                  >
+                    {a.name}
+                  </button>
+                ))}
+              </div>
+            </fieldset>
+          )}
         </div>
       )}
 
-      <div className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none]" role="group" aria-label="Type of home">
-        <button type="button" className={chip(filters.category === 'all')} aria-pressed={filters.category === 'all'} onClick={() => set({ category: 'all' })}>
-          All homes
-        </button>
-        {CATEGORIES.map((c) => (
+      {categories.length > 0 && (
+        <div
+          className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none]"
+          role="group"
+          aria-label="Category"
+        >
           <button
-            key={c.id}
             type="button"
-            className={chip(filters.category === c.id)}
-            aria-pressed={filters.category === c.id}
-            onClick={() => set({ category: filters.category === c.id ? 'all' : c.id })}
+            className={chip(filters.category === 'all')}
+            aria-pressed={filters.category === 'all'}
+            onClick={() => set({ category: 'all' })}
           >
-            {c.label}
+            All homes
           </button>
-        ))}
-      </div>
+          {categories.map((c) => (
+            <button
+              key={c.slug}
+              type="button"
+              className={chip(filters.category === c.slug)}
+              aria-pressed={filters.category === c.slug}
+              onClick={() =>
+                set({ category: filters.category === c.slug ? 'all' : c.slug })
+              }
+            >
+              {c.name}
+            </button>
+          ))}
+        </div>
+      )}
 
       <div className="flex items-center justify-between border-t border-ink/15 pt-4 text-sm">
         <p aria-live="polite" className="tabular text-ink/70">

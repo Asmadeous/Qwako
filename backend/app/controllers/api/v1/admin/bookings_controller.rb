@@ -15,7 +15,7 @@ module Api
         def index
           view = VIEWS.include?(params[:view]) ? params[:view] : "upcoming"
           page = [ params[:page].to_i, 1 ].max
-          bookings = search(scoped(view)).includes(:guest, :payments, listing: %i[photos videos amenities])
+          bookings = search(scoped(view)).includes(:guest, :payments, listing: %i[photos videos amenities category])
           rows = bookings.offset((page - 1) * PER_PAGE).limit(PER_PAGE + 1).to_a
 
           render json: {
@@ -44,7 +44,7 @@ module Api
 
         private
           def set_booking
-            @booking = Booking.includes(:guest, :payments, listing: %i[photos videos amenities]).find(params[:id])
+            @booking = Booking.includes(:guest, :payments, listing: %i[photos videos amenities category]).find(params[:id])
           end
 
           def refunds_due

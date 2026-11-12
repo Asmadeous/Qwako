@@ -9,9 +9,8 @@ AMENITIES = {
   "radio" => "Radio", "pets" => "Pets allowed", "entrance" => "Private entrance"
 }.freeze
 
-AMENITIES.each do |key, name|
-  Amenity.find_or_initialize_by(key:).update!(name:)
-end
+# Starter amenities only: once the owner manages their own, a re-seed leaves them alone.
+AMENITIES.each { |key, name| Amenity.create!(key:, name:) } if Amenity.none?
 
 admin_email = ENV["SEED_ADMIN_EMAIL"] || (Rails.env.production? ? nil : "admin@tgbnb.test")
 admin_password = ENV["SEED_ADMIN_PASSWORD"] || (Rails.env.production? ? nil : "admin-dev-password")
@@ -32,8 +31,11 @@ end
 # currency (Kenya prices in KES; England, Scotland, Wales and Northern Ireland in GBP).
 listings = JSON.parse(File.read(Rails.root.join("db/seeds/listings.json")))
 listings.each do |attrs|
+  attrs = attrs.dup
+  category_name = attrs.delete("category")
   listing = Listing.find_or_initialize_by(title: attrs["title"])
+  listing.category = Category.find_or_create_by!(name: category_name) if category_name
   listing.update!(attrs)
 end
 
-puts "Seeded #{Amenity.count} amenities, #{Listing.count} listings, #{User.admin.count} admin(s)."
+puts "Seeded #{Amenity.count} amenities, #{Category.count} categories, #{Listing.count} listings, #{User.admin.count} admin(s)."

@@ -1,64 +1,37 @@
-import { Link, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 
 import { useAuth } from '../../../hooks';
 
-const titleFor = (pathname) => {
+const titleFor = (pathname, isOwner) => {
+  if (pathname === '/account') return isOwner ? 'Overview' : 'Your profile';
+  if (pathname === '/account/profile') return 'Your profile';
   if (pathname === '/account/places/new') return 'Add a home';
   if (pathname.startsWith('/account/places/')) return 'Edit home';
-  if (pathname === '/account/places') return 'Your homes';
+  if (pathname === '/account/places') return 'Homes';
+  if (pathname === '/account/finances') return 'Finances';
   if (pathname.startsWith('/account/bookings/')) return 'Your booking';
   if (pathname === '/account/bookings') return 'Your bookings';
   if (pathname.startsWith('/account/reservations/')) return 'Booking';
   if (pathname === '/account/reservations') return 'Bookings';
-  return 'Your profile';
+  return 'Your account';
 };
 
-// Dashboard heading and tabs, in the home page's editorial style.
-const AccountNav = () => {
+// Heading for a dashboard page; the menu itself lives in DashboardLayout.
+// `actions` sit on the right, for example an "Add a home" button.
+const AccountNav = ({ actions, description }) => {
   const { pathname } = useLocation();
   const { user } = useAuth();
-  const section = pathname.split('/')[2] || 'profile';
-
-  // The owner's Bookings tab lists every guest's bookings, not their own trips.
-  const tabs =
-    user?.role === 'admin'
-      ? [
-          { id: 'profile', label: 'Profile', to: '/account' },
-          { id: 'reservations', label: 'Bookings', to: '/account/reservations' },
-          { id: 'places', label: 'Manage homes', to: '/account/places' },
-        ]
-      : [
-          { id: 'profile', label: 'Profile', to: '/account' },
-          { id: 'bookings', label: 'Bookings', to: '/account/bookings' },
-        ];
 
   return (
-    <div className="mt-24 mb-10 w-full px-4 md:mt-28">
-      <div className="flex items-end justify-between border-b border-ink/20 pb-6">
-        <div>
-          <span className="text-sm font-medium text-ink/60">
-            {user?.role === 'admin' ? 'Owner dashboard' : 'Your account'}
-          </span>
-          <h1 className="mt-3 font-bold tracking-tight text-5xl leading-[1.05] md:text-6xl">{titleFor(pathname)}</h1>
-        </div>
+    <header className="mx-4 mb-8 flex flex-wrap items-end justify-between gap-4 border-b border-ink/15 pb-5">
+      <div>
+        <h1 className="text-balance text-3xl font-bold tracking-tight md:text-4xl">
+          {titleFor(pathname, user?.role === 'admin')}
+        </h1>
+        {description && <p className="mt-1.5 text-pretty text-ink/70">{description}</p>}
       </div>
-      <nav className="flex gap-6 pt-4 text-sm font-medium" aria-label="Account">
-        {tabs.map((tab) => (
-          <Link
-            key={tab.id}
-            to={tab.to}
-            aria-current={section === tab.id ? 'page' : undefined}
-            className={
-              section === tab.id
-                ? 'text-ink underline decoration-1 underline-offset-[6px]'
-                : 'text-ink/60 hover:text-ink'
-            }
-          >
-            {tab.label}
-          </Link>
-        ))}
-      </nav>
-    </div>
+      {actions}
+    </header>
   );
 };
 

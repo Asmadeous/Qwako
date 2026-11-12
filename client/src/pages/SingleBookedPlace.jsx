@@ -123,7 +123,7 @@ const SingleBookedPlace = () => {
                 <p className="inline-flex rounded-full border border-ink/20 px-3 py-1 text-sm">
                   {bookingStatusLabel(booking.status)}
                 </p>
-                <h2 className="mt-3 font-bold tracking-tight text-4xl leading-tight md:text-5xl">
+                <h2 className="mt-2 text-3xl font-bold leading-tight tracking-tight">
                   <Link to={`/place/${booking.listing.id}`} className="hover:underline hover:decoration-ink/30 hover:underline-offset-4">
                     {booking.listing.title}
                   </Link>
@@ -238,7 +238,7 @@ const SingleBookedPlace = () => {
           </>
         ) : (
           <div className="mt-4 rounded-2xl border border-ink/15 px-6 py-14">
-            <h2 className="font-bold tracking-tight text-4xl">We couldn't find that booking.</h2>
+            <h2 className="text-2xl font-bold tracking-tight">We couldn't find that booking.</h2>
             <p className="mt-2 text-ink/70">It may belong to another account. Your bookings are listed on the bookings tab.</p>
             <Link
               to="/account/bookings"

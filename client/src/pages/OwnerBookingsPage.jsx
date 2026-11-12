@@ -38,7 +38,7 @@ const BookingRow = ({ booking }) => {
     <li>
       <Link
         to={`/account/reservations/${booking.id}`}
-        className="grid gap-x-6 gap-y-1 rounded-2xl border border-ink/15 p-4 transition-colors hover:border-ink/40 hover:bg-paper md:grid-cols-[11rem_minmax(0,1fr)_minmax(0,1fr)_8rem_10rem] md:items-center"
+        className="grid gap-x-6 gap-y-1 rounded-2xl border border-ink/15 p-4 transition-colors hover:border-ink/40 hover:bg-paper md:grid-cols-[10rem_minmax(0,1.3fr)_minmax(0,1fr)_7rem_9rem] md:items-center"
       >
         <span className="tabular text-sm">
           {dateRange(booking)}
@@ -48,7 +48,7 @@ const BookingRow = ({ booking }) => {
           </span>
         </span>
         <span className="min-w-0">
-          <span className="block truncate font-bold tracking-tight text-2xl leading-tight">{booking.listing.title}</span>
+          <span className="block font-semibold leading-snug">{booking.listing.title}</span>
           <span className="block truncate text-sm text-ink/55">{town}</span>
         </span>
         <span className="min-w-0 text-sm">
@@ -173,7 +173,7 @@ const OwnerBookingsPageContent = () => {
           </p>
         )}
 
-        <div className="mt-6 hidden gap-x-6 px-4 pb-2 text-xs text-ink/55 md:grid md:grid-cols-[11rem_minmax(0,1fr)_minmax(0,1fr)_8rem_10rem]" aria-hidden>
+        <div className="mt-6 hidden gap-x-6 px-4 pb-2 text-xs text-ink/55 md:grid md:grid-cols-[10rem_minmax(0,1.3fr)_minmax(0,1fr)_7rem_9rem]" aria-hidden>
           <span>Dates</span>
           <span>Home</span>
           <span>Guest</span>

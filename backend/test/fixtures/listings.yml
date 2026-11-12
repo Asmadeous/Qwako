@@ -13,6 +13,7 @@ cottage:
 
 loft:
   title: Kilimani Loft
+  category: city
   slug: kilimani-loft
   address: Kilimani, Nairobi, Kenya
   country: Kenya

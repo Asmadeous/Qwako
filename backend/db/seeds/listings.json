@@ -1,6 +1,7 @@
 [
   {
     "title": "Westlands Skyline Apartment",
+    "category": "Apartments",
     "address": "Westlands, Nairobi, Kenya",
     "description": "A bright two-bedroom apartment on the 14th floor in Westlands, a short walk from Sarit Centre and the Westlands restaurants. Backup power and fast fibre.",
     "house_rules": "Check-in from 2pm, check-out by 10am. No smoking indoors. No parties or events. Building security will ask for ID at the gate.",
@@ -21,6 +22,7 @@
   },
   {
     "title": "Kilimani Garden Flat",
+    "category": "Apartments",
     "address": "Kilimani, Nairobi, Kenya",
     "description": "A quiet ground-floor flat opening onto a shared garden, close to Yaya Centre and a 20-minute drive from the city centre.",
     "house_rules": "Check-in from 2pm, check-out by 10am. No smoking indoors. No parties or events.",
@@ -41,6 +43,7 @@
   },
   {
     "title": "Karen Garden House",
+    "category": "Houses & Villas",
     "address": "Karen, Nairobi, Kenya",
     "description": "A family house on a leafy acre in Karen with a fireplace, a wide veranda and space for children to play. Near the Giraffe Centre and Karen Blixen Museum.",
     "house_rules": "Check-in from 2pm, check-out by 10am. No smoking indoors. No parties or events. Dogs welcome by arrangement.",
@@ -62,6 +65,7 @@
   },
   {
     "title": "Diani Beach Villa",
+    "category": "Beach & Coast",
     "address": "Diani Beach, Kwale, Kenya",
     "description": "A modern villa a few steps from the white sand at Diani, with a private pool, ceiling fans in every room and a housekeeper on weekdays.",
     "house_rules": "Check-in from 2pm, check-out by 10am. No smoking indoors. No parties or events.",
@@ -83,6 +87,7 @@
   },
   {
     "title": "Watamu Ocean House",
+    "category": "Beach & Coast",
     "address": "Watamu, Kilifi, Kenya",
     "description": "An airy house above the beach at Watamu, close to the marine park for snorkelling and to Gede ruins.",
     "house_rules": "Check-in from 2pm, check-out by 10am. No smoking indoors. No parties or events.",
@@ -102,6 +107,7 @@
   },
   {
     "title": "Nyali Beach Apartment",
+    "category": "Beach & Coast",
     "address": "Nyali, Mombasa, Kenya",
     "description": "A sea-facing apartment in Nyali with a shared pool, ten minutes from Old Town Mombasa and Fort Jesus.",
     "house_rules": "Check-in from 2pm, check-out by 10am. No smoking indoors. No parties or events.",
@@ -122,6 +128,7 @@
   },
   {
     "title": "Shela Village House",
+    "category": "Beach & Coast",
     "address": "Shela, Lamu, Kenya",
     "description": "A cool, whitewashed house in Shela village with arched rooms, a rooftop terrace and the beach a short walk away. No cars on the island; we arrange boat transfers from Manda airstrip.",
     "house_rules": "Check-in from 2pm, check-out by 10am. No smoking indoors. No parties or events.",
@@ -141,6 +148,7 @@
   },
   {
     "title": "Naivasha Lakeside Cottage",
+    "category": "Lakes",
     "address": "Naivasha, Nakuru, Kenya",
     "description": "A timber cottage near the shore of Lake Naivasha, close to Hell's Gate National Park and Crescent Island.",
     "house_rules": "Check-in from 2pm, check-out by 10am. No smoking indoors. No parties or events. Hippos graze near the lake at night; please stay inside after dark.",
@@ -161,6 +169,7 @@
   },
   {
     "title": "Nanyuki Forest Cabin",
+    "category": "Cabins & Lodges",
     "address": "Nanyuki, Laikipia, Kenya",
     "description": "A glass-fronted cabin among the trees outside Nanyuki with views towards Mount Kenya. A good base for Ol Pejeta Conservancy.",
     "house_rules": "Check-in from 2pm, check-out by 10am. No smoking indoors. No parties or events.",
@@ -180,6 +189,7 @@
   },
   {
     "title": "Nakuru Hillside Home",
+    "category": "Houses & Villas",
     "address": "Nakuru, Nakuru, Kenya",
     "description": "A spacious family home on the hillside above Nakuru town, 15 minutes from Lake Nakuru National Park.",
     "house_rules": "Check-in from 2pm, check-out by 10am. No smoking indoors. No parties or events.",
@@ -200,6 +210,7 @@
   },
   {
     "title": "Kisumu Lakefront Apartment",
+    "category": "Lakes",
     "address": "Kisumu, Kisumu, Kenya",
     "description": "A modern apartment near the shores of Lake Victoria, close to Dunga Hill and the Kisumu waterfront restaurants.",
     "house_rules": "Check-in from 2pm, check-out by 10am. No smoking indoors. No parties or events.",
@@ -219,6 +230,7 @@
   },
   {
     "title": "Kilifi Creek Retreat",
+    "category": "Beach & Coast",
     "address": "Kilifi, Kilifi, Kenya",
     "description": "A calm house with a deck over Kilifi Creek, good for paddleboarding at high tide and sundowners at Distant Relatives.",
     "house_rules": "Check-in from 2pm, check-out by 10am. No smoking indoors. No parties or events.",

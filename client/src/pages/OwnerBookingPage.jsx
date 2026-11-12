@@ -117,7 +117,7 @@ const OwnerBookingPageContent = () => {
                 <p className="inline-flex rounded-full border border-ink/20 px-3 py-1 text-sm">
                   {bookingStatusLabel(booking.status, { owner: true })}
                 </p>
-                <h2 className="mt-3 font-bold tracking-tight text-4xl leading-tight md:text-5xl">
+                <h2 className="mt-2 text-3xl font-bold leading-tight tracking-tight">
                   <Link to={`/place/${booking.listing.id}`} className="hover:underline hover:decoration-ink/30 hover:underline-offset-4">
                     {booking.listing.title}
                   </Link>

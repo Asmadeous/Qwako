@@ -60,14 +60,14 @@ const Collage = () => {
                 images.map((id, k) => (
                   <img
                     key={id}
-                    {...photoProps(id, 2000)}
+                    {...photoProps(id, 2000, '100vw', { eager: k === 0 })}
                     alt=""
                     className="absolute inset-0 h-full w-full object-cover transition-opacity duration-700"
                     style={{ opacity: k === slide ? 1 : 0 }}
                   />
                 ))
               ) : (
-                <img src={photo(images[i], 800)} alt="" className="h-full w-full object-cover" />
+                <img src={photo(images[i], 640)} loading="lazy" decoding="async" alt="" className="h-full w-full object-cover" />
               )}
             </div>
           );

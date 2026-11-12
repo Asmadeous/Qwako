@@ -54,7 +54,7 @@ const Inside = () => {
             {ROOMS.map((room, i) => (
               <img
                 key={room.label}
-                {...photoProps(room.image, 1600)}
+                {...photoProps(room.image, 1600, '(min-width: 768px) 50vw, 100vw')}
                 alt={room.label.toLowerCase()}
                 className="absolute inset-0 h-full w-full object-cover transition-all duration-1000"
                 style={{ opacity: i === active ? 1 : 0, transform: `scale(${i === active ? 1 : 1.05})` }}

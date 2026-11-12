@@ -32,9 +32,11 @@ const Featured = () => {
         {stays.map((s, i) => (
           <img
             key={s.id}
-            src={s.photos?.[0]?.replace(/w=\d+/, 'w=2400')}
+            src={s.photos?.[0]?.replace(/w=\d+/, 'w=1080')}
             srcSet={unsplashSrcSet(s.photos?.[0], 2400)}
             sizes="100vw"
+            loading="lazy"
+            decoding="async"
             alt={s.title}
             className="absolute inset-0 h-full w-full object-cover transition-all duration-1000 ease-out"
             style={{

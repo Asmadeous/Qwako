@@ -11,10 +11,18 @@ export const ease = (t) => 1 - Math.pow(1 - t, 3);
 export const photo = (id, w = 2000) =>
   `https://images.unsplash.com/photo-${id}?w=${w}&q=80&auto=format&fit=crop`;
 
-// Spread onto an <img>: <img {...photoProps(id, 2400)} />.
-export const photoProps = (id, maxW = 2000, sizes = '100vw') => {
-  const src = photo(id, maxW);
-  return { src, srcSet: unsplashSrcSet(src, maxW), sizes };
+// Spread onto an <img>: <img {...photoProps(id, 2400)} />. Photos below the
+// first screen load lazily; pass { eager: true } for the hero.
+export const photoProps = (id, maxW = 2000, sizes = '100vw', { eager = false } = {}) => {
+  const src = photo(id, Math.min(maxW, 1080));
+  return {
+    src,
+    srcSet: unsplashSrcSet(photo(id, maxW), maxW),
+    sizes,
+    loading: eager ? 'eager' : 'lazy',
+    decoding: 'async',
+    ...(eager ? { fetchPriority: 'high' } : {}),
+  };
 };
 
 // 0 when a tall section's top reaches the top of the screen, 1 when its

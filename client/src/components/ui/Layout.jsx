@@ -4,6 +4,8 @@ import { Outlet, useLocation } from 'react-router-dom';
 import { Header } from './Header';
 import SiteFooter from '@/pages/home/SiteFooter';
 
+const APP_PAGES = /^\/(account|login|register|forgot-password|reset-password)(\/|$)/;
+
 const Layout = () => {
   const { pathname } = useLocation();
 
@@ -24,7 +26,8 @@ const Layout = () => {
       <main id="main" className="mx-auto flex min-h-dvh max-w-screen-xl flex-col px-1 md:px-4">
         <Outlet />
       </main>
-      <SiteFooter />
+      {/* The marketing footer belongs to browsing pages, not the dashboard or sign-in. */}
+      {!APP_PAGES.test(pathname) && <SiteFooter />}
     </div>
   );
 };

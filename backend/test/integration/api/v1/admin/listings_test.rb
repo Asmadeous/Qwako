@@ -26,7 +26,7 @@ class Api::V1::Admin::ListingsTest < ActionDispatch::IntegrationTest
     assert_response :created
     listing = response.parsed_body["listing"]
     assert_equal VALID[:photo_urls], listing["photos"]
-    assert_equal %w[wifi], listing["amenities"]
+    assert_equal %w[wifi], listing["amenities"].pluck("key")
     assert_equal "Kenya", listing["country"]
     assert_equal "KES", listing["currency"]
     assert_equal "harbour-flat", listing["slug"]
@@ -56,10 +56,14 @@ class Api::V1::Admin::ListingsTest < ActionDispatch::IntegrationTest
     assert response.parsed_body.dig("error", "details", "videos").present?
   end
 
-  test "admin index includes drafts" do
+  test "admin index includes drafts and says how many bookings each home has" do
     sign_in_as users(:owner)
     get api_v1_admin_listings_path, as: :json
-    assert_includes response.parsed_body["listings"].map { |listing| listing["title"] }, "Draft Barn"
+    rows = response.parsed_body["listings"].to_h { |listing| [ listing["title"], listing["bookings_count"] ] }
+    assert_includes rows.keys, "Draft Barn"
+    assert_equal 0, rows["Draft Barn"]
+    assert_equal Booking.where(listing: listings(:cottage)).count, rows[listings(:cottage).title]
+    assert_operator rows[listings(:cottage).title], :>, 0
   end
 
   test "invalid listings report field errors" do
@@ -109,28 +113,59 @@ class Api::V1::Admin::ListingsTest < ActionDispatch::IntegrationTest
     listing = listings(:loft)
     listing.bookings.delete_all
     get api_v1_admin_listing_path(listing), as: :json
-    assert_equal false, response.parsed_body.dig("listing", "has_bookings")
+    assert_equal 0, response.parsed_body.dig("listing", "bookings_count")
     assert_difference({ "Listing.count" => -1, "ListingPhoto.count" => -listing.photos.count }) do
       delete api_v1_admin_listing_path(listing), as: :json
     end
     assert_response :no_content
   end
 
-  test "a home with bookings can't be deleted, and guests can't delete" do
-    listing = listings(:loft)
-    Booking.create!(listing:, guest: users(:ada), check_in: Date.current + 50, check_out: Date.current + 52,
-      guests_count: 1, status: "cancelled_by_guest")
-
+  test "guests can't delete a home" do
     sign_in_as users(:ada)
-    delete api_v1_admin_listing_path(listing), as: :json
+    delete api_v1_admin_listing_path(listings(:loft)), as: :json
     assert_response :forbidden
+    assert Listing.exists?(listings(:loft).id)
+  end
+
+  test "deleting a booked home hides it everywhere but keeps its bookings and payments" do
+    listing = listings(:loft)
+    booking = Booking.create!(listing:, guest: users(:ada), check_in: Date.current + 50, check_out: Date.current + 52,
+      guests_count: 1)
+    booking.update_columns(status: "cancelled_by_guest")
 
     sign_in_as users(:owner)
     get api_v1_admin_listing_path(listing), as: :json
-    assert response.parsed_body.dig("listing", "has_bookings")
-    assert_no_difference "Listing.count" do
+    assert_equal [ 1, 0 ], response.parsed_body["listing"].values_at("bookings_count", "upcoming_count")
+
+    assert_no_difference [ "Listing.count", "Booking.count" ] do
       delete api_v1_admin_listing_path(listing), as: :json
     end
-    assert_error :unprocessable_content, "has_bookings"
+    assert_response :no_content
+    assert listing.reload.deleted?
+    assert_equal "unlisted", listing.status
+
+    get api_v1_admin_listings_path, as: :json
+    assert_not_includes response.parsed_body["listings"].map { |l| l["id"] }, listing.id
+    get api_v1_admin_listing_path(listing), as: :json
+    assert_response :not_found
+    get api_v1_admin_booking_path(booking), as: :json
+    assert_equal listing.title, response.parsed_body.dig("booking", "listing", "title")
+    get api_v1_admin_categories_path, as: :json
+    assert_equal 0, response.parsed_body["categories"].find { |c| c["slug"] == "city-homes" }["homes_count"]
+
+    delete api_v1_session_path, as: :json
+    get api_v1_listings_path, as: :json
+    assert_not_includes response.parsed_body["listings"].map { |l| l["id"] }, listing.id
+  end
+
+  test "a home with stays still to come can't be deleted" do
+    listing = listings(:cottage)
+    assert listing.upcoming_stays.exists?
+
+    sign_in_as users(:owner)
+    assert_no_changes -> { listing.reload.deleted_at } do
+      delete api_v1_admin_listing_path(listing), as: :json
+    end
+    assert_error :unprocessable_content, "has_upcoming_stays"
   end
 end

@@ -11,7 +11,9 @@ import {
 import { useAuth } from '../../hooks';
 
 import AccountNav from '@/components/ui/AccountNav';
+import CategoryPicker from '@/components/ui/CategoryPicker';
 import Perks from '@/components/ui/Perks';
+import ManageList from '@/components/ui/ManageList';
 import PhotosUploader from '@/components/ui/PhotosUploader';
 import VideosUploader from '@/components/ui/VideosUploader';
 import Spinner from '@/components/ui/Spinner';
@@ -24,6 +26,7 @@ const ERROR_KEYS = {
   price: ['nightly_price_cents'],
   cleaning: ['cleaning_charge_cents'],
   amenities: ['amenity_keys', 'amenities'],
+  category_id: ['category_id', 'category'],
 };
 
 const EMPTY = {
@@ -36,6 +39,7 @@ const EMPTY = {
   cleaning: 0,
   status: 'published',
   amenities: [],
+  category_id: null,
 };
 
 const fromListing = (listing) => ({
@@ -47,13 +51,16 @@ const fromListing = (listing) => ({
   price: centsToAmount(listing.nightly_price_cents),
   cleaning: centsToAmount(listing.cleaning_charge_cents),
   status: listing.status,
-  amenities: listing.amenities,
+  amenities: listing.amenities.map((a) => a.key),
+  category_id: listing.category?.id ?? null,
 });
 
 const PlacesFormPage = () => {
   const { id } = useParams();
   const auth = useAuth();
   const [redirect, setRedirect] = useState(false);
+  // Bumped after the owner edits the category or amenity lists, to reload them.
+  const [listsVersion, setListsVersion] = useState(0);
   const [loading, setLoading] = useState(Boolean(id));
   const [saving, setSaving] = useState(false);
   const [photos, setPhotos] = useState([]);
@@ -64,7 +71,7 @@ const PlacesFormPage = () => {
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [deleteError, setDeleteError] = useState('');
-  const [hasBookings, setHasBookings] = useState(true);
+  const [counts, setCounts] = useState({ bookings: 0, upcoming: 1 });
 
   useEffect(() => {
     if (!id) return;
@@ -74,7 +81,7 @@ const PlacesFormPage = () => {
         setForm(fromListing(data.listing));
         setPhotos(data.listing.photos);
         setVideos(data.listing.videos ?? []);
-        setHasBookings(Boolean(data.listing.has_bookings));
+        setCounts({ bookings: data.listing.bookings_count ?? 0, upcoming: data.listing.upcoming_count ?? 0 });
       })
       .catch((error) => setFormError(errorMessageFrom(error)))
       .finally(() => setLoading(false));
@@ -120,6 +127,7 @@ const PlacesFormPage = () => {
       cleaning_charge_cents: amountToCents(form.cleaning || 0),
       status: form.status,
       amenity_keys: form.amenities,
+      category_id: form.category_id,
       photo_urls: photos,
       video_urls: videos,
     };
@@ -181,9 +189,9 @@ const PlacesFormPage = () => {
     </div>
   );
   const section = (title, hint, children) => (
-    <section className="grid gap-6 border-t border-ink/15 py-10 md:grid-cols-[minmax(0,240px)_1fr] md:gap-12">
+    <section className="grid gap-6 border-t border-ink/15 py-10 first-of-type:border-t-0 first-of-type:pt-2 md:grid-cols-[minmax(0,240px)_1fr] md:gap-12">
       <div>
-        <h2 className="text-3xl font-bold leading-tight tracking-tight">
+        <h2 className="text-xl font-bold leading-tight tracking-tight">
           {title}
         </h2>
         {hint && <p className="mt-1 text-sm text-ink/60">{hint}</p>}
@@ -246,6 +254,16 @@ const PlacesFormPage = () => {
               },
             )}
             {fieldError('address')}
+            <CategoryPicker
+              key={`categories-${listsVersion}`}
+              manage={<ManageList kind="categories" onChanged={() => setListsVersion((n) => n + 1)} />}
+              value={form.category_id}
+              error={errors.category_id || errors.category}
+              onChange={(categoryId) => {
+                clearErrors(ERROR_KEYS.category_id);
+                setForm((current) => ({ ...current, category_id: categoryId }));
+              }}
+            />
           </>,
         )}
 
@@ -316,7 +334,15 @@ const PlacesFormPage = () => {
           'Only ticked items are shown on the listing.',
           <fieldset>
             <legend className="sr-only">Amenities</legend>
-            <Perks selected={form.amenities} handleFormData={handleChange} />
+            <Perks
+              key={`amenities-${listsVersion}`}
+              manage={<ManageList kind="amenities" onChanged={() => setListsVersion((n) => n + 1)} />}
+              selected={form.amenities}
+              handleFormData={handleChange}
+              onAdded={(key) =>
+                setForm((current) => ({ ...current, amenities: [...current.amenities, key] }))
+              }
+            />
           </fieldset>,
         )}
 
@@ -411,16 +437,18 @@ const PlacesFormPage = () => {
           <h2 className="text-2xl font-bold tracking-tight">
             Delete this home
           </h2>
-          {hasBookings ? (
+          {counts.upcoming > 0 ? (
             <p className="mt-1 max-w-prose text-sm text-ink/70">
-              Guests have booked this home, so it can't be deleted: their
-              bookings and payments need it. To hide it from guests, set
-              Visibility to Unlisted and save.
+              {counts.upcoming} {counts.upcoming === 1 ? 'guest is' : 'guests are'} still due to stay here, so it
+              can't be deleted yet. Cancel those bookings first. To stop new bookings now, set Visibility to
+              Unlisted and save.
             </p>
           ) : (
             <>
               <p className="mt-1 max-w-prose text-sm text-ink/70">
-                Nobody has booked this home yet, so it can be deleted for good.
+                {counts.bookings > 0
+                  ? `It disappears from the site and from your homes. Its ${counts.bookings} ${counts.bookings === 1 ? 'booking' : 'bookings'} and their payments stay in Bookings and Finances.`
+                  : 'Nobody has booked this home yet, so it is removed for good.'}
               </p>
               <Button
                 variant="danger-outline"
@@ -444,8 +472,9 @@ const PlacesFormPage = () => {
                 onConfirm={deleteHome}
               >
                 <p>
-                  {form.title || 'This home'}, its photos and videos will be
-                  removed from the site. You can't undo this.
+                  {form.title || 'This home'} will be removed from the site
+                  {counts.bookings > 0 ? ' and from your homes; its bookings and payments are kept' : ', with its photos and videos'}.
+                  You can't undo this.
                 </p>
               </ConfirmDialog>
             </>
