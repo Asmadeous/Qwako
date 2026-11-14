@@ -3,6 +3,8 @@
 # If running the rails server then create or migrate existing database
 if [ "${@: -2:1}" == "./bin/rails" ] && [ "${@: -1:1}" == "server" ]; then
   ./bin/rails db:prepare
+  # Free plan has no shell: load the seeds once, until the real home exists.
+  ./bin/rails runner 'load Rails.root.join("db/seeds.rb") unless Listing.exists?(title: "Grace Apartments D8-09, Tatu City")'
 fi
 
 exec "${@}"
