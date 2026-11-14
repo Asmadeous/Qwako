@@ -27,8 +27,21 @@ unless Rails.env.production?
   guest.update!(name: guest.name.presence || "Test Guest", password: "guest-dev-password", role: "guest")
 end
 
-# Demo Kenyan stays. Addresses end with the country, which sets the listing's
-# currency (Kenya prices in KES; England, Scotland, Wales and Northern Ireland in GBP).
+# The owner's real homes, priced in shillings. Addresses end with the country.
+# Photos live in client/public/listings and are served by the site itself.
+{ "kitchen" => "Fully fitted kitchen", "washing_machine" => "Washing machine",
+  "dishwasher" => "Dishwasher", "balcony" => "Balcony" }.each do |key, name|
+  Amenity.find_or_create_by!(key:) { |amenity| amenity.name = name }
+end
+
+# The old demo homes are removed wherever they were seeded.
+DEMO_TITLES = [
+  "Westlands Skyline Apartment", "Kilimani Garden Flat", "Karen Garden House", "Diani Beach Villa",
+  "Watamu Ocean House", "Nyali Beach Apartment", "Shela Village House", "Naivasha Lakeside Cottage",
+  "Nanyuki Forest Cabin", "Nakuru Hillside Home", "Kisumu Lakefront Apartment", "Kilifi Creek Retreat"
+].freeze
+Listing.kept.where(title: DEMO_TITLES).find_each(&:delete_or_archive!)
+
 listings = JSON.parse(File.read(Rails.root.join("db/seeds/listings.json")))
 listings.each do |attrs|
   attrs = attrs.dup
@@ -38,4 +51,4 @@ listings.each do |attrs|
   listing.update!(attrs)
 end
 
-puts "Seeded #{Amenity.count} amenities, #{Category.count} categories, #{Listing.count} listings, #{User.admin.count} admin(s)."
+puts "Seeded #{Amenity.count} amenities, #{Category.count} categories, #{Listing.kept.count} listings, #{User.admin.count} admin(s)."

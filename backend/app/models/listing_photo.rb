@@ -1,6 +1,6 @@
 class ListingPhoto < ApplicationRecord
-  # Remote images must be HTTPS; uploads are served by Active Storage.
-  URL_FORMAT = %r{\A(https://\S+|/rails/active_storage/\S+)\z}
+  # Remote images must be HTTPS; uploads are served by Active Storage; /listings/ files ship with the site.
+  URL_FORMAT = %r{\A(https://\S+|/rails/active_storage/\S+|/listings/\S+)\z}
 
   belongs_to :listing
 

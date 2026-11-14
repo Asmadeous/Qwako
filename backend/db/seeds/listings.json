@@ -1,252 +1,34 @@
 [
   {
-    "title": "Westlands Skyline Apartment",
+    "title": "Grace Apartments D8-09, Tatu City",
     "category": "Apartments",
-    "address": "Westlands, Nairobi, Kenya",
-    "description": "A bright two-bedroom apartment on the 14th floor in Westlands, a short walk from Sarit Centre and the Westlands restaurants. Backup power and fast fibre.",
-    "house_rules": "Check-in from 2pm, check-out by 10am. No smoking indoors. No parties or events. Building security will ask for ID at the gate.",
+    "address": "Tatu City, Ruiru, Kiambu County, Kenya",
+    "description": "A fully furnished two-bedroom apartment in Tatu City, Ruiru, available for short stays. The kitchen is fully fitted, with a dishwasher, washing machine and a breakfast bar for four. The living room is furnished, the main bedroom has an en suite bathroom, and the second bedroom has its own separate toilet and bathroom. A balcony looks out over the courtyard and a green park. Internet is included.",
+    "house_rules": "Please book in advance so we can confirm availability and avoid conflicting reservations.",
     "max_guests": 4,
-    "nightly_price_cents": 950000,
-    "cleaning_charge_cents": 150000,
+    "nightly_price_cents": 700000,
+    "cleaning_charge_cents": 0,
     "amenity_keys": [
       "wifi",
-      "tv",
-      "parking"
+      "kitchen",
+      "washing_machine",
+      "dishwasher",
+      "balcony"
     ],
     "photo_urls": [
-      "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1600121848594-d8644e57abab?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1595576508898-0ad5c879a061?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1484154218962-a197022b5858?w=1200&q=80&auto=format&fit=crop"
-    ]
-  },
-  {
-    "title": "Kilimani Garden Flat",
-    "category": "Apartments",
-    "address": "Kilimani, Nairobi, Kenya",
-    "description": "A quiet ground-floor flat opening onto a shared garden, close to Yaya Centre and a 20-minute drive from the city centre.",
-    "house_rules": "Check-in from 2pm, check-out by 10am. No smoking indoors. No parties or events.",
-    "max_guests": 2,
-    "nightly_price_cents": 750000,
-    "cleaning_charge_cents": 100000,
-    "amenity_keys": [
-      "wifi",
-      "tv",
-      "entrance"
+      "/listings/grace-d8-09/01-exterior.jpg",
+      "/listings/grace-d8-09/03-living-room.jpg",
+      "/listings/grace-d8-09/04-kitchen.jpg",
+      "/listings/grace-d8-09/05-breakfast-bar.jpg",
+      "/listings/grace-d8-09/06-main-bedroom.jpg",
+      "/listings/grace-d8-09/07-second-bedroom.jpg",
+      "/listings/grace-d8-09/08-bathroom.jpg",
+      "/listings/grace-d8-09/09-balcony.jpg",
+      "/listings/grace-d8-09/02-view-park.jpg"
     ],
-    "photo_urls": [
-      "https://images.unsplash.com/photo-1520608421741-68228b76b6df?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1600566752355-35792bedcfea?w=1200&q=80&auto=format&fit=crop"
-    ]
-  },
-  {
-    "title": "Karen Garden House",
-    "category": "Houses & Villas",
-    "address": "Karen, Nairobi, Kenya",
-    "description": "A family house on a leafy acre in Karen with a fireplace, a wide veranda and space for children to play. Near the Giraffe Centre and Karen Blixen Museum.",
-    "house_rules": "Check-in from 2pm, check-out by 10am. No smoking indoors. No parties or events. Dogs welcome by arrangement.",
-    "max_guests": 8,
-    "nightly_price_cents": 2800000,
-    "cleaning_charge_cents": 350000,
-    "amenity_keys": [
-      "wifi",
-      "parking",
-      "pets",
-      "tv"
-    ],
-    "photo_urls": [
-      "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1600210491892-03d54c0aaf87?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1556020685-ae41abfc9365?w=1200&q=80&auto=format&fit=crop"
-    ]
-  },
-  {
-    "title": "Diani Beach Villa",
-    "category": "Beach & Coast",
-    "address": "Diani Beach, Kwale, Kenya",
-    "description": "A modern villa a few steps from the white sand at Diani, with a private pool, ceiling fans in every room and a housekeeper on weekdays.",
-    "house_rules": "Check-in from 2pm, check-out by 10am. No smoking indoors. No parties or events.",
-    "max_guests": 8,
-    "nightly_price_cents": 3200000,
-    "cleaning_charge_cents": 400000,
-    "amenity_keys": [
-      "wifi",
-      "parking",
-      "tv",
-      "entrance"
-    ],
-    "photo_urls": [
-      "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1493809842364-78817add7ffb?w=1200&q=80&auto=format&fit=crop"
-    ]
-  },
-  {
-    "title": "Watamu Ocean House",
-    "category": "Beach & Coast",
-    "address": "Watamu, Kilifi, Kenya",
-    "description": "An airy house above the beach at Watamu, close to the marine park for snorkelling and to Gede ruins.",
-    "house_rules": "Check-in from 2pm, check-out by 10am. No smoking indoors. No parties or events.",
-    "max_guests": 6,
-    "nightly_price_cents": 2600000,
-    "cleaning_charge_cents": 300000,
-    "amenity_keys": [
-      "wifi",
-      "parking"
-    ],
-    "photo_urls": [
-      "https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1554995207-c18c203602cb?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1501183638710-841dd1904471?w=1200&q=80&auto=format&fit=crop"
-    ]
-  },
-  {
-    "title": "Nyali Beach Apartment",
-    "category": "Beach & Coast",
-    "address": "Nyali, Mombasa, Kenya",
-    "description": "A sea-facing apartment in Nyali with a shared pool, ten minutes from Old Town Mombasa and Fort Jesus.",
-    "house_rules": "Check-in from 2pm, check-out by 10am. No smoking indoors. No parties or events.",
-    "max_guests": 4,
-    "nightly_price_cents": 1100000,
-    "cleaning_charge_cents": 150000,
-    "amenity_keys": [
-      "wifi",
-      "tv",
-      "parking"
-    ],
-    "photo_urls": [
-      "https://images.unsplash.com/photo-1574362848149-11496d93a7c7?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1616594039964-ae9021a400a0?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1600607687644-c7171b42498f?w=1200&q=80&auto=format&fit=crop"
-    ]
-  },
-  {
-    "title": "Shela Village House",
-    "category": "Beach & Coast",
-    "address": "Shela, Lamu, Kenya",
-    "description": "A cool, whitewashed house in Shela village with arched rooms, a rooftop terrace and the beach a short walk away. No cars on the island; we arrange boat transfers from Manda airstrip.",
-    "house_rules": "Check-in from 2pm, check-out by 10am. No smoking indoors. No parties or events.",
-    "max_guests": 6,
-    "nightly_price_cents": 1800000,
-    "cleaning_charge_cents": 200000,
-    "amenity_keys": [
-      "wifi",
-      "entrance"
-    ],
-    "photo_urls": [
-      "https://images.unsplash.com/photo-1600210491892-03d54c0aaf87?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1611892440504-42a792e24d32?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1618773928121-c32242e63f39?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1540518614846-7eded433c457?w=1200&q=80&auto=format&fit=crop"
-    ]
-  },
-  {
-    "title": "Naivasha Lakeside Cottage",
-    "category": "Lakes",
-    "address": "Naivasha, Nakuru, Kenya",
-    "description": "A timber cottage near the shore of Lake Naivasha, close to Hell's Gate National Park and Crescent Island.",
-    "house_rules": "Check-in from 2pm, check-out by 10am. No smoking indoors. No parties or events. Hippos graze near the lake at night; please stay inside after dark.",
-    "max_guests": 4,
-    "nightly_price_cents": 1600000,
-    "cleaning_charge_cents": 200000,
-    "amenity_keys": [
-      "wifi",
-      "parking",
-      "pets"
-    ],
-    "photo_urls": [
-      "https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1617806118233-18e1de247200?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1590490360182-c33d57733427?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=1200&q=80&auto=format&fit=crop"
-    ]
-  },
-  {
-    "title": "Nanyuki Forest Cabin",
-    "category": "Cabins & Lodges",
-    "address": "Nanyuki, Laikipia, Kenya",
-    "description": "A glass-fronted cabin among the trees outside Nanyuki with views towards Mount Kenya. A good base for Ol Pejeta Conservancy.",
-    "house_rules": "Check-in from 2pm, check-out by 10am. No smoking indoors. No parties or events.",
-    "max_guests": 2,
-    "nightly_price_cents": 1450000,
-    "cleaning_charge_cents": 150000,
-    "amenity_keys": [
-      "parking",
-      "entrance"
-    ],
-    "photo_urls": [
-      "https://images.unsplash.com/photo-1595877244574-e90ce41ce089?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1560185893-a55cbc8c57e8?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1578683010236-d716f9a3f461?w=1200&q=80&auto=format&fit=crop"
-    ]
-  },
-  {
-    "title": "Nakuru Hillside Home",
-    "category": "Houses & Villas",
-    "address": "Nakuru, Nakuru, Kenya",
-    "description": "A spacious family home on the hillside above Nakuru town, 15 minutes from Lake Nakuru National Park.",
-    "house_rules": "Check-in from 2pm, check-out by 10am. No smoking indoors. No parties or events.",
-    "max_guests": 6,
-    "nightly_price_cents": 1200000,
-    "cleaning_charge_cents": 150000,
-    "amenity_keys": [
-      "wifi",
-      "parking",
-      "tv"
-    ],
-    "photo_urls": [
-      "https://images.unsplash.com/photo-1605276374104-dee2a0ed3cd6?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1560185007-cde436f6a4d0?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1559599238-308793637427?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1522444195799-478538b28823?w=1200&q=80&auto=format&fit=crop"
-    ]
-  },
-  {
-    "title": "Kisumu Lakefront Apartment",
-    "category": "Lakes",
-    "address": "Kisumu, Kisumu, Kenya",
-    "description": "A modern apartment near the shores of Lake Victoria, close to Dunga Hill and the Kisumu waterfront restaurants.",
-    "house_rules": "Check-in from 2pm, check-out by 10am. No smoking indoors. No parties or events.",
-    "max_guests": 3,
-    "nightly_price_cents": 850000,
-    "cleaning_charge_cents": 100000,
-    "amenity_keys": [
-      "wifi",
-      "tv"
-    ],
-    "photo_urls": [
-      "https://images.unsplash.com/photo-1600585154526-990dced4db0d?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1566665797739-1674de7a421a?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1505691938895-1758d7feb511?w=1200&q=80&auto=format&fit=crop"
-    ]
-  },
-  {
-    "title": "Kilifi Creek Retreat",
-    "category": "Beach & Coast",
-    "address": "Kilifi, Kilifi, Kenya",
-    "description": "A calm house with a deck over Kilifi Creek, good for paddleboarding at high tide and sundowners at Distant Relatives.",
-    "house_rules": "Check-in from 2pm, check-out by 10am. No smoking indoors. No parties or events.",
-    "max_guests": 4,
-    "nightly_price_cents": 1900000,
-    "cleaning_charge_cents": 250000,
-    "amenity_keys": [
-      "wifi",
-      "parking",
-      "pets"
-    ],
-    "photo_urls": [
-      "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=1200&q=80&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1615874959474-d609969a20ed?w=1200&q=80&auto=format&fit=crop"
-    ]
+    "property_type": "apartment",
+    "bedrooms": 2,
+    "beds": 2,
+    "bathrooms": 2
   }
 ]
