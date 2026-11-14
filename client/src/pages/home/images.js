@@ -1,21 +1,23 @@
-// Unsplash photo ids used on the home page
+// Photos of the real apartment, served from client/public/listings
+const P = '/listings/grace-d8-09/';
+
 export const IMG = {
-  hero: '1600585154340-be6161a56a0c',
+  hero: `${P}01-exterior.jpg`,
   collage: [
-    '1480074568708-e7b720bb3f09',
-    '1595877244574-e90ce41ce089',
-    '1600607687939-ce8a6c25118c',
-    '1600210492486-724fe5c67fb0',
-    '1510798831971-661eb04b3739',
-    '1449844908441-8829872d2607',
+    `${P}03-living-room.jpg`,
+    `${P}04-kitchen.jpg`,
+    `${P}06-main-bedroom.jpg`,
+    `${P}09-balcony.jpg`,
+    `${P}07-second-bedroom.jpg`,
+    `${P}05-breakfast-bar.jpg`,
   ],
-  aboutInline: '1464146072230-91cabc968266',
-  marquee: '1600585154340-be6161a56a0c',
-  evening: '1568605114967-8130f3a36994',
-  dusk: '1542718610-a1d656d1884c',
-  smallRoom: '1616486338812-3dadae4b4ace',
-  living: '1554995207-c18c203602cb',
-  bedroom: '1616594039964-ae9021a400a0',
-  secondRoom: '1505693416388-ac5ce068fe85',
-  stepInside: '1430285561322-7808604715df',
+  aboutInline: `${P}02-view-park.jpg`,
+  marquee: `${P}01-exterior.jpg`,
+  evening: `${P}09-balcony.jpg`,
+  dusk: `${P}02-view-park.jpg`,
+  smallRoom: `${P}03-living-room.jpg`,
+  living: `${P}03-living-room.jpg`,
+  bedroom: `${P}06-main-bedroom.jpg`,
+  secondRoom: `${P}07-second-bedroom.jpg`,
+  stepInside: `${P}02-view-park.jpg`,
 };

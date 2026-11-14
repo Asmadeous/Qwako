@@ -10,7 +10,7 @@ const Hero = () => (
       alt="Modern house in the evening light"
       className="absolute inset-0 h-full w-full animate-[heroZoom_2.4s_ease-out_both] object-cover"
     />
-    <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/10 to-black/40" />
+    <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/35 to-black/55" />
 
     <div className="relative flex h-full flex-col px-5 pt-20 pb-6 md:px-8">
       <h1 className="animate-[fadeUp_1.2s_ease-out_0.2s_both] font-bold tracking-tight text-[15vw] leading-[0.9] md:text-[8.5vw]">

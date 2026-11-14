@@ -8,8 +8,9 @@ export const lerp = (a, b, t) => a + (b - a) * t;
 export const range = (p, start, end) => clamp((p - start) / (end - start));
 export const ease = (t) => 1 - Math.pow(1 - t, 3);
 
+// Real photos are paths on this site; anything else is an Unsplash id.
 export const photo = (id, w = 2000) =>
-  `https://images.unsplash.com/photo-${id}?w=${w}&q=80&auto=format&fit=crop`;
+  id.startsWith('/') ? id : `https://images.unsplash.com/photo-${id}?w=${w}&q=80&auto=format&fit=crop`;
 
 // Spread onto an <img>: <img {...photoProps(id, 2400)} />. Photos below the
 // first screen load lazily; pass { eager: true } for the hero.

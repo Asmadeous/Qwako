@@ -13,7 +13,7 @@ const Grand = () => {
         <div className="pointer-events-none absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-sand to-white" />
         <div ref={headRef} className="relative">
           <span className={`${r(0).className} block text-sm font-medium`} style={r(0).style}>
-            The city loft
+            Tatu City
           </span>
           <h2 className={`${r(150).className} mt-4 font-bold tracking-tight text-[13vw] leading-[0.95] md:text-[6.5vw]`} style={r(150).style}>
             Small spaces,
@@ -34,7 +34,7 @@ const Grand = () => {
               borderRadius: `${lerp(16, 0, t)}px`,
             }}
           >
-            <img {...photoProps(IMG.smallRoom, 2400)} alt="Warm, sunlit living room" className="h-full w-full object-cover" />
+            <img {...photoProps(IMG.smallRoom, 2400)} alt="The furnished living room" className="h-full w-full object-cover" />
             <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" style={{ opacity: t }} />
             <h3
               className="absolute bottom-[8vh] left-5 text-[13vw] font-bold leading-[0.95] tracking-tight text-white md:left-8 md:text-[6vw]"
