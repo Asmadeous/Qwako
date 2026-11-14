@@ -47,11 +47,13 @@ const ResetPasswordPage = () => {
 
   return (
     <AuthLayout
-      title="Choose a new password"
+      title={searchParams.get('welcome') ? 'Welcome to the team. Choose your password' : 'Choose a new password'}
       intro={
         expired
           ? null
-          : "Use at least 8 characters. You'll be signed out on other devices."
+          : searchParams.get('welcome')
+            ? 'Use at least 8 characters. You sign in with this email and password from now on.'
+            : "Use at least 8 characters. You'll be signed out on other devices."
       }
     >
       {expired ? (

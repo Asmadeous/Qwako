@@ -25,7 +25,6 @@ class Api::V1::PaymentsTest < ActionDispatch::IntegrationTest
     assert_response :created
     body = response.parsed_body
     assert_equal "pending_payment", body.dig("booking", "status")
-    assert body.dig("booking", "pay_online")
     assert body.dig("booking", "hold_expires_at").present?
 
     payment = Booking.find(body.dig("booking", "id")).payments.sole
@@ -148,14 +147,5 @@ class Api::V1::PaymentsTest < ActionDispatch::IntegrationTest
     sign_in_as users(:grace)
     post verify_api_v1_booking_payment_path(booking_id), as: :json
     assert_error :not_found, "not_found"
-  end
-
-  test "UK stays are still confirmed without online payment" do
-    sign_in_as users(:ada)
-    post api_v1_bookings_path, params: { booking: {
-      listing_id: listings(:cottage).id, check_in: Date.current + 50, check_out: Date.current + 52, guests_count: 2
-    } }, as: :json
-    assert_equal "confirmed", response.parsed_body.dig("booking", "status")
-    assert_nil response.parsed_body["checkout_url"]
   end
 end

@@ -21,13 +21,16 @@ module Api
         end
 
         def destroy
-          Category.find(params[:id]).destroy!
+          record = Category.find(params[:id])
+          record.destroy!
+          audit("delete_category", nil, "Deleted category #{record.name}")
           head :no_content
         end
 
         private
           def save(category, status:)
             if category.save
+              audit("save_category", category, "Saved category #{category.name}")
               render json: { category: category_json(category).merge(homes_count: category.listings.kept.count) }, status:
             else
               render_validation_errors category

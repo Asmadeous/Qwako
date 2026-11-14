@@ -45,6 +45,11 @@ module Paystack
       request(Net::HTTP::Get.new("/transaction/verify/#{ERB::Util.url_encode(reference)}"))
     end
 
+    # Refunds all or part (amount, in cents) of a transaction (its reference or id).
+    def refund(transaction:, amount:)
+      request(Net::HTTP::Post.new("/refund").tap { |req| req.body = { transaction:, amount: }.to_json })
+    end
+
     private
       def request(req)
         raise Error, "Paystack is not configured." if @secret_key.empty?

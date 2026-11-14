@@ -2,11 +2,17 @@ class Listing < ApplicationRecord
   MAX_PHOTOS = 30
   MAX_VIDEOS = 10
   MAX_GUESTS = 16
-  # The last part of the address names the country, which sets the currency.
-  CURRENCIES = {
-    "Kenya" => "KES",
-    "England" => "GBP", "Scotland" => "GBP", "Wales" => "GBP", "Northern Ireland" => "GBP"
+  # Every home is in Kenya and priced in shillings.
+  COUNTRY = "Kenya"
+  CURRENCY = "KES"
+  PROPERTY_TYPES = %w[house apartment cottage villa cabin bungalow studio room].freeze
+  # What a guest gets back when they cancel; owner cancellations always refund in full.
+  CANCELLATION_POLICIES = {
+    "flexible" => "Full refund if you cancel before the day of check-in.",
+    "moderate" => "Full refund if you cancel at least 5 days before check-in, half after that.",
+    "strict" => "Half refund if you cancel at least 7 days before check-in, nothing after that."
   }.freeze
+  TIME_FORMAT = /\A([01]\d|2[0-3]):[0-5]\d\z/
 
   has_many :photos, -> { order(:position) }, class_name: "ListingPhoto", dependent: :delete_all,
     inverse_of: :listing, autosave: true, validate: false # has_photos validates each photo
@@ -15,9 +21,15 @@ class Listing < ApplicationRecord
   has_many :listing_amenities, dependent: :delete_all
   has_many :amenities, through: :listing_amenities
   has_many :bookings, dependent: :restrict_with_error
+  has_many :availability_blocks, dependent: :delete_all
+  has_many :reviews, dependent: :restrict_with_error
+  has_many :saved_listings, dependent: :delete_all
   belongs_to :category, optional: true
 
   enum :status, { draft: "draft", published: "published", unlisted: "unlisted" }, default: "published", validate: true
+  enum :booking_type, { instant: "instant", request: "request" }, default: "instant", validate: true, prefix: :books
+  enum :cancellation_policy, CANCELLATION_POLICIES.keys.index_by(&:itself), default: "flexible", validate: true,
+    suffix: :policy
 
   normalizes :title, :address, with: ->(value) { value.strip }
 
@@ -30,9 +42,17 @@ class Listing < ApplicationRecord
   # Minor units (cents) of the listing's currency.
   validates :nightly_price_cents, numericality: { only_integer: true, greater_than: 0, less_than_or_equal_to: 10_000_000 }
   validates :cleaning_charge_cents, numericality: { only_integer: true, in: 0..1_000_000 }
-  validates :country, inclusion: { in: CURRENCIES.keys, message: "must end with Kenya, England, Scotland, Wales or Northern Ireland" },
-    if: -> { address.present? }
   validates :category, presence: { message: "must be one of your categories" }, if: :category_id?
+  validates :property_type, inclusion: { in: PROPERTY_TYPES, message: "must be one of the listed types" }
+  validates :bedrooms, numericality: { only_integer: true, in: 0..50 }
+  validates :beds, :bathrooms, numericality: { only_integer: true, in: 1..50 }
+  validates :check_in_time, :check_out_time, format: { with: TIME_FORMAT, message: "must be a time like 14:00" }
+  validates :min_nights, numericality: { only_integer: true, in: 1..365 }
+  validates :max_nights, numericality: { only_integer: true, in: 1..365 }
+  validates :max_nights, numericality: { greater_than_or_equal_to: :min_nights, message: "must be at least the minimum nights" },
+    if: -> { min_nights.is_a?(Integer) && max_nights.is_a?(Integer) }
+  validates :check_in_instructions, :wifi_details, length: { maximum: 5000 }
+  validates :licence_number, length: { maximum: 60 }
   validate :has_photos, :has_valid_videos
 
   scope :kept, -> { where(deleted_at: nil) }
@@ -44,7 +64,28 @@ class Listing < ApplicationRecord
     where("listings.title ILIKE :pattern OR listings.address ILIKE :pattern", pattern:)
   }
 
+  # Homes free for the whole stay: no active booking and no blocked night in it.
+  scope :available_between, ->(check_in, check_out) {
+    where.not(id: Booking.active.where("daterange(check_in, check_out) && daterange(?, ?)", check_in, check_out).select(:listing_id))
+      .where.not(id: AvailabilityBlock.overlapping(check_in, check_out).select(:listing_id))
+  }
+
   def deleted? = deleted_at.present?
+
+  def cancellation_policy_text = CANCELLATION_POLICIES.fetch(cancellation_policy)
+
+  # Nights guests can't book over the next year: [from, to) ranges, to exclusive.
+  def unavailable_ranges(from: Time.zone.today, to: Time.zone.today + 1.year)
+    booked = bookings.active.where("check_out > ? AND check_in < ?", from, to).pluck(:check_in, :check_out)
+    blocked = availability_blocks.where("ends_on > ? AND starts_on < ?", from, to).pluck(:starts_on, :ends_on)
+    (booked + blocked).sort.map { |start, finish| { from: start, to: finish } }
+  end
+
+  def nights_free?(check_in, check_out, except: nil)
+    taken = bookings.active.where("daterange(check_in, check_out) && daterange(?, ?)", check_in, check_out)
+    taken = taken.where.not(id: except.id) if except
+    !taken.exists? && !availability_blocks.overlapping(check_in, check_out).exists?
+  end
 
   # Guests with a stay still to come keep their home; it can't be deleted yet.
   def upcoming_stays
@@ -100,9 +141,16 @@ class Listing < ApplicationRecord
   end
 
   private
+    # The owner types the town and county; "Kenya" is added when it's missing,
+    # so every address reads "Town, County, Kenya".
     def derive_country_and_currency
-      self.country = address.to_s.split(",").last.to_s.strip.presence || "Unknown"
-      self.currency = CURRENCIES[country] if CURRENCIES.key?(country)
+      self.country = COUNTRY
+      self.currency = CURRENCY
+      return if address.blank?
+
+      parts = address.split(",").map(&:strip).reject(&:blank?)
+      parts.pop if parts.last.to_s.casecmp?(COUNTRY)
+      self.address = [ *parts, COUNTRY ].join(", ")
     end
 
     def assign_slug

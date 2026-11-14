@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import { Link, Navigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
@@ -6,7 +6,6 @@ import { api, errorMessageFrom, fieldErrorsFrom } from '@/utils/axios';
 import {
   amountToCents,
   centsToAmount,
-  currencyForAddress,
 } from '@/utils/currency';
 import { useAuth } from '../../hooks';
 
@@ -19,6 +18,7 @@ import VideosUploader from '@/components/ui/VideosUploader';
 import Spinner from '@/components/ui/Spinner';
 import { Button } from '@/components/ui/button';
 import ConfirmDialog from '@/components/ui/ConfirmDialog';
+import { POLICIES, PROPERTY_TYPES } from '@/utils/format';
 
 // Form fields whose server errors are reported under other names.
 const ERROR_KEYS = {
@@ -40,7 +40,26 @@ const EMPTY = {
   status: 'published',
   amenities: [],
   category_id: null,
+  property_type: 'house',
+  bedrooms: 1,
+  beds: 1,
+  bathrooms: 1,
+  check_in_time: '14:00',
+  check_out_time: '10:00',
+  min_nights: 1,
+  max_nights: 30,
+  booking_type: 'instant',
+  cancellation_policy: 'flexible',
+  check_in_instructions: '',
+  wifi_details: '',
+  licence_number: '',
 };
+
+const DETAIL_KEYS = [
+  'property_type', 'bedrooms', 'beds', 'bathrooms', 'check_in_time', 'check_out_time', 'min_nights', 'max_nights',
+  'booking_type', 'cancellation_policy', 'check_in_instructions', 'wifi_details', 'licence_number',
+];
+const NUMBER_KEYS = ['bedrooms', 'beds', 'bathrooms', 'min_nights', 'max_nights'];
 
 const fromListing = (listing) => ({
   title: listing.title,
@@ -53,6 +72,7 @@ const fromListing = (listing) => ({
   status: listing.status,
   amenities: listing.amenities.map((a) => a.key),
   category_id: listing.category?.id ?? null,
+  ...Object.fromEntries(DETAIL_KEYS.map((key) => [key, listing[key] ?? EMPTY[key]])),
 });
 
 const PlacesFormPage = () => {
@@ -130,6 +150,7 @@ const PlacesFormPage = () => {
       category_id: form.category_id,
       photo_urls: photos,
       video_urls: videos,
+      ...Object.fromEntries(DETAIL_KEYS.map((key) => [key, NUMBER_KEYS.includes(key) ? Number(form[key]) : form[key]])),
     };
     try {
       if (id) await api.patch(`/admin/listings/${id}`, { listing });
@@ -164,9 +185,8 @@ const PlacesFormPage = () => {
   if (redirect) return <Navigate to="/account/places" />;
   if (loading) return <Spinner />;
 
-  const currency = currencyForAddress(form.address);
-  const currencyLabel = currency === 'GBP' ? '£' : 'Ksh';
-  const currencyName = currency === 'GBP' ? 'pounds' : 'Kenyan shillings';
+  const currencyLabel = 'Ksh';
+  const selectClass = 'h-11 w-full rounded-xl border border-ink/25 bg-paper px-3 text-ink focus:border-ink focus:outline-none';
 
   const fieldError = (field) =>
     errors[field] && (
@@ -249,7 +269,7 @@ const PlacesFormPage = () => {
                 {...invalid('address')}
               />,
               {
-                hint: 'Town, county, country. For example "Diani Beach, Kwale, Kenya". Homes in Kenya are priced in shillings, homes in England, Scotland, Wales or Northern Ireland in pounds.',
+                hint: 'Town and county. For example "Diani Beach, Kwale". Kenya is added for you.',
                 error: 'country',
               },
             )}
@@ -324,7 +344,7 @@ const PlacesFormPage = () => {
                 onChange={handleChange}
                 {...invalid('house_rules')}
               />,
-              { hint: 'Check-in and check-out times, smoking, parties, pets.' },
+              { hint: 'Smoking, parties, pets, quiet hours.' },
             )}
           </>,
         )}
@@ -347,8 +367,108 @@ const PlacesFormPage = () => {
         )}
 
         {section(
+          'Rooms',
+          'Shown at the top of the home page.',
+          <div className="grid gap-6 sm:grid-cols-2">
+            {field(
+              'property_type',
+              'Type of home',
+              <select id="listing-property_type" name="property_type" value={form.property_type} onChange={handleChange} className={selectClass} {...invalid('property_type')}>
+                {Object.entries(PROPERTY_TYPES).map(([value, label]) => (
+                  <option key={value} value={value}>{label}</option>
+                ))}
+              </select>,
+            )}
+            {[
+              ['bedrooms', 'Bedrooms', 0, 'Use 0 for a studio.'],
+              ['beds', 'Beds', 1],
+              ['bathrooms', 'Bathrooms', 1],
+            ].map(([name, label, min, hint]) => (
+              <Fragment key={name}>
+                {field(
+                  name,
+                  label,
+                  <input id={`listing-${name}`} type="number" name={name} min={min} max={50} required value={form[name]} onChange={handleChange} className="tabular" {...invalid(name)} />,
+                  { hint },
+                )}
+              </Fragment>
+            ))}
+          </div>,
+        )}
+
+        {section(
+          'Booking rules',
+          'How guests book and what happens if they cancel.',
+          <div className="grid gap-6 sm:grid-cols-2">
+            {field(
+              'check_in_time',
+              'Check-in from',
+              <input id="listing-check_in_time" type="time" name="check_in_time" required value={form.check_in_time} onChange={handleChange} {...invalid('check_in_time')} />,
+            )}
+            {field(
+              'check_out_time',
+              'Check-out by',
+              <input id="listing-check_out_time" type="time" name="check_out_time" required value={form.check_out_time} onChange={handleChange} {...invalid('check_out_time')} />,
+            )}
+            {field(
+              'min_nights',
+              'Minimum nights',
+              <input id="listing-min_nights" type="number" name="min_nights" min={1} max={365} required value={form.min_nights} onChange={handleChange} className="tabular" {...invalid('min_nights')} />,
+            )}
+            {field(
+              'max_nights',
+              'Maximum nights',
+              <input id="listing-max_nights" type="number" name="max_nights" min={1} max={365} required value={form.max_nights} onChange={handleChange} className="tabular" {...invalid('max_nights')} />,
+            )}
+            {field(
+              'booking_type',
+              'How guests book',
+              <select id="listing-booking_type" name="booking_type" value={form.booking_type} onChange={handleChange} className={selectClass}>
+                <option value="instant">Instant: confirmed as soon as they pay</option>
+                <option value="request">Request: you accept or decline within 24 hours</option>
+              </select>,
+            )}
+            {field(
+              'cancellation_policy',
+              'Cancellation policy',
+              <select id="listing-cancellation_policy" name="cancellation_policy" value={form.cancellation_policy} onChange={handleChange} className={selectClass}>
+                {Object.entries(POLICIES).map(([value, p]) => (
+                  <option key={value} value={value}>{p.label}</option>
+                ))}
+              </select>,
+              { hint: POLICIES[form.cancellation_policy]?.text },
+            )}
+          </div>,
+        )}
+
+        {section(
+          'For confirmed guests',
+          'Only guests with a confirmed stay see these, on their booking page.',
+          <>
+            {field(
+              'check_in_instructions',
+              'Check-in instructions',
+              <textarea id="listing-check_in_instructions" name="check_in_instructions" rows={4} value={form.check_in_instructions} onChange={handleChange} {...invalid('check_in_instructions')} />,
+              { hint: 'Exact address or directions, where the key is, gate codes, who to call.' },
+            )}
+            {field(
+              'wifi_details',
+              'Wifi',
+              <textarea id="listing-wifi_details" name="wifi_details" rows={2} value={form.wifi_details} onChange={handleChange} {...invalid('wifi_details')} />,
+              { hint: 'Network name and password.' },
+            )}
+            {field(
+              'licence_number',
+              'Short-stay licence number (optional)',
+              <input id="listing-licence_number" type="text" name="licence_number" value={form.licence_number} onChange={handleChange} {...invalid('licence_number')} />,
+              { hint: 'Shown on the home page if you have one.' },
+            )}
+          </>,
+        )}
+
+        {section(
           'Price and guests',
-          `Prices are in ${currencyName}, set by the home's country. Guests pay the nightly price plus one cleaning charge.`,
+          'Prices are in Kenyan shillings. Guests pay the nightly price plus one cleaning charge.',
           <div className="grid gap-6 sm:grid-cols-2">
             {field(
               'price',

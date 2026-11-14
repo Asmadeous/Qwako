@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { format, isSameDay, startOfToday } from 'date-fns';
+import { useMemo, useState } from 'react';
+import { addDays, format, isSameDay, parseISO, startOfToday } from 'date-fns';
 import { CalendarDays } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
@@ -8,9 +8,26 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 
 const day = (date) => format(date, 'EEE d MMM yyyy');
 
-// Controlled range picker: the booking form owns the dates.
-export default function DatePickerWithRange({ id, value, onChange, className, invalid }) {
+// Booked or blocked stays come as [{ from, to }] with `to` the check-out day,
+// so that day is still free to arrive on.
+const toNights = (unavailable = []) =>
+  unavailable.map(({ from, to }) => ({ from: parseISO(from), to: addDays(parseISO(to), -1) }));
+
+// Controlled range picker: the booking form owns the dates. Taken nights are
+// greyed out; once check-in is picked, check-out can be any day up to the next
+// taken night, including the day another guest arrives.
+export default function DatePickerWithRange({ id, value, onChange, className, invalid, unavailable, placeholder }) {
   const [open, setOpen] = useState(false);
+  const taken = useMemo(() => toNights(unavailable), [unavailable]);
+
+  const disabled = useMemo(() => {
+    const today = startOfToday();
+    if (value?.from && !value?.to) {
+      const nextTaken = taken.map((r) => r.from).filter((d) => d > value.from).sort((a, b) => a - b)[0];
+      return [{ before: value.from }, ...(nextTaken ? [{ after: nextTaken }] : [])];
+    }
+    return [{ before: today }, ...taken];
+  }, [taken, value?.from, value?.to]);
 
   // A click after a full range starts a new stay rather than stretching the old
   // one; a full range closes the calendar.
@@ -22,7 +39,7 @@ export default function DatePickerWithRange({ id, value, onChange, className, in
     if (next.from && next.to) setOpen(false);
   };
 
-  let label = 'Choose your dates';
+  let label = placeholder || 'Choose your dates';
   if (value?.from && value?.to) label = `${day(value.from)} to ${day(value.to)}`;
   else if (value?.from) label = `${day(value.from)}, now pick check-out`;
 
@@ -51,8 +68,24 @@ export default function DatePickerWithRange({ id, value, onChange, className, in
           onSelect={handleSelect}
           numberOfMonths={1}
           weekStartsOn={1}
-          disabled={{ before: startOfToday() }}
+          disabled={disabled}
+          modifiers={{ taken }}
+          modifiersClassNames={{ taken: 'line-through decoration-ink/50' }}
         />
+        {(taken.length > 0 || (value?.from && !value?.to)) && (
+          <div className="flex items-center justify-between gap-3 border-t border-ink/10 px-4 py-2 text-xs text-ink/65">
+            <span>{taken.length > 0 ? 'Crossed-out nights are already booked.' : 'Now pick check-out.'}</span>
+            {value?.from && !value?.to && (
+              <button
+                type="button"
+                onClick={() => onChange({ from: undefined, to: undefined })}
+                className="min-h-9 rounded-full px-2 font-medium text-ink underline underline-offset-4"
+              >
+                Start again
+              </button>
+            )}
+          </div>
+        )}
       </PopoverContent>
     </Popover>
   );

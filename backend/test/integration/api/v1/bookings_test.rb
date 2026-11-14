@@ -23,8 +23,10 @@ class Api::V1::BookingsTest < ActionDispatch::IntegrationTest
     assert_equal 21000, booking["nightly_price_cents"]
     assert_equal 3000, booking["cleaning_charge_cents"]
     assert_equal 66000, booking["total_cents"]
-    assert_equal "confirmed", booking["status"]
-    assert_equal "Cotswolds Cottage", booking.dig("listing", "title")
+    assert_equal "pending_payment", booking["status"]
+    assert_equal "KES", booking["currency"]
+    assert response.parsed_body["checkout_url"].present?
+    assert_equal "Naivasha Cottage", booking.dig("listing", "title")
   end
 
   test "a Kenyan stay is booked in shillings" do

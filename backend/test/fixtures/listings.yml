@@ -1,10 +1,10 @@
 cottage:
-  title: Cotswolds Cottage
-  slug: cotswolds-cottage
+  title: Naivasha Cottage
+  slug: naivasha-cottage
   description: Stone cottage.
-  address: Bourton-on-the-Water, Gloucestershire, England
-  country: England
-  currency: GBP
+  address: Naivasha, Nakuru, Kenya
+  country: Kenya
+  currency: KES
   max_guests: 4
   nightly_price_cents: 21000
   cleaning_charge_cents: 3000
@@ -25,9 +25,9 @@ loft:
 hidden:
   title: Draft Barn
   slug: draft-barn
-  address: Somewhere, Devon, England
-  country: England
-  currency: GBP
+  address: Nanyuki, Laikipia, Kenya
+  country: Kenya
+  currency: KES
   max_guests: 2
   nightly_price_cents: 10000
   status: draft

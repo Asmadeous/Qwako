@@ -9,7 +9,7 @@ module Api
       rate_limit to: 10, within: 10.minutes, only: :update, with: -> { render_rate_limited }
 
       def create
-        if (user = User.find_by(email: params[:email].to_s.strip.downcase))
+        if (user = User.kept.find_by(email: params[:email].to_s.strip.downcase))
           url = "#{app_url}/reset-password?#{{ token: user.password_reset_token }.to_query}"
           PasswordsMailer.reset(user, url).deliver_later
         end
@@ -17,7 +17,8 @@ module Api
       end
 
       def update
-        user = User.find_by_password_reset_token(params[:token].to_s)
+        # Also takes the link a new team member gets to choose their first password.
+        user = User.find_by_password_reset_token(params[:token].to_s) || User.find_by_token_for(:invitation, params[:token].to_s)
         unless user
           return render_error(:invalid_token, "This reset link has expired or was already used. Ask for a new one.",
                               status: :unprocessable_content)
@@ -25,7 +26,7 @@ module Api
 
         password = params[:password].to_s
         user.errors.add(:password, "can't be blank") if password.empty?
-        return render_validation_errors(user) if password.empty? || !user.update(password:)
+        return render_validation_errors(user) if password.empty? || !user.update(password:, email_verified_at: user.email_verified_at || Time.current)
 
         # Signs out every device, then signs this one in with the new password.
         user.sessions.destroy_all

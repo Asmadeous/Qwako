@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_11_12_000003) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_13_000002) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gist"
   enable_extension "citext"
@@ -53,6 +53,29 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_12_000003) do
     t.index ["key"], name: "index_amenities_on_key", unique: true
   end
 
+  create_table "audit_logs", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "admin_id"
+    t.string "action", null: false
+    t.string "target_type"
+    t.uuid "target_id"
+    t.string "summary", null: false
+    t.string "ip_address"
+    t.datetime "created_at", null: false
+    t.index ["admin_id"], name: "index_audit_logs_on_admin_id"
+    t.index ["created_at"], name: "index_audit_logs_on_created_at"
+  end
+
+  create_table "availability_blocks", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "listing_id", null: false
+    t.date "starts_on", null: false
+    t.date "ends_on", null: false
+    t.string "reason", default: "", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["listing_id"], name: "index_availability_blocks_on_listing_id"
+    t.check_constraint "ends_on > starts_on", name: "availability_blocks_dates_ordered"
+  end
+
   create_table "bookings", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "listing_id", null: false
     t.uuid "guest_id", null: false
@@ -66,7 +89,10 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_12_000003) do
     t.string "status", default: "confirmed", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "currency", default: "GBP", null: false
+    t.string "currency", default: "KES", null: false
+    t.datetime "requested_until"
+    t.datetime "cancelled_at"
+    t.string "cancel_reason"
     t.index ["guest_id"], name: "index_bookings_on_guest_id"
     t.index ["listing_id"], name: "index_bookings_on_listing_id"
     t.check_constraint "check_out > check_in", name: "bookings_dates_ordered"
@@ -85,6 +111,31 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_12_000003) do
     t.datetime "updated_at", null: false
     t.index ["name"], name: "index_categories_on_name", unique: true
     t.index ["slug"], name: "index_categories_on_slug", unique: true
+  end
+
+  create_table "contact_messages", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "name", null: false
+    t.string "email", null: false
+    t.string "phone"
+    t.text "body", null: false
+    t.datetime "handled_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "conversations", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "guest_id", null: false
+    t.uuid "listing_id"
+    t.uuid "booking_id"
+    t.string "subject", null: false
+    t.datetime "last_message_at", null: false
+    t.datetime "guest_read_at"
+    t.datetime "owner_read_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["booking_id"], name: "index_conversations_on_booking_id", unique: true
+    t.index ["guest_id"], name: "index_conversations_on_guest_id"
+    t.index ["listing_id"], name: "index_conversations_on_listing_id"
   end
 
   create_table "listing_amenities", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -130,9 +181,24 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_12_000003) do
     t.boolean "featured", default: false, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "currency", default: "GBP", null: false
+    t.string "currency", default: "KES", null: false
     t.uuid "category_id"
     t.datetime "deleted_at"
+    t.string "property_type", default: "house", null: false
+    t.integer "bedrooms", default: 1, null: false
+    t.integer "beds", default: 1, null: false
+    t.integer "bathrooms", default: 1, null: false
+    t.string "check_in_time", default: "14:00", null: false
+    t.string "check_out_time", default: "10:00", null: false
+    t.integer "min_nights", default: 1, null: false
+    t.integer "max_nights", default: 30, null: false
+    t.string "booking_type", default: "instant", null: false
+    t.string "cancellation_policy", default: "flexible", null: false
+    t.text "check_in_instructions", default: "", null: false
+    t.text "wifi_details", default: "", null: false
+    t.string "licence_number", default: "", null: false
+    t.decimal "rating_average", precision: 3, scale: 2
+    t.integer "review_count", default: 0, null: false
     t.index ["category_id"], name: "index_listings_on_category_id"
     t.index ["deleted_at"], name: "index_listings_on_deleted_at"
     t.index ["slug"], name: "index_listings_on_slug", unique: true
@@ -140,8 +206,32 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_12_000003) do
     t.check_constraint "cleaning_charge_cents >= 0", name: "listings_cleaning_non_negative"
     t.check_constraint "currency::text = ANY (ARRAY['KES'::character varying, 'GBP'::character varying]::text[])", name: "listings_currency_valid"
     t.check_constraint "max_guests > 0", name: "listings_max_guests_positive"
+    t.check_constraint "min_nights >= 1 AND max_nights >= min_nights", name: "listings_nights_range"
     t.check_constraint "nightly_price_cents > 0", name: "listings_price_positive"
     t.check_constraint "status::text = ANY (ARRAY['draft'::character varying, 'published'::character varying, 'unlisted'::character varying]::text[])", name: "listings_status_valid"
+  end
+
+  create_table "messages", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "conversation_id", null: false
+    t.uuid "sender_id", null: false
+    t.text "body", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["conversation_id"], name: "index_messages_on_conversation_id"
+    t.index ["sender_id"], name: "index_messages_on_sender_id"
+  end
+
+  create_table "notifications", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "user_id", null: false
+    t.string "kind", null: false
+    t.string "title", null: false
+    t.string "body", default: "", null: false
+    t.string "url"
+    t.datetime "read_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id", "read_at"], name: "index_notifications_on_user_id_and_read_at"
+    t.index ["user_id"], name: "index_notifications_on_user_id"
   end
 
   create_table "payments", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -159,11 +249,39 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_12_000003) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.datetime "refunded_at"
+    t.integer "refund_cents"
+    t.string "provider_refund_id"
     t.index ["booking_id"], name: "index_payments_on_booking_id"
     t.index ["reference"], name: "index_payments_on_reference", unique: true
     t.check_constraint "amount_cents > 0", name: "payments_amount_positive"
     t.check_constraint "currency::text = ANY (ARRAY['KES'::character varying, 'GBP'::character varying]::text[])", name: "payments_currency_valid"
     t.check_constraint "status::text = ANY (ARRAY['pending'::character varying, 'succeeded'::character varying, 'failed'::character varying]::text[])", name: "payments_status_valid"
+  end
+
+  create_table "reviews", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "booking_id", null: false
+    t.uuid "listing_id", null: false
+    t.uuid "author_id", null: false
+    t.integer "rating", null: false
+    t.text "comment", default: "", null: false
+    t.text "owner_reply"
+    t.boolean "hidden", default: false, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["author_id"], name: "index_reviews_on_author_id"
+    t.index ["booking_id"], name: "index_reviews_on_booking_id", unique: true
+    t.index ["listing_id"], name: "index_reviews_on_listing_id"
+    t.check_constraint "rating >= 1 AND rating <= 5", name: "reviews_rating_range"
+  end
+
+  create_table "saved_listings", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "user_id", null: false
+    t.uuid "listing_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["listing_id"], name: "index_saved_listings_on_listing_id"
+    t.index ["user_id", "listing_id"], name: "index_saved_listings_on_user_id_and_listing_id", unique: true
+    t.index ["user_id"], name: "index_saved_listings_on_user_id"
   end
 
   create_table "sessions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -343,20 +461,40 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_12_000003) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "role", default: "guest", null: false
+    t.string "phone"
+    t.datetime "email_verified_at"
+    t.datetime "marketing_consent_at"
+    t.boolean "email_messages", default: true, null: false
+    t.string "google_uid"
+    t.datetime "deleted_at"
     t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["google_uid"], name: "index_users_on_google_uid", unique: true
     t.check_constraint "role::text = ANY (ARRAY['guest'::character varying, 'admin'::character varying]::text[])", name: "users_role_valid"
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "audit_logs", "users", column: "admin_id", on_delete: :nullify
+  add_foreign_key "availability_blocks", "listings", on_delete: :cascade
   add_foreign_key "bookings", "listings"
   add_foreign_key "bookings", "users", column: "guest_id"
+  add_foreign_key "conversations", "bookings", on_delete: :nullify
+  add_foreign_key "conversations", "listings", on_delete: :nullify
+  add_foreign_key "conversations", "users", column: "guest_id"
   add_foreign_key "listing_amenities", "amenities", on_delete: :cascade
   add_foreign_key "listing_amenities", "listings", on_delete: :cascade
   add_foreign_key "listing_photos", "listings", on_delete: :cascade
   add_foreign_key "listing_videos", "listings", on_delete: :cascade
   add_foreign_key "listings", "categories", on_delete: :nullify
+  add_foreign_key "messages", "conversations", on_delete: :cascade
+  add_foreign_key "messages", "users", column: "sender_id"
+  add_foreign_key "notifications", "users", on_delete: :cascade
   add_foreign_key "payments", "bookings"
+  add_foreign_key "reviews", "bookings"
+  add_foreign_key "reviews", "listings"
+  add_foreign_key "reviews", "users", column: "author_id"
+  add_foreign_key "saved_listings", "listings", on_delete: :cascade
+  add_foreign_key "saved_listings", "users", on_delete: :cascade
   add_foreign_key "sessions", "users", on_delete: :cascade
   add_foreign_key "solid_queue_batch_executions", "solid_queue_batches", column: "batch_id", on_delete: :cascade
   add_foreign_key "solid_queue_batch_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade

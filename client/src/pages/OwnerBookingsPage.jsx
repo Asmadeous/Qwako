@@ -12,6 +12,7 @@ import { Button } from '@/components/ui/button';
 
 const VIEWS = [
   { id: 'upcoming', label: 'Upcoming', empty: 'No upcoming bookings. New bookings appear here as soon as guests book.' },
+  { id: 'requests', label: 'Requests', empty: 'No requests waiting. Homes set to take requests send them here.' },
   { id: 'refunds', label: 'Refunds due', empty: 'No refunds are due.' },
   { id: 'past', label: 'Past', empty: 'No past stays yet.' },
   { id: 'cancelled', label: 'Cancelled', empty: 'No cancelled or expired bookings.' },

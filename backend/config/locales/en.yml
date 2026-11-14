@@ -38,3 +38,19 @@ en:
         max_guests: "Sleeps up to"
         nightly_price_cents: "Price per night"
         cleaning_charge_cents: "Cleaning charge"
+        property_type: "Type of home"
+        min_nights: "Minimum nights"
+        max_nights: "Maximum nights"
+        check_in_time: "Check-in time"
+        check_out_time: "Check-out time"
+        check_in_instructions: "Check-in instructions"
+        wifi_details: "Wifi details"
+        licence_number: "Licence number"
+      availability_block:
+        starts_on: "First night"
+        ends_on: "Last night"
+      review:
+        rating: "Rating"
+  date:
+    formats:
+      stay: "%-d %b %Y"

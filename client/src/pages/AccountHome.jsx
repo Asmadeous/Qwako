@@ -8,7 +8,7 @@ import { buttonVariants } from '@/components/ui/button';
 import { useAuth } from '../../hooks';
 import { api, errorMessageFrom } from '@/utils/axios';
 import { formatPrice } from '@/utils/currency';
-import ProfilePage from './ProfilePage';
+import GuestOverview from './GuestOverview';
 
 const whenLabel = (iso) => {
   const days = differenceInCalendarDays(parseISO(iso), new Date());
@@ -41,6 +41,7 @@ const OwnerOverview = () => {
   const [finances, setFinances] = useState(null);
   const [arrivals, setArrivals] = useState(null);
   const [homes, setHomes] = useState(null);
+  const [today, setToday] = useState(null);
   const [error, setError] = useState('');
 
   useEffect(() => {
@@ -48,11 +49,13 @@ const OwnerOverview = () => {
       api.get('/admin/finances'),
       api.get('/admin/bookings', { params: { view: 'upcoming' } }),
       api.get('/admin/listings'),
+      api.get('/admin/overview'),
     ])
-      .then(([f, b, l]) => {
+      .then(([f, b, l, o]) => {
         setFinances(f.data);
         setArrivals(b.data.bookings.slice(0, 6));
         setHomes(l.data.listings);
+        setToday(o.data);
       })
       .catch((err) => setError(errorMessageFrom(err)));
   }, []);
@@ -65,6 +68,18 @@ const OwnerOverview = () => {
   const noCategory = homes?.filter((h) => !h.category) ?? [];
   const live = homes?.filter((h) => h.status === 'published').length ?? 0;
   const todos = [
+    ...(today?.requests ?? []).map((r) => ({
+      to: `/account/reservations/${r.id}`,
+      text: `${r.guest_name} asks to book ${r.listing_title}. Answer by ${format(parseISO(r.requested_until), 'd MMM, HH:mm')}`,
+    })),
+    today?.unread_messages > 0 && {
+      to: '/account/inbox?view=unread',
+      text: `${today.unread_messages} unread ${today.unread_messages === 1 ? 'conversation' : 'conversations'}`,
+    },
+    today?.new_contact_messages > 0 && {
+      to: '/account/inbox?view=contact',
+      text: `${today.new_contact_messages} contact form ${today.new_contact_messages === 1 ? 'message' : 'messages'} to answer`,
+    },
     refundsDue > 0 && {
       to: '/account/reservations?view=refunds',
       text: `${refundsDue} ${refundsDue === 1 ? 'refund is' : 'refunds are'} due to guests`,
@@ -135,6 +150,28 @@ const OwnerOverview = () => {
         )}
       </section>
 
+      {today && (
+        <section aria-labelledby="today-heading" className="mx-4 mt-6">
+          <h2 id="today-heading" className="sr-only">
+            Today
+          </h2>
+          <dl className="grid grid-cols-2 gap-3 text-sm md:grid-cols-4">
+            {[
+              { label: 'Arriving today', value: today.arrivals_today.length, note: today.arrivals_today.map((a) => a.guest_name).join(', ') },
+              { label: 'Leaving today', value: today.departures_today.length, note: today.departures_today.map((a) => a.guest_name).join(', ') },
+              { label: 'Booked this month', value: `${today.occupancy_this_month}%`, note: 'of nights across listed homes' },
+              { label: 'Next 30 days', value: `${today.occupancy_next_30_days}%`, note: `booked; ${today.in_house} staying now` },
+            ].map((item) => (
+              <div key={item.label} className="rounded-2xl border border-ink/15 p-4">
+                <dt className="font-medium text-ink/65">{item.label}</dt>
+                <dd className="tabular mt-1 text-2xl font-bold tracking-tight">{item.value}</dd>
+                {item.note && <dd className="mt-0.5 truncate text-ink/60">{item.note}</dd>}
+              </div>
+            ))}
+          </dl>
+        </section>
+      )}
+
       <div className="mx-4 mt-10 grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,22rem)]">
         <section aria-labelledby="arrivals-heading">
           <div className="flex items-baseline justify-between gap-4">
@@ -183,7 +220,7 @@ const OwnerOverview = () => {
             Needs your attention
           </h2>
           {homes && todos.length === 0 && (
-            <p className="mt-4 text-sm text-ink/70">Nothing right now. Refunds owed and homes missing photos show up here.</p>
+            <p className="mt-4 text-sm text-ink/70">Nothing right now. Requests, unread messages, refunds owed and homes missing photos show up here.</p>
           )}
           {todos.length > 0 && (
             <ul className="mt-4 grid gap-2">
@@ -207,10 +244,10 @@ const OwnerOverview = () => {
   );
 };
 
-// /account: the owner's overview; a guest's profile.
+// /account: the owner's overview, or the guest's.
 const AccountHome = () => {
   const { user } = useAuth();
-  return user?.role === 'admin' ? <OwnerOverview /> : <ProfilePage />;
+  return user?.role === 'admin' ? <OwnerOverview /> : <GuestOverview />;
 };
 
 export default AccountHome;

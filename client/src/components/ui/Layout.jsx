@@ -2,9 +2,11 @@ import { useEffect } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 
 import { Header } from './Header';
+import { DashboardHeader } from './DashboardLayout';
 import SiteFooter from '@/pages/home/SiteFooter';
 
 const APP_PAGES = /^\/(account|login|register|forgot-password|reset-password)(\/|$)/;
+const DASHBOARD = /^\/account(\/|$)/;
 
 const Layout = () => {
   const { pathname } = useLocation();
@@ -22,7 +24,7 @@ const Layout = () => {
       >
         Skip to content
       </a>
-      <Header />
+      {DASHBOARD.test(pathname) ? <DashboardHeader /> : <Header />}
       <main id="main" className="mx-auto flex min-h-dvh max-w-screen-xl flex-col px-1 md:px-4">
         <Outlet />
       </main>

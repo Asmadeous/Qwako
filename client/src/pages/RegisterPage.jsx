@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link, Navigate, useLocation } from 'react-router-dom';
+import GoogleButton from '@/components/ui/GoogleButton';
 import { toast } from 'react-toastify';
 import { Check } from 'lucide-react';
 
@@ -187,6 +188,7 @@ const RegisterPage = () => {
           {submitting ? 'Creating account...' : 'Create account'}
         </Button>
       </form>
+      <GoogleButton />
     </AuthLayout>
   );
 };

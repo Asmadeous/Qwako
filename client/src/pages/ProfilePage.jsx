@@ -1,6 +1,6 @@
 import React from 'react';
 import { toast } from 'react-toastify';
-import { Navigate, useNavigate } from 'react-router-dom';
+import { Link, Navigate, useNavigate } from 'react-router-dom';
 
 import AccountNav from '@/components/ui/AccountNav';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -34,7 +34,7 @@ const ProfilePage = () => {
     <div>
       <AccountNav />
       <section className="mx-4 grid max-w-3xl items-center gap-8 rounded-3xl border border-ink/15 bg-paper p-6 sm:grid-cols-[auto_1fr] md:p-8">
-          <Avatar className="size-24 md:size-28">
+          <Avatar className="h-24 w-24 md:h-28 md:w-28">
             {user.avatar_url && <AvatarImage src={user.avatar_url} alt="" className="object-cover" />}
             <AvatarFallback className="bg-ink text-4xl font-bold text-sand">
               {user.name.slice(0, 1).toUpperCase()}
@@ -50,6 +50,15 @@ const ProfilePage = () => {
               <div>
                 <dt className="text-sm font-medium text-ink/60">Email</dt>
                 <dd className="mt-1 break-all text-xl font-semibold">{user.email}</dd>
+              </div>
+              <div>
+                <dt className="text-sm font-medium text-ink/60">Phone</dt>
+                <dd className="mt-1 text-xl font-semibold">
+                  {user.phone || <span className="text-base font-normal text-ink/60">Not added</span>}{' '}
+                  <Link to="/account/settings" className="text-sm font-medium underline underline-offset-4">
+                    {user.phone ? 'Change' : 'Add one'}
+                  </Link>
+                </dd>
               </div>
             </dl>
 

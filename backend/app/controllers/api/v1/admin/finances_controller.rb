@@ -1,8 +1,8 @@
 module Api
   module V1
     module Admin
-      # Money in and out for one calendar year, per currency (shillings and
-      # pounds are never added together). Refunds still owed and stays already
+      # Money in and out for one calendar year, per currency (all homes are in
+      # Kenya, so in practice shillings). Refunds still owed and stays already
       # booked ahead are shown as they stand today, whatever the year.
       class FinancesController < ApplicationController
         before_action :require_admin
@@ -36,7 +36,8 @@ module Api
           end
 
           def refunds_due
-            @refunds_due ||= Payment.succeeded.refund_due.group(:currency).pluck(:currency, Arel.sql("SUM(amount_cents)"), Arel.sql("COUNT(*)"))
+            @refunds_due ||= Payment.succeeded.refund_due.group(:currency)
+              .pluck(:currency, Arel.sql("SUM(COALESCE(refund_cents, amount_cents))"), Arel.sql("COUNT(*)"))
               .to_h { |currency, cents, count| [ currency, { cents:, count: } ] }
           end
 
@@ -48,7 +49,7 @@ module Api
 
           def summary(currency, received, refunded)
             received_cents = received.sum(&:amount_cents)
-            refunded_cents = refunded.sum(&:amount_cents)
+            refunded_cents = refunded.sum { |p| refunded_amount(p) }
             {
               currency:,
               received_cents:,
@@ -67,20 +68,29 @@ module Api
           def month_row(month, received, refunded)
             in_month = ->(at) { at&.in_time_zone&.month == month }
             received_cents = received.select { |p| in_month.(p.paid_at) }.sum(&:amount_cents)
-            refunded_cents = refunded.select { |p| in_month.(p.refunded_at) }.sum(&:amount_cents)
+            refunded_cents = refunded.select { |p| in_month.(p.refunded_at) }.sum { |p| refunded_amount(p) }
             { month:, received_cents:, refunded_cents:, net_cents: received_cents - refunded_cents }
           end
 
+          # Stays and nights count only bookings that went ahead; refunds
+          # include those already sent and those still owed.
           def home_rows(received)
             received.group_by { |p| p.booking.listing }.map { |listing, payments|
-              { listing_id: listing.id, title: listing.title, deleted: listing.deleted?, bookings: payments.map(&:booking_id).uniq.size,
-                nights: payments.uniq(&:booking_id).sum { |p| p.booking.nights }, received_cents: payments.sum(&:amount_cents) }
-            }.sort_by { |row| -row[:received_cents] }
+              stays = payments.map(&:booking).uniq.select { |booking| booking.confirmed? || booking.completed? }
+              received_cents = payments.sum(&:amount_cents)
+              refunds_cents = payments.sum { |p| p.needs_refund? ? refunded_amount(p) : 0 }
+              { listing_id: listing.id, title: listing.title, deleted: listing.deleted?, bookings: stays.size,
+                nights: stays.sum(&:nights), received_cents:, refunds_cents:, net_cents: received_cents - refunds_cents }
+            }.sort_by { |row| -row[:net_cents] }
+          end
+
+          def refunded_amount(payment)
+            payment.refund_cents || payment.amount_cents
           end
 
           def payment_row(payment)
             booking = payment.booking
-            payment.slice(:id, :reference, :amount_cents, :currency, :channel, :paid_at, :refunded_at).merge(
+            payment.slice(:id, :reference, :amount_cents, :currency, :channel, :paid_at, :refunded_at, :refund_cents).merge(
               refund_due: payment.refund_due?,
               booking_id: booking.id,
               guest_name: booking.guest.name,

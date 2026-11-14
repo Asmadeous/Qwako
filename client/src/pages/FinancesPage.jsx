@@ -24,7 +24,7 @@ const csvCell = (value) => {
 
 const downloadCsv = (year, payments) => {
   const rows = [
-    ['Paid on', 'Reference', 'Guest', 'Guest email', 'Home', 'Check in', 'Check out', 'Paid with', 'Currency', 'Amount', 'Refunded on'],
+    ['Paid on', 'Reference', 'Guest', 'Guest email', 'Home', 'Check in', 'Check out', 'Paid with', 'Currency', 'Amount', 'Refund', 'Refunded on'],
     ...payments.map((p) => [
       p.paid_at ? format(parseISO(p.paid_at), 'yyyy-MM-dd') : '',
       p.reference,
@@ -36,7 +36,8 @@ const downloadCsv = (year, payments) => {
       paidWith(p.channel),
       p.currency,
       (p.amount_cents / 100).toFixed(2),
-      p.refunded_at ? format(parseISO(p.refunded_at), 'yyyy-MM-dd') : p.refund_due ? 'Refund due' : '',
+      p.refunded_at || p.refund_due ? ((p.refund_cents ?? p.amount_cents) / 100).toFixed(2) : '',
+      p.refunded_at ? format(parseISO(p.refunded_at), 'yyyy-MM-dd') : p.refund_due ? 'Due' : '',
     ]),
   ];
   const blob = new Blob([rows.map((r) => r.map(csvCell).join(',')).join('\n')], { type: 'text/csv' });
@@ -129,9 +130,11 @@ const CurrencySection = ({ summary, year }) => {
               <thead>
                 <tr className="border-b border-ink/15">
                   <th scope="col" className={th}>Home</th>
-                  <th scope="col" className={thNum}>Bookings</th>
+                  <th scope="col" className={thNum}>Stays</th>
                   <th scope="col" className={thNum}>Nights</th>
                   <th scope="col" className={thNum}>Received</th>
+                  <th scope="col" className={thNum}>Refunds</th>
+                  <th scope="col" className={thNum}>Net</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-ink/10">
@@ -150,7 +153,9 @@ const CurrencySection = ({ summary, year }) => {
                     </th>
                     <td className={tdNum}>{h.bookings}</td>
                     <td className={tdNum}>{h.nights}</td>
-                    <td className={`${tdNum} font-semibold`}>{money(h.received_cents)}</td>
+                    <td className={tdNum}>{money(h.received_cents)}</td>
+                    <td className={tdNum}>{h.refunds_cents ? money(h.refunds_cents) : '-'}</td>
+                    <td className={`${tdNum} font-semibold`}>{money(h.net_cents)}</td>
                   </tr>
                 ))}
               </tbody>
@@ -241,7 +246,7 @@ const FinancesContent = () => {
                   summary?.currency === c.currency ? 'bg-ink text-sand' : 'border border-ink/20 hover:border-ink/50'
                 }`}
               >
-                {c.currency === 'KES' ? 'Kenya (KES)' : c.currency === 'GBP' ? 'UK (GBP)' : c.currency}
+                {c.currency}
               </button>
             ))}
           </div>
@@ -282,9 +287,11 @@ const FinancesContent = () => {
                       <td className={`${tdNum} font-semibold`}>{formatPrice(p.amount_cents, p.currency)}</td>
                       <td className={`${tdNum} whitespace-nowrap`}>
                         {p.refunded_at ? (
-                          <span className="text-ink/60">Refunded {format(parseISO(p.refunded_at), 'd MMM')}</span>
+                          <span className="text-ink/60">
+                            {formatPrice(p.refund_cents ?? p.amount_cents, p.currency)} refunded {format(parseISO(p.refunded_at), 'd MMM')}
+                          </span>
                         ) : p.refund_due ? (
-                          <span className="font-semibold text-red-800">Due</span>
+                          <span className="font-semibold text-red-800">{formatPrice(p.refund_cents ?? p.amount_cents, p.currency)} due</span>
                         ) : (
                           '-'
                         )}

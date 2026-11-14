@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import { Link, Navigate, useParams } from 'react-router-dom';
-import { ChevronLeft, Play, Users } from 'lucide-react';
+import { Link, Navigate, useLocation, useNavigate, useParams } from 'react-router-dom';
+import { BedDouble, Bath, ChevronLeft, Clock, DoorOpen, MessageSquare, Play, Users } from 'lucide-react';
 
 import { api } from '@/utils/axios';
 import { formatPrice } from '@/utils/currency';
@@ -9,6 +9,12 @@ import BookingWidget from '@/components/ui/BookingWidget';
 import PlaceGallery from '@/components/ui/PlaceGallery';
 import PerksWidget from '@/components/ui/PerksWidget';
 import { Button } from '@/components/ui/button';
+import SaveButton from '@/components/ui/SaveButton';
+import StartConversationDialog from '@/components/ui/StartConversationDialog';
+import { Stars } from '@/components/ui/StarRating';
+import { useAuth } from '../../hooks';
+import { formatDate, plural, PROPERTY_TYPES, POLICIES } from '@/utils/format';
+import { rememberViewed } from '@/utils/recentlyViewed';
 
 const PlaceSkeleton = () => (
   <div aria-busy="true" className="animate-pulse px-4 pt-24 motion-reduce:animate-none md:pt-28">
@@ -25,6 +31,10 @@ const PlacePage = () => {
   const [place, setPlace] = useState(null);
   const [notFound, setNotFound] = useState(false);
   const [bookingInView, setBookingInView] = useState(false);
+  const [asking, setAsking] = useState(false);
+  const { user } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     let current = true;
@@ -42,6 +52,7 @@ const PlacePage = () => {
   useEffect(() => {
     if (!place) return undefined;
     document.title = `${place.title} | T&G BnB`;
+    rememberViewed(place);
     return () => {
       document.title = 'T&G BnB';
     };
@@ -63,6 +74,11 @@ const PlacePage = () => {
 
   if (!place) return <PlaceSkeleton />;
 
+  const askOwner = () => {
+    if (!user) return navigate('/login', { state: { from: location.pathname } });
+    setAsking(true);
+  };
+
   const scrollToBooking = () =>
     document.getElementById('booking')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
@@ -77,8 +93,17 @@ const PlacePage = () => {
       </Link>
 
       <header className="mb-6 mt-1">
-        <h1 className="font-bold tracking-tight text-5xl leading-[1.05] md:text-6xl">{place.title}</h1>
+        <div className="flex items-start justify-between gap-4">
+          <h1 className="font-bold tracking-tight text-5xl leading-[1.05] md:text-6xl">{place.title}</h1>
+          <SaveButton place={place} withLabel className="mt-2 border border-ink/20 px-4 hover:border-ink/50" />
+        </div>
         <div className="mt-3 flex flex-wrap items-center gap-x-5 gap-y-2 text-sm">
+          {place.review_count > 0 && (
+            <a href="#reviews" className="inline-flex items-center gap-1.5 underline decoration-ink/25 underline-offset-4">
+              <Stars value={place.rating_average} />
+              {Number(place.rating_average).toFixed(1)} ({plural(place.review_count, 'review')})
+            </a>
+          )}
           <AddressLink placeAddress={place.address} />
           <span className="inline-flex items-center gap-1.5 text-ink/75">
             <Users aria-hidden strokeWidth={1.5} className="size-4" />
@@ -100,6 +125,24 @@ const PlacePage = () => {
 
       <div className="mt-10 grid gap-10 md:grid-cols-[minmax(0,1fr)_360px] lg:grid-cols-[minmax(0,1fr)_400px] lg:gap-16">
         <div>
+          <ul aria-label="The home" className="mb-8 flex flex-wrap gap-x-6 gap-y-3 border-b border-ink/15 pb-6 text-sm">
+            <li className="flex items-center gap-2">
+              <DoorOpen aria-hidden strokeWidth={1.5} className="size-5" />
+              {PROPERTY_TYPES[place.property_type] ?? 'Home'}
+            </li>
+            <li className="flex items-center gap-2">
+              <BedDouble aria-hidden strokeWidth={1.5} className="size-5" />
+              {place.bedrooms === 0 ? 'Studio' : plural(place.bedrooms, 'bedroom')}, {plural(place.beds, 'bed')}
+            </li>
+            <li className="flex items-center gap-2">
+              <Bath aria-hidden strokeWidth={1.5} className="size-5" />
+              {plural(place.bathrooms, 'bathroom')}
+            </li>
+            <li className="flex items-center gap-2">
+              <Clock aria-hidden strokeWidth={1.5} className="size-5" />
+              Check-in from {place.check_in_time}, check-out by {place.check_out_time}
+            </li>
+          </ul>
           <section className="pb-8">
             <h2 className="font-bold tracking-tight text-3xl">About this home</h2>
             <p className="mt-4 max-w-[65ch] whitespace-pre-line text-lg leading-relaxed text-ink/85">
@@ -136,12 +179,58 @@ const PlacePage = () => {
               </p>
             </section>
           )}
+          <section className="border-t border-ink/15 py-8">
+            <h2 className="font-bold tracking-tight text-3xl">Cancellation</h2>
+            <p className="mt-4 max-w-[65ch] leading-relaxed text-ink/85">
+              <strong className="font-semibold">{POLICIES[place.cancellation_policy]?.label ?? 'Flexible'}.</strong>{' '}
+              {place.cancellation_policy_text} If the owner cancels, you get all your money back.
+              {place.booking_type === 'request' && ' This home takes requests: the owner replies within 24 hours, and you are refunded in full if they decline.'}
+            </p>
+            {place.licence_number && <p className="mt-3 text-sm text-ink/60">Licence {place.licence_number}</p>}
+          </section>
+
+          <section id="reviews" className="scroll-mt-24 border-t border-ink/15 py-8">
+            <h2 className="font-bold tracking-tight text-3xl">
+              {place.review_count > 0 ? `${Number(place.rating_average).toFixed(1)} from ${plural(place.review_count, 'review')}` : 'Reviews'}
+            </h2>
+            {place.reviews?.length ? (
+              <ul className="mt-5 grid gap-6 md:grid-cols-2">
+                {place.reviews.map((review) => (
+                  <li key={review.id}>
+                    <p className="flex items-center gap-2 text-sm">
+                      <span className="font-semibold">{review.author_name}</span>
+                      <span className="text-ink/55">{formatDate(review.created_at)}</span>
+                    </p>
+                    <Stars value={review.rating} className="mt-1" />
+                    {review.comment && <p className="mt-2 text-pretty leading-relaxed text-ink/85">{review.comment}</p>}
+                    {review.owner_reply && (
+                      <p className="mt-2 border-l-2 border-ink/20 pl-3 text-sm text-ink/70">Owner: {review.owner_reply}</p>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="mt-4 text-ink/70">No reviews yet. Guests can review after their stay.</p>
+            )}
+          </section>
         </div>
 
         <aside id="booking" className="scroll-mt-24 self-start md:sticky md:top-24">
           <BookingWidget place={place} />
+          <Button variant="outline" className="mt-3 w-full" onClick={askOwner}>
+            <MessageSquare aria-hidden className="size-4" />
+            Message the owner
+          </Button>
         </aside>
       </div>
+
+      <StartConversationDialog
+        open={asking}
+        onOpenChange={setAsking}
+        params={{ listing_id: place.id }}
+        title={`Ask about ${place.title}`}
+        onSent={(conversationId) => navigate(`/account/messages/${conversationId}`)}
+      />
 
       {/* Phones: keep the price and a way to book in reach. */}
       <div

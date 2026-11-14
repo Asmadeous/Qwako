@@ -25,7 +25,7 @@ class Api::V1::Admin::FinancesTest < ActionDispatch::IntegrationTest
     assert_error :forbidden, "forbidden"
   end
 
-  test "totals this year's money per currency, never mixing shillings and pounds" do
+  test "totals this year's money, refunds and stays booked ahead" do
     sign_in_as users(:owner)
     get api_v1_admin_finances_path, as: :json
     assert_response :ok
@@ -33,7 +33,7 @@ class Api::V1::Admin::FinancesTest < ActionDispatch::IntegrationTest
 
     assert_equal @year, body["year"]
     assert_includes body["years"], @year - 1
-    assert_equal %w[KES GBP], body["currencies"].map { |c| c["currency"] }
+    assert_equal %w[KES], body["currencies"].map { |c| c["currency"] }
 
     kes = body["currencies"].first
     received = @paid.amount_cents + @refunded.amount_cents + @owed.amount_cents
@@ -45,10 +45,10 @@ class Api::V1::Admin::FinancesTest < ActionDispatch::IntegrationTest
     assert_equal 12, kes["months"].size
     assert_equal received, kes["months"].sum { |m| m["received_cents"] }
     assert_equal [ listings(:loft).id, 3 ], kes["homes"].first.values_at("listing_id", "bookings")
-
-    gbp = body["currencies"].second
-    assert_equal 0, gbp["received_cents"]
-    assert_equal bookings(:grace_cottage).total_cents, gbp["booked_ahead_cents"]
+    refunds = @refunded.amount_cents + @owed.amount_cents
+    assert_equal [ received, refunds, received - refunds ], kes["homes"].first.values_at("received_cents", "refunds_cents", "net_cents")
+    assert_equal Booking.confirmed.where(check_in: Date.current..).sum(:total_cents), kes["booked_ahead_cents"]
+    assert_operator kes["booked_ahead_cents"], :>=, bookings(:grace_cottage).total_cents
 
     assert_equal 3, body["payments"].size
     owed_row = body["payments"].find { |p| p["reference"] == @owed.reference }

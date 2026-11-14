@@ -32,15 +32,19 @@ class Api::V1::Admin::ListingsTest < ActionDispatch::IntegrationTest
     assert_equal "harbour-flat", listing["slug"]
   end
 
-  test "a UK nation prices in pounds and other countries are refused" do
+  test "homes are in Kenya, priced in shillings, and Kenya is added to the address when missing" do
     sign_in_as users(:owner)
-    post api_v1_admin_listings_path, params: { listing: VALID.merge(address: "St Ives, Cornwall, England") }, as: :json
+    post api_v1_admin_listings_path, params: { listing: VALID.merge(address: "Malindi, Kilifi") }, as: :json
     assert_response :created
-    assert_equal "GBP", response.parsed_body.dig("listing", "currency")
+    assert_equal [ "Malindi, Kilifi, Kenya", "Kenya", "KES" ], response.parsed_body["listing"].values_at("address", "country", "currency")
 
-    post api_v1_admin_listings_path, params: { listing: VALID.merge(title: "Paris Loft", address: "Paris, France") }, as: :json
-    assert_error :unprocessable_content, "validation_failed"
-    assert response.parsed_body.dig("error", "details", "country").present?
+    post api_v1_admin_listings_path, params: { listing: VALID.merge(title: "Lamu House", address: " Shela ,Lamu,  kenya ") }, as: :json
+    assert_response :created
+    assert_equal "Shela, Lamu, Kenya", response.parsed_body.dig("listing", "address")
+
+    patch api_v1_admin_listing_path(listings(:loft)), params: { listing: { address: "Lavington, Nairobi" } }, as: :json
+    assert_response :ok
+    assert_equal "Lavington, Nairobi, Kenya", response.parsed_body.dig("listing", "address")
   end
 
   test "videos are saved in order and checked like photos" do
@@ -103,7 +107,7 @@ class Api::V1::Admin::ListingsTest < ActionDispatch::IntegrationTest
       params: { listing: { title: "", photo_urls: %w[https://images.example.com/new.jpg], amenity_keys: [] } }, as: :json
     assert_error :unprocessable_content, "validation_failed"
     cottage.reload
-    assert_equal "Cotswolds Cottage", cottage.title
+    assert_equal "Naivasha Cottage", cottage.title
     assert_equal 2, cottage.photos.count
     assert_equal 2, cottage.amenities.count
   end

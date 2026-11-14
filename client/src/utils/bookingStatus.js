@@ -29,8 +29,7 @@ export const paymentSummary = (booking) => {
   if (payments.some((p) => p.refunded_at)) return { label: 'Refunded', tone: 'muted' };
   const paid = payments.find((p) => p.status === 'succeeded');
   if (paid) return { label: `Paid by ${channelName(paid.channel)}`, tone: 'ok' };
-  if (booking.pay_online && booking.status === 'pending_payment') return { label: 'Not paid yet', tone: 'muted' };
-  if (!booking.pay_online) return { label: 'No online payment', tone: 'muted' };
+  if (booking.status === 'pending_payment') return { label: 'Not paid yet', tone: 'muted' };
   return { label: 'Not paid', tone: 'muted' };
 };
 

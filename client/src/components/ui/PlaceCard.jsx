@@ -3,8 +3,9 @@ import { Link } from 'react-router-dom';
 import { formatPrice } from '@/utils/currency';
 import { countyOf } from '@/utils/listingFilters';
 import { listingPhotoProps } from '@/utils/images';
+import SaveButton from './SaveButton';
 
-const PlaceCard = ({ place }) => {
+const PlaceCard = ({ place, onSavedChange, query = '' }) => {
   const {
     id,
     photos,
@@ -16,7 +17,8 @@ const PlaceCard = ({ place }) => {
   const county = countyOf(place);
 
   return (
-    <Link to={`/place/${id}`} className="group block rounded-2xl">
+    <article className="relative">
+    <Link to={`/place/${id}${query}`} className="group block rounded-2xl">
       <div className="aspect-[4/3] overflow-hidden rounded-2xl bg-ink/10">
         {photos?.[0] && (
           <img
@@ -44,8 +46,16 @@ const PlaceCard = ({ place }) => {
         a night
         <span className="text-ink/40"> / </span>
         up to {guests} guests
+        {place.review_count > 0 && (
+          <>
+            <span className="text-ink/40"> / </span>
+            <span aria-label={`Rated ${place.rating_average} out of 5`}>★ {Number(place.rating_average).toFixed(1)}</span>
+          </>
+        )}
       </p>
     </Link>
+    <SaveButton place={place} onChange={onSavedChange} className="absolute right-2 top-2 bg-sand/90 text-ink shadow-sm backdrop-blur hover:bg-sand" />
+    </article>
   );
 };
 

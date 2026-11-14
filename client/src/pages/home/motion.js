@@ -21,7 +21,7 @@ export const photoProps = (id, maxW = 2000, sizes = '100vw', { eager = false } =
     sizes,
     loading: eager ? 'eager' : 'lazy',
     decoding: 'async',
-    ...(eager ? { fetchPriority: 'high' } : {}),
+    ...(eager ? { fetchpriority: 'high' } : {}),
   };
 };
 

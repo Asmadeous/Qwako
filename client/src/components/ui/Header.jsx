@@ -52,7 +52,7 @@ export const Header = () => {
           {user ? (
             <Link to="/account" className="flex min-h-11 items-center gap-2 text-sm font-medium hover:underline">
               <span className="hidden md:inline">{user.role === 'admin' ? 'Dashboard' : 'Account'}</span>
-              <Avatar className="flex size-8 overflow-hidden rounded-full">
+              <Avatar className="flex h-8 w-8 overflow-hidden rounded-full">
                 {user.avatar_url && (
                   <AvatarImage src={user.avatar_url} alt="" className="h-full w-full object-cover" />
                 )}

@@ -1,26 +1,8 @@
-// Listings store their country (the last part of the address): Kenya, or a
-// UK nation. Kenyan stays are priced in KES, UK stays in GBP.
-const COUNTRY_ORDER = [
-  'Kenya',
-  'England',
-  'Scotland',
-  'Wales',
-  'Northern Ireland',
-];
-const byCountryOrder = (a, b) =>
-  COUNTRY_ORDER.indexOf(a) - COUNTRY_ORDER.indexOf(b) || a.localeCompare(b);
+// Every home is in Kenya (the last part of its address), priced in shillings.
+export const countriesIn = (places) => [...new Set(places.map((p) => p.country))].sort();
 
-export const countriesIn = (places) =>
-  [...new Set(places.map((p) => p.country))].sort(byCountryOrder);
-
-// "Kenya", "the UK" or "Kenya and the UK", for page copy.
-export const areaLabel = (places) => {
-  const countries = countriesIn(places);
-  const names = [];
-  if (countries.includes('Kenya')) names.push('Kenya');
-  if (countries.some((c) => c !== 'Kenya')) names.push('the UK');
-  return names.join(' and ') || 'Kenya';
-};
+// For page copy.
+export const areaLabel = () => 'Kenya';
 
 // Categories the owner has given to the homes in view, by name. Only
 // categories with at least one listed home appear as filters.
@@ -48,13 +30,6 @@ export const BUDGETS = {
       max: 3000000,
     },
     { id: 'kes-gt30k', label: 'Ksh 30,000+', min: 3000000, max: Infinity },
-  ],
-  GBP: [
-    { id: 'any', label: 'Any price', min: 0, max: Infinity },
-    { id: 'gbp-lt100', label: 'Under £100', min: 0, max: 10000 },
-    { id: 'gbp-100-200', label: '£100 to £200', min: 10000, max: 20000 },
-    { id: 'gbp-200-400', label: '£200 to £400', min: 20000, max: 40000 },
-    { id: 'gbp-gt400', label: '£400+', min: 40000, max: Infinity },
   ],
 };
 
@@ -103,7 +78,7 @@ export const DEFAULT_FILTERS = {
 
 const regionOf = (place) => place.country;
 
-// The county (or UK county) is the part of the address just before the country.
+// The county is the part of the address just before the country.
 export const countyOf = (place) => {
   const parts = (place.address || '').split(',').map((part) => part.trim());
   return parts.length > 1 ? parts[parts.length - 2] : '';

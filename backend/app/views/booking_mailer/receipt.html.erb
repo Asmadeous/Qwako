@@ -1,0 +1,18 @@
+<p>Hello <%= @booking.guest.name %>,</p>
+<p>Your stay at <strong><%= @listing.title %></strong> is confirmed.</p>
+<table cellpadding="4" style="border-collapse:collapse">
+  <tr><td>Check-in</td><td><%= l(@booking.check_in, format: :stay) %> from <%= @listing.check_in_time %></td></tr>
+  <tr><td>Check-out</td><td><%= l(@booking.check_out, format: :stay) %> by <%= @listing.check_out_time %></td></tr>
+  <tr><td>Guests</td><td><%= @booking.guests_count %></td></tr>
+  <tr><td>Where</td><td><%= @listing.address %></td></tr>
+  <tr><td><%= money(@booking.nightly_price_cents) %> x <%= @booking.nights %> nights</td><td><%= money(@booking.nights * @booking.nightly_price_cents) %></td></tr>
+  <% if @booking.cleaning_charge_cents.positive? %>
+  <tr><td>Cleaning charge</td><td><%= money(@booking.cleaning_charge_cents) %></td></tr>
+  <% end %>
+  <tr><td><strong>Total paid</strong></td><td><strong><%= money(@booking.total_cents) %></strong></td></tr>
+  <% @payments.each do |payment| %>
+  <tr><td>Payment <%= payment.reference %></td><td><%= payment.channel == "mobile_money" ? "M-Pesa" : payment.channel.to_s.humanize %>, <%= l(payment.paid_at.to_date, format: :stay) if payment.paid_at %></td></tr>
+  <% end %>
+</table>
+<p>Cancellation: <%= @listing.cancellation_policy_text %></p>
+<p>Check-in instructions and wifi details are on your booking page: <a href="<%= @url %>">view your booking and receipt</a>.</p>

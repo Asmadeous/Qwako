@@ -5,26 +5,27 @@ module Api
 
       rate_limit to: 20, within: 10.minutes, only: :create, with: -> { render_rate_limited }
 
+      INCLUDES = [ :payments, :conversation, { review: :author }, { listing: %i[photos videos amenities category] } ].freeze
+
       before_action -> { Booking.expire_stale_holds! }
 
       def index
-        bookings = Current.user.bookings.includes(:payments, listing: %i[photos videos amenities category]).order(check_in: :desc)
+        bookings = Current.user.bookings.includes(*INCLUDES).order(check_in: :desc)
         render json: { bookings: bookings.map { |booking| booking_json(booking) } }
       end
 
       def show
-        render json: { booking: booking_json(Current.user.bookings.find(params[:id])) }
+        booking = Current.user.bookings.includes(*INCLUDES).find(params[:id])
+        render json: { booking: booking_json(booking).merge(payments: booking.payments.sort_by(&:created_at).map { |p| receipt_payment_json(p) }) }
       end
 
-      # Kenyan stays are held for payment and the guest is sent to Paystack;
-      # other stays are confirmed straight away until their payments exist.
+      # The dates are held while the guest pays through Paystack.
       def create
-        booking = Current.user.bookings.new(booking_params)
+        booking = Current.user.bookings.new(booking_params.merge(status: "pending_payment"))
         booking.listing = Listing.find_by(id: booking_params[:listing_id])
-        booking.status = "pending_payment" if booking.listing&.currency.in?(Booking::ONLINE_PAYMENT_CURRENCIES)
         return render_validation_errors(booking) unless save_booking(booking)
 
-        checkout_url = start_checkout(booking).authorization_url if booking.pending_payment?
+        checkout_url = start_checkout(booking).authorization_url
         render json: { booking: booking_json(booking), checkout_url: }, status: :created
       rescue Paystack::Error => error
         Rails.logger.error("Paystack checkout failed for booking #{booking.id}: #{error.message}")
@@ -34,7 +35,7 @@ module Api
 
       def cancel
         booking = Current.user.bookings.find(params[:id])
-        unless booking.cancel_by_guest!
+        unless booking.cancel_by_guest!(reason: params[:reason].to_s.strip.first(300))
           return render_error("not_cancellable", "This booking can no longer be cancelled. Contact the owner.",
                               status: :unprocessable_content)
         end
@@ -42,7 +43,23 @@ module Api
         render json: { booking: booking_json(booking.reload) }
       end
 
+      # Moves the stay to other free dates: same number of nights or fewer.
+      def reschedule
+        booking = Current.user.bookings.find(params[:id])
+        if booking.reschedule!(parse_date(params[:check_in]), parse_date(params[:check_out]), by_owner: false)
+          render json: { booking: booking_json(booking.reload) }
+        else
+          render_validation_errors booking
+        end
+      end
+
       private
+        def parse_date(value)
+          Date.iso8601(value.to_s)
+        rescue Date::Error
+          nil
+        end
+
         def booking_params
           raw = params[:booking]
           return {} unless raw.is_a?(ActionController::Parameters)

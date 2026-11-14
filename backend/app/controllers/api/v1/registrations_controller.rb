@@ -9,6 +9,7 @@ module Api
 
         if save_user(user)
           start_new_session_for user
+          EmailVerificationsController.send_link(user, app_url)
           render json: { user: user_json(user) }, status: :created
         else
           render_validation_errors user
@@ -18,7 +19,7 @@ module Api
       private
         def registration_params
           raw = params[:user]
-          raw.is_a?(ActionController::Parameters) ? raw.permit(:name, :email, :password) : {}
+          raw.is_a?(ActionController::Parameters) ? raw.permit(:name, :email, :password, :phone) : {}
         end
 
         # The uniqueness validation can lose a race with a concurrent sign-up;

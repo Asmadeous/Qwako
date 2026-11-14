@@ -13,8 +13,8 @@ for optional tool settings.
 
 ## What this is
 
-T&G BnB is the direct-booking website for one owner's holiday homes (Kenya first,
-UK later; prices in KES or GBP by country): guests
+T&G BnB is the direct-booking website for one owner's holiday homes in Kenya
+(Kenya only; prices in Kenyan shillings, paid through Paystack): guests
 browse and book nights, and the owner manages properties, bookings and payments
 from an admin dashboard. Not a marketplace.
 

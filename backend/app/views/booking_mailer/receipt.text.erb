@@ -1,0 +1,17 @@
+Hello <%= @booking.guest.name %>,
+
+Your stay at <%= @listing.title %> is confirmed.
+
+Check-in: <%= l(@booking.check_in, format: :stay) %> from <%= @listing.check_in_time %>
+Check-out: <%= l(@booking.check_out, format: :stay) %> by <%= @listing.check_out_time %>
+Guests: <%= @booking.guests_count %>
+Where: <%= @listing.address %>
+
+<%= money(@booking.nightly_price_cents) %> x <%= @booking.nights %> nights: <%= money(@booking.nights * @booking.nightly_price_cents) %>
+<% if @booking.cleaning_charge_cents.positive? %>Cleaning charge: <%= money(@booking.cleaning_charge_cents) %>
+<% end %>Total paid: <%= money(@booking.total_cents) %>
+<% @payments.each do |payment| %>Payment <%= payment.reference %>, <%= l(payment.paid_at.to_date, format: :stay) if payment.paid_at %>
+<% end %>
+Cancellation: <%= @listing.cancellation_policy_text %>
+
+Check-in instructions, wifi and your receipt: <%= @url %>

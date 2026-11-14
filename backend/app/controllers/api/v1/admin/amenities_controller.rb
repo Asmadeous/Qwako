@@ -22,13 +22,16 @@ module Api
         end
 
         def destroy
-          Amenity.find(params[:id]).destroy!
+          record = Amenity.find(params[:id])
+          record.destroy!
+          audit("delete_amenity", nil, "Deleted amenity #{record.name}")
           head :no_content
         end
 
         private
           def save(amenity, status:)
             if amenity.save
+              audit("save_amenity", amenity, "Saved amenity #{amenity.name}")
               render json: { amenity: amenity_json(amenity).merge(homes_count: amenity.listings.kept.count) }, status:
             else
               render_validation_errors amenity

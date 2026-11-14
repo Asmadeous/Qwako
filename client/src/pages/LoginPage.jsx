@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link, Navigate, useLocation } from 'react-router-dom';
+import GoogleButton from '@/components/ui/GoogleButton';
 import { toast } from 'react-toastify';
 
 import AuthField from '@/components/ui/AuthField';
@@ -149,6 +150,7 @@ const LoginPage = () => {
           {submitting ? 'Signing in...' : 'Sign in'}
         </Button>
       </form>
+      <GoogleButton />
     </AuthLayout>
   );
 };

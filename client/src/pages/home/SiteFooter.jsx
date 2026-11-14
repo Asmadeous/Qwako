@@ -12,7 +12,7 @@ const SiteFooter = () => {
         <span>Homes, considered.</span>
       </div>
 
-      <div className="grid gap-10 py-14 md:grid-cols-[2fr_1fr_1fr]">
+      <div className="grid gap-10 py-14 md:grid-cols-[2fr_1fr_1fr_1fr]">
         <div>
           <h2 className="font-bold tracking-tight text-5xl leading-[0.95] sm:text-6xl md:text-8xl">
             Homes,
@@ -35,7 +35,8 @@ const SiteFooter = () => {
             {user ? (
               <>
                 <li><Link to="/account" className="hover:underline">Your account</Link></li>
-                <li><Link to="/account/bookings" className="hover:underline">Your bookings</Link></li>
+                <li><Link to="/account/bookings" className="hover:underline">Your trips</Link></li>
+                <li><Link to="/account/saved" className="hover:underline">Saved homes</Link></li>
               </>
             ) : (
               <>
@@ -43,6 +44,14 @@ const SiteFooter = () => {
                 <li><Link to="/register" className="hover:underline">Create account</Link></li>
               </>
             )}
+          </ul>
+        </div>
+        <div>
+          <span className="text-sm font-medium text-ink/60">Help</span>
+          <ul className="mt-4 space-y-2 text-sm">
+            <li><Link to="/contact" className="hover:underline">Contact us</Link></li>
+            <li><Link to="/terms" className="hover:underline">Terms and cancellations</Link></li>
+            <li><Link to="/privacy" className="hover:underline">Privacy notice</Link></li>
           </ul>
         </div>
       </div>

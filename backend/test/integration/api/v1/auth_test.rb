@@ -1,7 +1,7 @@
 require "test_helper"
 
 class Api::V1::AuthTest < ActionDispatch::IntegrationTest
-  USER_KEYS = %w[id email name role avatar_url].freeze
+  USER_KEYS = %w[id email name role phone email_messages avatar_url email_verified marketing_consent google_linked].freeze
 
   def sign_up(name: "Sam Taylor", email: "sam@example.com", password: "password123")
     post api_v1_registrations_path, params: { user: { name:, email:, password: } }, as: :json

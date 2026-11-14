@@ -2,7 +2,7 @@
 
 <!-- blueprint:source-hash 34b5c155489ca31474409642b3a21b115601a40df05957cfd6832d54561ed4bd -->
 
-> Direct-booking website for one owner's holiday homes, Kenya first and the UK later: nightly stays with an
+> Direct-booking website for one owner's holiday homes in Kenya (Kenya only): nightly stays with an
 > Airbnb-style booking flow, plus guest and owner dashboards. Not a marketplace.
 
 ## Problem
@@ -22,21 +22,20 @@ replaces it (Rails backend) rather than patching it.
 | Guest | Signed in; every public sign-up is a guest | Book, pay, manage trips, wishlists, messages, reviews, profile and settings. |
 | Admin | Owner and staff; created by the owner, never by sign-up | Properties, calendar, prices, bookings, guests, payments, reviews, messages, occupancy and revenue. |
 
-Market: Kenya first, the UK later. The address's country sets the currency:
-Kenya in KES, UK nations in GBP. Dates as `5 Nov 2026`. Kenyan stays are paid
-through Paystack (M-Pesa or card). Open for the Kenya launch: time zone rules, Kenyan law (Data
-Protection Act 2019, tourism levy). Mostly phone users; every page works at 360px.
+Market: Kenya only. Every home has a Kenyan address and is priced in Kenyan
+shillings (KES). Dates as `5 Nov 2026`. Every stay is paid online through
+Paystack (M-Pesa or card) before it is confirmed. Time zone: Africa/Nairobi.
+Mostly phone users; every page works at 360px.
 
 ## Usage model
 
 - Internet-facing, untrusted users, real payments.
 - Scale: one owner, small portfolio, hundreds to low thousands of guests a year;
   one server, one database.
-- Law (Kenya to be confirmed): for UK stays, UK GDPR / DPA 2018 (privacy notice, data export, deletion); PECR (cookie
-  and marketing consent, only essential cookies before consent); Consumer
-  Contracts Regs and DMCC Act 2024 (total price incl. mandatory charges up front,
-  clear cancellation terms); Scottish short-term let licence numbers; London
-  entire-home 90-night limit.
+- Law: Kenya's Data Protection Act 2019 (privacy notice, consent for marketing,
+  guests can see and delete their data) and Consumer Protection Act 2012 (total
+  price including mandatory charges up front, clear cancellation terms). Tourism
+  levy and short-stay registration to be confirmed with the owner.
 - Security: server-side pricing, authorization on every endpoint, rate limits on
   sign-in and booking, signed idempotent Stripe webhooks, no secrets in the repo,
   audited admin actions. Card data never stored.
@@ -59,7 +58,7 @@ Milestone 1 - Accounts
 
 Milestone 2 - Properties and discovery
 
-4. **Property catalogue with seed data** - listings, photos, videos, amenities, address with country, KES or GBP; Kenyan demo listings seeded.
+4. **Property catalogue with seed data** - listings, photos, videos, amenities, Kenyan address, priced in KES; Kenyan demo listings seeded.
 5. **Public listing page on Rails** - gallery, details, rules, policy, licence, total for chosen dates; area only until booked.
 6. **Stays search on Rails** - destination, date availability, guests, price, type, amenities, sort, pagination, shareable URL.
 
@@ -103,7 +102,7 @@ multi-language, mobile apps.
 ## Data model
 
 All tables: `id uuid` PK (`gen_random_uuid()`), UUID FKs, `created_at` /
-`updated_at`. Money is integer cents (`*_cents`) in the stay's `currency` (KES or GBP). Field names below are the
+`updated_at`. Money is integer cents (`*_cents`) in Kenyan shillings (`currency` is always KES). Field names below are the
 working contract; each feature spec locks the ones it introduces.
 
 ### User (feature 1, 3)
@@ -122,10 +121,10 @@ working contract; each feature spec locks the ones it introduces.
 
 ### Listing (feature 4)
 - `title`, `slug` (unique), `description` text, `property_type` string
-- `address_line1`, `address_line2`, `town`, `county`, `postcode`, `nation`
-  (England, Scotland, Wales, Northern Ireland); `latitude`, `longitude` decimal
+- `address` string ("Town, County, Kenya"); `country` derived from it and
+  always Kenya; `latitude`, `longitude` decimal
 - `max_guests`, `bedrooms`, `beds`, `bathrooms` integer
-- `nightly_price_cents`, `cleaning_charge_cents` integer, `currency` (KES, GBP)
+- `nightly_price_cents`, `cleaning_charge_cents` integer, `currency` (KES)
 - `min_nights`, `max_nights` integer; `check_in_time`, `check_out_time` time
 - `booking_type` enum `instant | request`
 - `cancellation_policy` enum `flexible | moderate | strict`

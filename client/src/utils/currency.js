@@ -1,7 +1,6 @@
-// Prices are integer cents (minor units) of the listing's own currency:
-// KES for stays in Kenya, GBP for stays in the UK.
+// Prices are integer cents (minor units) of Kenyan shillings: every home is in Kenya.
 
-const LOCALES = { KES: 'en-KE', GBP: 'en-GB' };
+const LOCALES = { KES: 'en-KE' };
 const formatters = {};
 
 const formatterFor = (currency) => {
@@ -17,13 +16,6 @@ const formatterFor = (currency) => {
 
 export const formatPrice = (cents, currency = 'KES') =>
   formatterFor(currency).format((Number(cents) || 0) / 100);
-
-// The country is the last part of an address; it sets the currency.
-const UK_NATIONS = ['England', 'Scotland', 'Wales', 'Northern Ireland'];
-export const currencyForAddress = (address = '') => {
-  const country = address.split(',').pop().trim();
-  return UK_NATIONS.includes(country) ? 'GBP' : 'KES';
-};
 
 export const amountToCents = (amount) => Math.round(Number(amount) * 100);
 

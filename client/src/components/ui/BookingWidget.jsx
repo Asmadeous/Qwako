@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react';
 import { Navigate, useLocation, useSearchParams } from 'react-router-dom';
-import { addDays, differenceInCalendarDays, format, isValid, parseISO, startOfToday } from 'date-fns';
+import { differenceInCalendarDays, format, isValid, parseISO, startOfToday } from 'date-fns';
 import { toast } from 'react-toastify';
 
 import { useAuth } from '../../../hooks';
@@ -13,7 +13,7 @@ const toISODate = (date) => format(date, 'yyyy-MM-dd');
 
 // Dates and guests carried in the address (?check_in=&check_out=&guests=), so a
 // guest who signs in to book comes back to the same choice. Defaults to one
-// night from today.
+// no dates, so the guest picks free ones on the calendar.
 const initialChoice = (params, maxGuests) => {
   const today = startOfToday();
   const from = parseISO(params.get('check_in') || '');
@@ -21,7 +21,7 @@ const initialChoice = (params, maxGuests) => {
   const datesOk = isValid(from) && isValid(to) && from >= today && to > from;
   const guests = Number(params.get('guests'));
   return {
-    dateRange: datesOk ? { from, to } : { from: today, to: addDays(today, 1) },
+    dateRange: datesOk ? { from, to } : { from: undefined, to: undefined },
     guests: Number.isInteger(guests) && guests >= 1 && guests <= maxGuests ? guests : 1,
   };
 };
@@ -94,10 +94,10 @@ const BookingWidget = ({ place }) => {
     }
   };
 
-  const paysOnline = place.currency === 'KES';
+  const isRequest = place.booking_type === 'request';
   let buttonLabel = 'Sign in to book';
-  if (user) buttonLabel = paysOnline ? 'Book and pay' : 'Book this home';
-  if (submitting) buttonLabel = paysOnline ? 'Opening payment...' : 'Booking...';
+  if (user) buttonLabel = isRequest ? 'Request and pay' : 'Book and pay';
+  if (submitting) buttonLabel = 'Opening payment...';
 
   if (redirect) return <Navigate to={redirect.to} state={redirect.state} />;
 
@@ -125,7 +125,14 @@ const BookingWidget = ({ place }) => {
             value={dateRange}
             onChange={setDateRange}
             invalid={dateErrors.length > 0}
+            unavailable={place.unavailable}
           />
+          {(place.min_nights > 1 || place.max_nights < 30) && (
+            <p className="text-sm text-ink/60">
+              {place.min_nights > 1 && `At least ${place.min_nights} nights. `}
+              {place.max_nights < 30 && `Up to ${place.max_nights} nights.`}
+            </p>
+          )}
         </div>
         <div className="grid gap-1.5">
           <label htmlFor="booking-guests" className="text-sm font-medium">
@@ -188,11 +195,11 @@ const BookingWidget = ({ place }) => {
       <Button type="submit" size="lg" className="mt-5 w-full" disabled={submitting} aria-busy={submitting}>
         {buttonLabel}
       </Button>
-      {paysOnline && (
-        <p className="mt-3 text-center text-sm text-ink/60">
-          Pay by M-Pesa or card on Paystack. Your dates are held for 15 minutes while you pay.
-        </p>
-      )}
+      <p className="mt-3 text-center text-sm text-ink/60">
+        {isRequest
+          ? 'Pay by M-Pesa or card on Paystack. The owner replies within 24 hours; if they decline, you get all your money back.'
+          : 'Pay by M-Pesa or card on Paystack. Your dates are held for 15 minutes while you pay.'}
+      </p>
     </form>
   );
 };

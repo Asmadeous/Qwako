@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>T&amp;G BnB: Technical document</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  @page { size: A4; margin: 20mm 18mm 20mm 18mm; }
+  @page :first { margin: 0; }
+  :root {
+    --ink: #2A2725; --ink-2: #57514A; --ink-3: #8C8270;
+    --sand: #EDE6D6; --paper: #F7F3EA; --line: #E4DCCB; --warn: #8A3B12;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  body { font-family: "Plus Jakarta Sans", sans-serif; color: var(--ink); font-size: 9.6pt; line-height: 1.55; margin: 0; }
+  code, .mono { font-family: "JetBrains Mono", monospace; font-size: 8.4pt; }
+  code { background: var(--paper); padding: 0 3px; border-radius: 3px; }
+
+  /* Cover */
+  .cover { height: 297mm; width: 210mm; background: var(--sand); padding: 26mm 22mm; display: flex; flex-direction: column; page-break-after: always; }
+  .cover .mark { font-weight: 800; font-size: 13pt; letter-spacing: -0.01em; }
+  .cover h1 { font-size: 46pt; line-height: 1.02; letter-spacing: -0.035em; font-weight: 800; margin: auto 0 8mm; max-width: 150mm; }
+  .cover .lede { font-size: 12.5pt; line-height: 1.5; max-width: 135mm; color: var(--ink-2); margin: 0 0 16mm; }
+  .cover dl { display: grid; grid-template-columns: 38mm 1fr; gap: 2.5mm 6mm; margin: 0; padding-top: 6mm; border-top: 1.5px solid var(--ink); font-size: 10pt; }
+  .cover dt { color: var(--ink-2); }
+  .cover dd { margin: 0; font-weight: 600; }
+
+  h2 { font-size: 19pt; letter-spacing: -0.025em; line-height: 1.15; font-weight: 800; margin: 0 0 4mm; padding-top: 2mm; }
+  h2 .n { color: var(--ink-3); font-weight: 600; margin-right: 3mm; }
+  h3 { font-size: 11.5pt; font-weight: 700; margin: 6mm 0 2mm; letter-spacing: -0.01em; }
+  section { margin-top: 11mm; }
+  section.newpage { page-break-before: always; margin-top: 0; }
+  h2, h3 { break-after: avoid; page-break-after: avoid; }
+  h3 + p, h3 + ul, h3 + table, h3 + ol { break-before: avoid; }
+  p { margin: 0 0 2.6mm; max-width: 165mm; }
+  .intro { font-size: 10.6pt; color: var(--ink-2); max-width: 160mm; margin-bottom: 5mm; }
+  ul, ol { margin: 0 0 3mm; padding-left: 5mm; }
+  li { margin-bottom: 1.2mm; }
+  li::marker { color: var(--ink-3); }
+
+  table { width: 100%; border-collapse: collapse; margin: 2mm 0 5mm; font-size: 8.9pt; page-break-inside: auto; }
+  tr { page-break-inside: avoid; }
+  th { text-align: left; font-weight: 700; padding: 2mm 3mm 2mm 0; border-bottom: 1.5px solid var(--ink); vertical-align: bottom; }
+  td { padding: 1.8mm 3mm 1.8mm 0; border-bottom: 1px solid var(--line); vertical-align: top; }
+  td:first-child { font-weight: 600; }
+  td.plain { font-weight: 400; }
+  .status { white-space: nowrap; font-weight: 600; }
+  .todo { color: var(--warn); }
+
+  .note { background: var(--paper); border-left: 3px solid var(--ink); padding: 3mm 4mm; margin: 3mm 0 5mm; max-width: 170mm; page-break-inside: avoid; }
+  .note p:last-child { margin: 0; }
+  .note.warn { border-left-color: var(--warn); }
+  .note strong:first-child { display: block; margin-bottom: 1mm; }
+
+  .two { display: grid; grid-template-columns: 1fr 1fr; gap: 8mm; }
+  .steps { counter-reset: s; list-style: none; padding: 0; }
+  .steps li { counter-increment: s; position: relative; padding-left: 9mm; margin-bottom: 2.4mm; }
+  .steps li::before { content: counter(s); position: absolute; left: 0; top: 0.2mm; width: 5.6mm; height: 5.6mm; border-radius: 50%; background: var(--ink); color: var(--sand); font-size: 7.6pt; font-weight: 700; display: grid; place-items: center; }
+
+  /* Architecture diagram */
+  .diagram { margin: 4mm 0 6mm; page-break-inside: avoid; }
+  .diagram svg { width: 100%; height: auto; display: block; }
+
+  .toc { columns: 2; column-gap: 10mm; list-style: none; padding: 0; margin: 0 0 6mm; }
+  .toc li { break-inside: avoid; display: flex; gap: 3mm; padding: 1.6mm 0; border-bottom: 1px solid var(--line); }
+  .toc .n { color: var(--ink-3); width: 6mm; }
+
+  .glance { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4mm; margin: 4mm 0 6mm; }
+  .glance div { background: var(--paper); padding: 3.5mm 4mm; border-radius: 2mm; }
+  .glance b { display: block; font-size: 15pt; letter-spacing: -0.02em; }
+  .glance span { color: var(--ink-2); font-size: 8.6pt; }
+
+  pre { font-family: "JetBrains Mono", monospace; font-size: 8.2pt; background: var(--paper); padding: 3mm 4mm; border-radius: 2mm; margin: 2mm 0 4mm; white-space: pre-wrap; page-break-inside: avoid; }
+</style>
+</head>
+<body>
+
+<div class="cover">
+  <div class="mark">T&amp;G BnB</div>
+  <h1>Technical document</h1>
+  <p class="lede">How the direct-booking website for the T&amp;G holiday homes in Kenya is built and hosted, how bookings and payments work, and how to run and extend it.</p>
+  <dl>
+    <dt>Website</dt><dd>tg-bnb-lake.vercel.app</dd>
+    <dt>API</dt><dd>tg-bnb-api.onrender.com</dd>
+    <dt>Describes</dt><dd>The code as of 14 Nov 2026</dd>
+    <dt>Written for</dt><dd>The owner, and any developer who takes over the code</dd>
+  </dl>
+</div>
+
+<section style="margin-top:0">
+  <h2>Contents</h2>
+  <ol class="toc">
+    <li><span class="n">1</span>Summary</li>
+    <li><span class="n">2</span>How the system fits together</li>
+    <li><span class="n">3</span>Who can do what</li>
+    <li><span class="n">4</span>What guests can do</li>
+    <li><span class="n">5</span>The owner's dashboard</li>
+    <li><span class="n">6</span>Booking and payment</li>
+    <li><span class="n">7</span>Cancellations, date changes and refunds</li>
+    <li><span class="n">8</span>Emails and notifications</li>
+    <li><span class="n">9</span>Security and privacy</li>
+    <li><span class="n">10</span>Hosting and settings</li>
+    <li><span class="n">11</span>Going live on the owner's accounts</li>
+    <li><span class="n">12</span>Planned enhancements</li>
+    <li><span class="n">13</span>Developer guide: backend</li>
+    <li><span class="n">14</span>Developer guide: website (client)</li>
+    <li><span class="n">15</span>Data model</li>
+    <li><span class="n">16</span>API reference</li>
+  </ol>
+
+  <h2><span class="n">1</span>Summary</h2>
+  <p class="intro">T&amp;G BnB is the owner's own booking website for their holiday homes in Kenya. Guests browse the homes, see the full price for their dates, and pay online in Kenyan shillings through Paystack (M-Pesa or card). The owner and their team run everything from a dashboard: homes, calendar, bookings, refunds, guests, messages, reviews and money.</p>
+
+  <div class="glance">
+    <div><b>Kenya only</b><span>Every home has a Kenyan address. Prices in KES. Times in Nairobi time.</span></div>
+    <div><b>No fees</b><span>Price = nights × nightly rate + cleaning charge. Nothing added at checkout.</span></div>
+    <div><b>142 tests</b><span>Backend tests all pass, with lint and security scans clean.</span></div>
+  </div>
+
+  <h3>Highlights</h3>
+  <ul>
+    <li><b>Server-side pricing.</b> Every price is worked out on the server from the home's settings, so a guest can never change what they pay.</li>
+    <li><b>No double bookings.</b> The database itself refuses overlapping stays, even when two guests pay at the same moment.</li>
+    <li><b>Local payments.</b> M-Pesa and card through Paystack's secure checkout, with refunds sent from the dashboard.</li>
+    <li><b>Instant booking or requests</b>, chosen per home, with Flexible, Moderate or Strict cancellation policies.</li>
+    <li><b>A complete owner dashboard</b>: homes, calendar, bookings, refunds, guests, inbox, reviews, finances, team and an activity log.</li>
+    <li><b>Built for phones first</b>, accessible by keyboard and screen reader, with the privacy features Kenya's Data Protection Act asks for (data download, account closure, consent).</li>
+  </ul>
+</section>
+
+<section class="newpage">
+  <h2><span class="n">2</span>How the system fits together</h2>
+  <p class="intro">There are two programs: the website guests see (the client) and the server that holds the data and rules (the API). The browser only ever talks to one address, which keeps sign-in cookies simple and safe.</p>
+
+  <div class="diagram">
+    <svg viewBox="0 0 680 300" xmlns="http://www.w3.org/2000/svg" font-family="Plus Jakarta Sans, sans-serif" font-size="11">
+      <defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#2A2725"/></marker></defs>
+      <rect x="10" y="115" width="120" height="64" rx="8" fill="#F7F3EA" stroke="#2A2725" stroke-width="1.5"/>
+      <text x="70" y="142" text-anchor="middle" font-weight="700">Guest or owner</text>
+      <text x="70" y="160" text-anchor="middle" fill="#57514A">phone or computer</text>
+
+      <rect x="185" y="100" width="150" height="94" rx="8" fill="#EDE6D6" stroke="#2A2725" stroke-width="1.5"/>
+      <text x="260" y="127" text-anchor="middle" font-weight="700">Website (client)</text>
+      <text x="260" y="145" text-anchor="middle" fill="#57514A">React, hosted on Vercel</text>
+      <text x="260" y="163" text-anchor="middle" fill="#57514A">passes /api/v1 and /rails</text>
+      <text x="260" y="179" text-anchor="middle" fill="#57514A">through to the API</text>
+
+      <rect x="390" y="100" width="150" height="94" rx="8" fill="#EDE6D6" stroke="#2A2725" stroke-width="1.5"/>
+      <text x="465" y="127" text-anchor="middle" font-weight="700">API (backend)</text>
+      <text x="465" y="145" text-anchor="middle" fill="#57514A">Ruby on Rails, on Render</text>
+      <text x="465" y="163" text-anchor="middle" fill="#57514A">rules, prices, emails,</text>
+      <text x="465" y="179" text-anchor="middle" fill="#57514A">background jobs, photos</text>
+
+      <rect x="575" y="115" width="95" height="64" rx="8" fill="#F7F3EA" stroke="#2A2725" stroke-width="1.5"/>
+      <text x="622" y="142" text-anchor="middle" font-weight="700">Database</text>
+      <text x="622" y="160" text-anchor="middle" fill="#57514A">PostgreSQL</text>
+
+      <rect x="410" y="12" width="110" height="52" rx="8" fill="#fff" stroke="#8C8270" stroke-dasharray="4 3"/>
+      <text x="465" y="35" text-anchor="middle" font-weight="700">Paystack</text>
+      <text x="465" y="51" text-anchor="middle" fill="#57514A">M-Pesa and card</text>
+
+      <rect x="430" y="232" width="110" height="52" rx="8" fill="#fff" stroke="#8C8270" stroke-dasharray="4 3"/>
+      <text x="485" y="255" text-anchor="middle" font-weight="700">Email (SMTP)</text>
+      <text x="485" y="271" text-anchor="middle" fill="#57514A">owner's provider</text>
+
+      <rect x="185" y="232" width="150" height="52" rx="8" fill="#fff" stroke="#8C8270" stroke-dasharray="4 3"/>
+      <text x="260" y="255" text-anchor="middle" font-weight="700">Google</text>
+      <text x="260" y="271" text-anchor="middle" fill="#57514A">"Continue with Google"</text>
+
+      <line x1="130" y1="147" x2="183" y2="147" stroke="#2A2725" stroke-width="1.4" marker-end="url(#a)"/>
+      <line x1="335" y1="147" x2="388" y2="147" stroke="#2A2725" stroke-width="1.4" marker-end="url(#a)"/>
+      <line x1="540" y1="147" x2="573" y2="147" stroke="#2A2725" stroke-width="1.4" marker-end="url(#a)"/>
+      <line x1="450" y1="66" x2="450" y2="98" stroke="#8C8270" stroke-width="1.2" marker-end="url(#a)"/>
+      <text x="443" y="86" text-anchor="end" fill="#57514A" font-size="9.5">"paid" message (webhook)</text>
+      <line x1="480" y1="100" x2="480" y2="68" stroke="#8C8270" stroke-width="1.2" marker-end="url(#a)"/>
+      <text x="487" y="86" fill="#57514A" font-size="9.5">start payment, check it, refund</text>
+      <line x1="485" y1="194" x2="485" y2="230" stroke="#8C8270" stroke-width="1.2" marker-end="url(#a)"/>
+      <text x="492" y="216" fill="#57514A" font-size="9.5">emails</text>
+      <line x1="260" y1="194" x2="260" y2="230" stroke="#8C8270" stroke-width="1.2" marker-end="url(#a)"/>
+      <text x="253" y="216" text-anchor="end" fill="#57514A" font-size="9.5">sign in</text>
+      <line x1="415" y1="196" x2="338" y2="252" stroke="#8C8270" stroke-width="1.2" marker-end="url(#a)"/>
+      <text x="364" y="222" text-anchor="end" fill="#57514A" font-size="9.5">token checked</text>
+    </svg>
+  </div>
+
+  <table>
+    <thead><tr><th style="width:26%">Part</th><th>What it does</th><th style="width:28%">Where it runs today</th></tr></thead>
+    <tr><td>Website (client)</td><td>All pages guests and the owner see. Holds no data or rules of its own; it asks the API for everything.</td><td class="plain">Vercel project <code>tg-bnb</code></td></tr>
+    <tr><td>API (backend)</td><td>Accounts, homes, prices, availability, bookings, payments, refunds, messages, reviews, emails, the owner's tools, and uploaded photos and videos.</td><td class="plain">Render web service <code>tg-bnb-api</code>, Frankfurt, free plan</td></tr>
+    <tr><td>Database</td><td>Everything the site stores. Also holds the background job queue and cache, so no extra service is needed.</td><td class="plain">Render Postgres <code>tg-bnb-db</code>, free plan</td></tr>
+    <tr><td>Paystack</td><td>Takes the guest's payment on its own secure page and sends refunds. The site never sees card or M-Pesa details.</td><td class="plain">Owner's Paystack account</td></tr>
+    <tr><td>Email</td><td>Sends verification links, password resets, team invites, receipts and booking updates through any SMTP provider.</td><td class="plain">Owner's email provider</td></tr>
+    <tr><td>Google sign-in</td><td>Optional "Continue with Google" for guests. The API checks every Google token with Google.</td><td class="plain">Owner's Google Cloud project</td></tr>
+  </table>
+</section>
+
+<section>
+  <h2><span class="n">3</span>Who can do what</h2>
+  <table>
+    <thead><tr><th style="width:18%">Who</th><th style="width:28%">How they get access</th><th>What they can do</th></tr></thead>
+    <tr><td>Visitor</td><td class="plain">Not signed in</td><td class="plain">Home page, search, home pages with prices and availability, contact form, legal pages. Cannot book, save or message.</td></tr>
+    <tr><td>Guest</td><td class="plain">Signs up with email and password, or with Google. Every public sign-up is a guest.</td><td class="plain">Book and pay, manage their trips, change dates, cancel, save homes, message the owner, review stays, manage their profile and settings, download their data, close their account.</td></tr>
+    <tr><td>Team (owner and staff)</td><td class="plain">Added by an existing team member from <b>Team</b>. Nobody can sign up as team.</td><td class="plain">Everything in the owner's dashboard (section 5).</td></tr>
+  </table>
+  <div class="note"><strong>Team access</strong><p>Team members have full access to the dashboard. Any member can invite or remove others (but not themselves). A removed member's account becomes a guest account and is signed out everywhere. Every team action is recorded in the Activity log.</p></div>
+
+  <h2 style="margin-top:9mm"><span class="n">4</span>What guests can do</h2>
+  <table>
+    <thead><tr><th style="width:30%">Feature</th><th>How it works</th></tr></thead>
+    <tr><td>Find a home</td><td class="plain">Search by place, dates, number of guests, price, category and amenities, with sorting. Only homes free for the chosen dates are shown. The search lives in the address bar, so a search can be shared as a link.</td></tr>
+    <tr><td>Home page</td><td class="plain">Photos and videos, description, amenities, house rules, check-in and check-out times, cancellation policy, licence number, reviews, a calendar of free nights, and the exact total for the chosen dates.</td></tr>
+    <tr><td>Book and pay</td><td class="plain">Sign in, then pay on Paystack's page by M-Pesa or card. Section 6 has the details.</td></tr>
+    <tr><td>Trips</td><td class="plain">Every booking with its status, receipt, check-in details (only once confirmed), and options to change dates, cancel or message the owner.</td></tr>
+    <tr><td>Saved homes</td><td class="plain">A heart on any home adds it to the guest's saved list.</td></tr>
+    <tr><td>Messages</td><td class="plain">Conversations with the owner, about a booking or a home.</td></tr>
+    <tr><td>Reviews</td><td class="plain">After check-out, a 1 to 5 star rating and comment. The owner can reply or hide abusive reviews.</td></tr>
+    <tr><td>Notifications</td><td class="plain">A bell with unread updates, refreshed every minute while the page is open, plus emails (section 8).</td></tr>
+    <tr><td>Account</td><td class="plain">Name, phone, photo, password, email verification, marketing consent, message emails on or off, data download (JSON), and account closure.</td></tr>
+  </table>
+</section>
+
+<section>
+  <h2><span class="n">5</span>The owner's dashboard</h2>
+  <p class="intro">Signed-in team members see these pages under <code>/account</code>. Guests who open these addresses are turned away, and the API refuses them too, whatever the browser sends.</p>
+  <table>
+    <thead><tr><th style="width:20%">Page</th><th>What it is for</th></tr></thead>
+    <tr><td>Overview</td><td class="plain">Today's arrivals and departures, guests staying now, requests and refunds waiting, unread messages, occupancy, this year's money, and recent reviews.</td></tr>
+    <tr><td>Homes</td><td class="plain">Create, edit, publish, unlist or delete homes. A home with past bookings is archived rather than deleted, so its records stay. Set the following: photos (up to 20 per upload, 10 MB each, resized to at most 2000 px) and videos (MP4, WebM or MOV, 200 MB each), or links to them; price, cleaning charge and guest limit; bedrooms, beds and bathrooms; check-in and check-out times; minimum and maximum nights; instant booking or requests; cancellation policy; house rules; private check-in instructions and wifi details; licence number; category; amenities. Owners can add their own categories and amenities.</td></tr>
+    <tr><td>Calendar</td><td class="plain">A month view across all homes. Block nights (repairs, own use) with a reason, or reopen them. Blocked nights disappear from booking straight away. Nights a guest has booked cannot be blocked.</td></tr>
+    <tr><td>Bookings</td><td class="plain">Every booking, with filters. Accept or decline requests, cancel, change dates, and settle refunds (section 7).</td></tr>
+    <tr><td>Guests</td><td class="plain">Everyone who has booked, with their number of stays, total spent and latest stay.</td></tr>
+    <tr><td>Inbox</td><td class="plain">Guest conversations and contact-form messages. Messages can be marked as dealt with.</td></tr>
+    <tr><td>Reviews</td><td class="plain">Reply to reviews, or hide one. A hidden review leaves the public page and the home's rating.</td></tr>
+    <tr><td>Finances</td><td class="plain">For any year: money received, refunded and net, by month and by home (stays, nights, received, refunds, net); refunds still owed; stays booked ahead; every payment, with CSV download.</td></tr>
+    <tr><td>Team</td><td class="plain">Add a team member by email. They get an invite link, valid for 7 days, to choose a password.</td></tr>
+    <tr><td>Activity</td><td class="plain">A log of every team action: who did what, to what, and when.</td></tr>
+  </table>
+</section>
+
+<section class="newpage">
+  <h2><span class="n">6</span>Booking and payment</h2>
+  <p class="intro">The server works out every price from the home's own settings. The browser sends only the home, the dates and the number of guests, so a guest cannot change what they pay.</p>
+
+  <h3>Steps</h3>
+  <ol class="steps">
+    <li>The guest picks dates and guests. The server checks the dates against the home's rules: not in the past, within the minimum and maximum nights, within the guest limit, the home published, and no booked or blocked nights in the way.</li>
+    <li>The server creates the booking as <b>awaiting payment</b> and holds the dates for <b>15 minutes</b>. It saves the price at that moment: nightly rate, nights, cleaning charge and total.</li>
+    <li>The guest goes to Paystack's checkout page and pays by M-Pesa or card.</li>
+    <li>Paystack tells the server the payment succeeded, in two ways: the guest's browser returns to the site and the server asks Paystack to confirm it, and Paystack also sends a signed "paid" message (webhook) even if the guest closes the page. Either way the result is the same, and a payment is only ever counted once. The server checks that the amount and currency match what was charged.</li>
+    <li><b>Instant booking</b> homes confirm straight away and the guest gets a receipt. <b>Request</b> homes become a request; the owner has <b>24 hours</b> to accept or decline. A request that gets no answer is declined automatically and refunded in full.</li>
+  </ol>
+
+  <h3>What stops double bookings</h3>
+  <p>The database itself refuses two active bookings (awaiting payment, requested or confirmed) on the same home with overlapping nights. Even if two people press "Pay" at the same moment, only one gets the nights. The database also checks that the total always equals nights × nightly rate + cleaning charge.</p>
+
+  <h3>Unpaid holds and late payments</h3>
+  <ul>
+    <li>A background task runs every minute. It frees holds that weren't paid within 15 minutes and declines requests that are past 24 hours.</li>
+    <li>If a payment arrives after its hold expired and the nights are still free, the booking still goes through. If someone else has taken the nights by then, the payment is marked as a refund due, and the owner sees it in Bookings and Finances.</li>
+  </ul>
+
+  <h3>Booking statuses</h3>
+  <table style="break-inside:avoid">
+    <thead><tr><th style="width:26%">Status</th><th>Meaning</th></tr></thead>
+    <tr><td>Awaiting payment</td><td class="plain">Dates held for 15 minutes while the guest pays.</td></tr>
+    <tr><td>Requested</td><td class="plain">Paid, waiting for the owner to accept (request homes only).</td></tr>
+    <tr><td>Confirmed</td><td class="plain">Paid and confirmed. The guest can see the check-in instructions and wifi details.</td></tr>
+    <tr><td>Declined</td><td class="plain">The owner declined the request, or did not answer in 24 hours. Full refund due.</td></tr>
+    <tr><td>Expired</td><td class="plain">Not paid in time. The dates are free again.</td></tr>
+    <tr><td>Cancelled by guest / by owner</td><td class="plain">Cancelled. The refund depends on who cancelled (section 7).</td></tr>
+  </table>
+</section>
+
+<section>
+  <h2><span class="n">7</span>Cancellations, date changes and refunds</h2>
+
+  <h3>Cancellation policies (chosen per home)</h3>
+  <table>
+    <thead><tr><th style="width:20%">Policy</th><th>Guest gets back</th></tr></thead>
+    <tr><td>Flexible</td><td class="plain">Everything, if they cancel before the day of check-in.</td></tr>
+    <tr><td>Moderate</td><td class="plain">Everything at least 5 days before check-in; half after that.</td></tr>
+    <tr><td>Strict</td><td class="plain">Half at least 7 days before check-in; nothing after that.</td></tr>
+  </table>
+  <ul>
+    <li>Guests can cancel until the day before check-in. They see the refund before they confirm.</li>
+    <li>A request the owner hasn't accepted yet is always refunded in full if the guest cancels it.</li>
+    <li>When the owner cancels a stay or declines a request, the guest gets everything back.</li>
+  </ul>
+
+  <h3>Changing dates</h3>
+  <p>Guests (before check-in) and the owner (until check-out) can move a confirmed or requested stay to other free dates. The nightly price stays the same. A shorter stay refunds the difference. A longer stay is refused; the guest books the extra nights separately.</p>
+
+  <h3>How a refund is paid</h3>
+  <p>Cancelling, declining or shortening a stay works out the refund and marks it as <b>due</b> on the payment. The owner then settles it on the booking's page in one of two ways:</p>
+  <ul>
+    <li><b>Refund through Paystack</b>: the site asks Paystack to send the money back to the guest's card or M-Pesa.</li>
+    <li><b>I refunded it in Paystack</b>: for a refund the owner already sent from the Paystack dashboard; the site only records it.</li>
+  </ul>
+  <p>Either way the guest is told, the Finances page updates, and the action is logged.</p>
+</section>
+
+<section>
+  <h2><span class="n">8</span>Emails and notifications</h2>
+  <p class="intro">Each update creates an item in the person's notification bell and, where listed, an email. Emails are sent in the background so pages stay fast.</p>
+  <table>
+    <thead><tr><th style="width:34%">Email</th><th style="width:20%">To</th><th>When</th></tr></thead>
+    <tr><td>Confirm your email</td><td class="plain">New account</td><td class="plain">After sign-up. Link valid for 3 days.</td></tr>
+    <tr><td>Reset your password</td><td class="plain">Anyone</td><td class="plain">"Forgot password". Link valid for 15 minutes and works once. Resetting signs the person out everywhere else.</td></tr>
+    <tr><td>Team invitation</td><td class="plain">New team member</td><td class="plain">When added on the Team page. Link valid for 7 days.</td></tr>
+    <tr><td>Booking receipt</td><td class="plain">Guest</td><td class="plain">When a stay is confirmed.</td></tr>
+    <tr><td>New booking / booking request</td><td class="plain">Every team member</td><td class="plain">When a stay is confirmed, or a request is paid.</td></tr>
+    <tr><td>Request sent, declined</td><td class="plain">Guest</td><td class="plain">When a request is paid, or declined.</td></tr>
+    <tr><td>Booking cancelled</td><td class="plain">Guest, and the team if the guest cancelled</td><td class="plain">On any cancellation, with the refund amount.</td></tr>
+    <tr><td>Dates changed</td><td class="plain">The other side</td><td class="plain">When the guest or the owner moves a stay.</td></tr>
+    <tr><td>Refund sent</td><td class="plain">Guest</td><td class="plain">When a refund is recorded or sent through Paystack.</td></tr>
+    <tr><td>New message</td><td class="plain">Other side</td><td class="plain">On every message, unless the person turned message emails off in Settings.</td></tr>
+    <tr><td>Contact form</td><td class="plain">Every team member</td><td class="plain">When someone uses the contact form.</td></tr>
+  </table>
+  <p>New reviews appear only in the bell, with no email.</p>
+  <div class="note"><strong>Email delivery</strong><p>Emails are sent through the SMTP provider set in the server settings (section 10). On a developer's machine they are saved as files in <code>backend/tmp/mails</code> instead of being sent.</p></div>
+
+  <h2 style="margin-top:9mm"><span class="n">9</span>Security and privacy</h2>
+  <ul>
+    <li><b>Prices and rules on the server.</b> The browser cannot set a price, a refund, a booking status or a role.</li>
+    <li><b>Access checked on every request.</b> Every owner action checks that the signed-in person is on the team. Guests only ever see their own bookings, messages and data.</li>
+    <li><b>Sign-in.</b> Passwords are at least 8 characters and stored only as bcrypt hashes. The session cookie is signed, hidden from page scripts (httpOnly), HTTPS-only in production, and SameSite=Lax. The API also refuses changes sent from other websites (an Origin check), which blocks cross-site form tricks. The live site forces HTTPS.</li>
+    <li><b>Payments.</b> Card and M-Pesa details never reach the site; Paystack handles them. Paystack's "paid" messages are accepted only with a valid signature (HMAC-SHA512 with the secret key), and amounts are checked against the booking.</li>
+    <li><b>Limits on repeated attempts</b> from the same IP address, for example: sign-in and sign-up 10 per 3 minutes, password reset emails 5 per 10 minutes, verification emails 3 per 10 minutes, bookings 20 per 10 minutes, messages 30 per 10 minutes, contact form 5 per 10 minutes.</li>
+    <li><b>Uploads</b> are team-only and limited by type and size. Photos are re-encoded and resized on upload.</li>
+    <li><b>Private details</b>: a home's check-in instructions and wifi details are shown only to a guest with a confirmed stay.</li>
+    <li><b>Audit log</b> of every team action, with the person and IP address.</li>
+    <li><b>Data protection (Kenya, Data Protection Act 2019).</b> There are privacy and terms pages, and a cookie notice. Marketing consent is opt-in and recorded with a date. Guests can download all their data. Closing an account removes the person's name, email, phone, photo and sign-in, but keeps their bookings and payments for the owner's tax and dispute records.</li>
+    <li><b>Checks on every change</b>: a static security scan (Brakeman) and a check of known-vulnerable libraries (bundler-audit) run in GitHub Actions with the tests. Both are clean.</li>
+  </ul>
+</section>
+
+<section class="newpage">
+  <h2><span class="n">10</span>Hosting and settings</h2>
+
+  <h3>How a new version goes live</h3>
+  <ul>
+    <li><b>API:</b> Render rebuilds from <code>backend/Dockerfile</code> on every push to the <code>main</code> branch that changes <code>backend/</code>. On start it runs any database updates (migrations). The first start on an empty database loads the schema and the demo homes.</li>
+    <li><b>Website:</b> deployed with <code>vercel deploy --prod</code> from <code>client/</code>. The Vercel project can also be connected to the Git repository to deploy on every push. <code>client/vercel.json</code> forwards <code>/api/v1</code> and <code>/rails</code> to the Render API. If the API address changes, update that file.</li>
+    <li><b>Background jobs</b> (emails, expiring holds) run inside the API process (<code>SOLID_QUEUE_IN_PUMA=1</code>), so no separate worker is needed.</li>
+  </ul>
+
+  <h3>API settings (environment variables on Render)</h3>
+  <table>
+    <thead><tr><th style="width:30%">Setting</th><th>Purpose</th><th style="width:17%">Needed for</th></tr></thead>
+    <tr><td><code>DATABASE_URL</code></td><td class="plain">Database connection.</td><td class="status">Always</td></tr>
+    <tr><td><code>RAILS_MASTER_KEY</code></td><td class="plain">Unlocks the app's encrypted secrets (signs cookies). Keep it private; losing it signs everyone out.</td><td class="status">Always</td></tr>
+    <tr><td><code>APP_URL</code></td><td class="plain">The website address, used in email links and Paystack's return link.</td><td class="status">Always</td></tr>
+    <tr><td><code>SOLID_QUEUE_IN_PUMA</code></td><td class="plain"><code>1</code> runs background jobs inside the API.</td><td class="status">Always</td></tr>
+    <tr><td><code>PAYSTACK_SECRET_KEY</code></td><td class="plain">Paystack secret key: <code>sk_test_…</code> for testing, <code>sk_live_…</code> for real payments. Find it under Settings, API Keys &amp; Webhooks in Paystack.</td><td class="status">Payments</td></tr>
+    <tr><td><code>SMTP_ADDRESS</code>, <code>SMTP_PORT</code>, <code>SMTP_USERNAME</code>, <code>SMTP_PASSWORD</code>, <code>MAIL_FROM</code></td><td class="plain">Any SMTP provider (Gmail, Zoho, Brevo, SendGrid and others). The port defaults to 587. Use an address on the owner's domain for <code>MAIL_FROM</code>.</td><td class="status">Emails</td></tr>
+    <tr><td><code>GOOGLE_CLIENT_ID</code></td><td class="plain">Google OAuth client ID, the same one as the website's.</td><td class="status">Google sign-in</td></tr>
+    <tr><td><code>SEED_ADMIN_EMAIL</code>, <code>SEED_ADMIN_PASSWORD</code></td><td class="plain">Create the first team account when seeding a production database. No admin is created without both.</td><td class="status">First setup</td></tr>
+    <tr><td><code>CORS_ORIGINS</code></td><td class="plain">Only if the website is served from a different address than the API. Not needed with the Vercel forwarding.</td><td class="status">Not needed</td></tr>
+  </table>
+
+  <h3>Website settings (on Vercel, at build time)</h3>
+  <table>
+    <thead><tr><th style="width:30%">Setting</th><th>Purpose</th><th style="width:17%">Needed for</th></tr></thead>
+    <tr><td><code>VITE_GOOGLE_CLIENT_ID</code></td><td class="plain">Shows the "Continue with Google" button. Hidden when not set.</td><td class="status">Google sign-in</td></tr>
+    <tr><td><code>VITE_API_URL</code></td><td class="plain">Only to call an API on another address. Leave unset with the Vercel forwarding.</td><td class="status">Not needed</td></tr>
+  </table>
+
+  <h3>Paystack dashboard</h3>
+  <p>Set the webhook URL to <code>https://&lt;website address&gt;/api/v1/webhooks/paystack</code>. For the current site: <code>https://tg-bnb-lake.vercel.app/api/v1/webhooks/paystack</code>. Enable M-Pesa and card for KES.</p>
+</section>
+
+<section>
+  <h2><span class="n">11</span>Going live on the owner's accounts</h2>
+  <p class="intro">The system is complete. Going live means connecting it to the owner's own accounts and production hosting. Each step is configuration only; no code changes are needed.</p>
+  <table>
+    <thead><tr><th style="width:5%">#</th><th style="width:30%">Step</th><th>What to do</th></tr></thead>
+    <tr><td>1</td><td>Production hosting</td><td class="plain">Move the database to a paid plan with daily backups, and the API to an always-on plan so pages answer instantly at any hour. The same Docker image also runs on the owner's own server.</td></tr>
+    <tr><td>2</td><td>File storage</td><td class="plain">Attach a persistent disk or S3-compatible storage, so photos and videos the owner uploads are kept across updates.</td></tr>
+    <tr><td>3</td><td>Paystack</td><td class="plain">Set <code>PAYSTACK_SECRET_KEY</code> and the webhook URL (section 10). Make one booking and one refund with the test key, then switch to the live key.</td></tr>
+    <tr><td>4</td><td>Email</td><td class="plain">Set the SMTP settings and <code>MAIL_FROM</code>, then send a test sign-up, password reset and team invite.</td></tr>
+    <tr><td>5</td><td>Homes and team</td><td class="plain">Create the owner's team account, invite staff from Team, and replace the 12 demo homes with the real ones.</td></tr>
+    <tr><td>6</td><td>Domain</td><td class="plain">Point the owner's domain at the website, then update <code>APP_URL</code> and the Paystack webhook URL to match.</td></tr>
+    <tr><td>7</td><td>Google sign-in (optional)</td><td class="plain">Create an OAuth client in Google Cloud with the website address as an authorised origin. Set <code>GOOGLE_CLIENT_ID</code> and <code>VITE_GOOGLE_CLIENT_ID</code>, then redeploy the website.</td></tr>
+    <tr><td>8</td><td>Tax and registration</td><td class="plain">Confirm VAT on receipts, the tourism levy and short-stay registration with the owner's adviser, and review the privacy and terms wording.</td></tr>
+  </table>
+</section>
+
+<section style="break-inside:avoid">
+  <h2><span class="n">12</span>Planned enhancements</h2>
+  <p class="intro">The system is built so these can be added without reworking what exists.</p>
+  <ul>
+    <li><b>Seasonal and weekend pricing</b>, length-of-stay discounts and extra-guest charges.</li>
+    <li><b>Calendar sync</b> (iCal) with Airbnb and Booking.com, so nights booked elsewhere close automatically.</li>
+    <li><b>Team roles</b>, for example staff who manage bookings but not finances.</li>
+    <li><b>Extending a stay</b> from the booking page, charging only the extra nights.</li>
+    <li><b>Automated website tests</b> (Vitest and Playwright), alongside the existing backend tests.</li>
+  </ul>
+</section>
+
+<section class="newpage">
+  <h2><span class="n">13</span>Developer guide: backend</h2>
+  <p class="intro">Rails 8.1 in API mode, Ruby 4.0.2, PostgreSQL (UUID keys; <code>pgcrypto</code>, <code>citext</code>, <code>btree_gist</code>). JSON under <code>/api/v1</code>. Uploaded files are served under <code>/rails</code> (Active Storage). Time zone: Nairobi.</p>
+
+  <h3>Run it</h3>
+<pre>cd backend
+bin/setup --skip-server     # gems, databases, migrations
+bin/rails db:seed           # amenities, 12 Kenyan demo homes, dev accounts
+bin/rails server            # http://localhost:3000, health check GET /up</pre>
+  <p>In development the seed creates a team account <code>admin@tgbnb.test</code> and a guest <code>guest@tgbnb.test</code>, with the passwords in <code>db/seeds.rb</code>. These work on a developer's machine only.</p>
+
+  <h3>Checks (all must pass; CI runs them on every change to <code>backend/</code>)</h3>
+<pre>bin/rails test              # Minitest, 142 tests
+bin/rubocop                 # style
+bin/brakeman --no-pager     # security scan
+bin/bundler-audit           # vulnerable gems</pre>
+  <p>Tests use a fake Paystack client and a fake Google check, so they never call outside services.</p>
+
+  <h3>Where things live</h3>
+  <table>
+    <thead><tr><th style="width:38%">Path</th><th>Contents</th></tr></thead>
+    <tr><td><code>app/controllers/api/v1/</code></td><td class="plain">Guest and public endpoints. <code>admin/</code> holds team endpoints, each with <code>before_action :require_admin</code>. <code>webhooks/paystack_controller.rb</code> handles Paystack.</td></tr>
+    <tr><td><code>app/controllers/concerns/</code></td><td class="plain"><code>authentication.rb</code> (cookie sessions), <code>json_renderers.rb</code> (shared JSON shapes), <code>paystack_checkout.rb</code> (starting a payment).</td></tr>
+    <tr><td><code>app/models/booking.rb</code></td><td class="plain">The booking rules: holds, confirm after payment, accept, decline, cancel, refund amounts, date changes.</td></tr>
+    <tr><td><code>app/models/payment.rb</code></td><td class="plain">Settling a Paystack transaction (once only), flagging and sending refunds.</td></tr>
+    <tr><td><code>app/models/paystack.rb</code></td><td class="plain">A small Paystack API client: initialise, verify, refund, webhook signature.</td></tr>
+    <tr><td><code>app/models/notify.rb</code></td><td class="plain">Every notification and the emails that go with it.</td></tr>
+    <tr><td><code>app/models/google_identity.rb</code></td><td class="plain">Checks Google ID tokens with Google.</td></tr>
+    <tr><td><code>app/mailers/</code></td><td class="plain">Account, password, booking receipt and notice emails.</td></tr>
+    <tr><td><code>config/recurring.yml</code></td><td class="plain">Scheduled jobs (production only): expire holds every minute; clear finished jobs hourly.</td></tr>
+    <tr><td><code>db/seeds.rb</code>, <code>db/seeds/listings.json</code></td><td class="plain">Amenities, demo homes, dev accounts.</td></tr>
+  </table>
+
+  <h3>Conventions</h3>
+  <ul>
+    <li>Money is whole integers in cents (<code>*_cents</code>), always KES. Bookings save their price at the time of booking.</li>
+    <li>Errors are always <code>{ "error": { "code", "message", "details"? } }</code>. Validation errors use code <code>validation_failed</code>, with field messages in <code>details</code>.</li>
+    <li>Lists page with <code>?page=</code>; responses include the next page number when there is one.</li>
+    <li>Team actions call <code>audit(action, target, summary)</code> to write the Activity log.</li>
+    <li>Key rules are also enforced in the database: no overlapping active bookings, totals that match, dates in order, valid statuses.</li>
+    <li>In development, expired holds are not cleared automatically (the schedule runs in production only). Run <code>Booking.expire_stale_holds!</code> in the console if needed.</li>
+  </ul>
+</section>
+
+<section>
+  <h2><span class="n">14</span>Developer guide: website (client)</h2>
+  <p class="intro">React 18 with Vite 4, Tailwind CSS 3, React Router 6, axios, Radix UI (dialog, popover, avatar) in a shadcn-style component folder, react-day-picker 8, date-fns 2, lucide-react icons, react-toastify. Plain JavaScript (JSX), no TypeScript.</p>
+
+  <h3>Run it</h3>
+<pre>cd client
+yarn install
+yarn dev        # http://localhost:5173; forwards /api/v1 and /rails to RAILS_API_URL (default http://localhost:3000)
+yarn build      # production files in dist/</pre>
+
+  <h3>Structure</h3>
+  <table>
+    <thead><tr><th style="width:34%">Path</th><th>Contents</th></tr></thead>
+    <tr><td><code>src/App.jsx</code></td><td class="plain">All routes, the app's providers, toasts and cookie notice.</td></tr>
+    <tr><td><code>src/pages/</code></td><td class="plain">One file per page. <code>home/</code> holds the landing page sections.</td></tr>
+    <tr><td><code>src/components/ui/</code></td><td class="plain">Shared components: layouts (<code>Layout</code>, <code>DashboardLayout</code>, <code>AuthLayout</code>), route guards (<code>RequireSignIn</code>, <code>RequireOwner</code>), dialogs, booking widget, date picker, and the shadcn-style primitives.</td></tr>
+    <tr><td><code>src/providers/</code></td><td class="plain">Shared state: the signed-in user, homes, saved homes, notifications (refreshed every 60 s while the tab is visible).</td></tr>
+    <tr><td><code>hooks/index.js</code></td><td class="plain"><code>useAuth</code> and other hooks over the providers.</td></tr>
+    <tr><td><code>src/utils/axios.js</code></td><td class="plain">The single API client (<code>withCredentials</code> for the session cookie), plus <code>errorMessageFrom</code> and <code>fieldErrorsFrom</code> to show server errors.</td></tr>
+    <tr><td><code>src/utils/</code></td><td class="plain">Money and date formatting, booking status labels, search filters, recently viewed.</td></tr>
+    <tr><td><code>tailwind.config.cjs</code></td><td class="plain">Colours <code>sand</code> #EDE6D6, <code>ink</code> #2A2725, <code>paper</code> #F7F3EA, and warm greys. Font: Plus Jakarta Sans.</td></tr>
+  </table>
+
+  <h3>Routes</h3>
+  <table>
+    <thead><tr><th style="width:38%">Address</th><th>Page</th></tr></thead>
+    <tr><td><code>/</code></td><td class="plain">Home page</td></tr>
+    <tr><td><code>/homes</code> (<code>/stays</code> redirects)</td><td class="plain">Search results</td></tr>
+    <tr><td><code>/place/:id</code></td><td class="plain">A home</td></tr>
+    <tr><td><code>/login</code>, <code>/register</code>, <code>/forgot-password</code>, <code>/reset-password</code>, <code>/verify-email</code></td><td class="plain">Accounts. <code>/reset-password?welcome=1</code> is also the team invite page.</td></tr>
+    <tr><td><code>/privacy</code>, <code>/terms</code>, <code>/contact</code></td><td class="plain">Legal and contact pages</td></tr>
+    <tr><td><code>/account</code>, <code>/account/profile</code>, <code>/account/settings</code>, <code>/account/notifications</code></td><td class="plain">Signed in: overview (guest or owner view), profile, settings, notifications</td></tr>
+    <tr><td><code>/account/bookings[/:id[/receipt]]</code>, <code>/account/saved</code>, <code>/account/messages[/:id]</code></td><td class="plain">Signed in: trips, receipt, saved homes, messages</td></tr>
+    <tr><td><code>/account/places[/new|/:id]</code>, <code>/account/reservations[/:id]</code>, <code>/account/calendar</code>, <code>/account/inbox[/:id]</code>, <code>/account/guests[/:id]</code>, <code>/account/reviews</code>, <code>/account/finances</code>, <code>/account/team</code>, <code>/account/activity</code></td><td class="plain">Team only (<code>RequireOwner</code>): homes, bookings, calendar, inbox, guests, reviews, finances, team, activity</td></tr>
+  </table>
+
+  <h3>Things to know</h3>
+  <ul>
+    <li>Use explicit <code>h-* w-*</code> rather than <code>size-*</code> on components that already set a height or width: the installed tailwind-merge (1.14) does not recognise <code>size-*</code> as conflicting.</li>
+    <li>React 18.2 needs the lowercase <code>fetchpriority</code> attribute on images.</li>
+    <li>Every page must work at 360 px wide, by keyboard, with visible focus.</li>
+    <li><code>netlify.toml</code> is left over from an earlier host and is not used.</li>
+  </ul>
+</section>
+
+<section>
+  <h2><span class="n">15</span>Data model</h2>
+  <p class="intro">Every table uses UUID keys and timestamps. Money is in integer cents (KES).</p>
+  <table>
+    <thead><tr><th style="width:22%">Table</th><th>Holds</th></tr></thead>
+    <tr><td>users</td><td class="plain">Email (unique, case-insensitive), name, password hash, role (<code>guest</code> or <code>admin</code>), phone, email verified at, marketing consent at, message emails on/off, Google ID, closed at. Avatar photo via Active Storage.</td></tr>
+    <tr><td>sessions</td><td class="plain">One row per signed-in browser: user, IP address, user agent.</td></tr>
+    <tr><td>listings</td><td class="plain">A home: title, slug, description, type, address (always Kenya), guests, bedrooms, beds, bathrooms, nightly price, cleaning charge, times, min/max nights, booking type, cancellation policy, house rules, check-in instructions, wifi details, licence number, status (draft, published, unlisted), featured, category, cached rating and review count, deleted at.</td></tr>
+    <tr><td>listing_photos, listing_videos</td><td class="plain">Ordered photo and video URLs (uploaded files or outside links).</td></tr>
+    <tr><td>categories, amenities, listing_amenities</td><td class="plain">Owner-defined categories, and amenities linked to homes.</td></tr>
+    <tr><td>availability_blocks</td><td class="plain">Nights the owner closed: home, from, to (exclusive), reason.</td></tr>
+    <tr><td>bookings</td><td class="plain">Home, guest, check-in, check-out, guests, nights, saved nightly price, cleaning charge and total, status, request deadline, cancelled at and reason. Database rules: no overlap for active bookings, total = nights × nightly + cleaning.</td></tr>
+    <tr><td>payments</td><td class="plain">Booking, Paystack reference (unique), amount, currency, status (pending, succeeded, failed), channel, Paystack transaction ID, paid at; refund due, refund amount, refunded at, Paystack refund ID.</td></tr>
+    <tr><td>reviews</td><td class="plain">One per booking: rating 1 to 5, comment, owner reply, hidden.</td></tr>
+    <tr><td>saved_listings</td><td class="plain">A guest's saved homes.</td></tr>
+    <tr><td>conversations, messages</td><td class="plain">A guest's thread with the owner, about a booking or a home, with read markers for each side; the messages in it.</td></tr>
+    <tr><td>notifications</td><td class="plain">Bell items: kind, title, text, link, read at.</td></tr>
+    <tr><td>contact_messages</td><td class="plain">Contact form entries and when they were dealt with.</td></tr>
+    <tr><td>audit_logs</td><td class="plain">Team actions: who, action, target, summary, IP address.</td></tr>
+    <tr><td>solid_queue_*, solid_cache_*</td><td class="plain">Background job queue and cache, kept in the same database.</td></tr>
+  </table>
+</section>
+
+<section>
+  <h2><span class="n">16</span>API reference</h2>
+  <p class="intro">All under <code>/api/v1</code>, JSON in and out. Signed-in requests use the <code>session_id</code> cookie. Team endpoints return 403 for guests and 401 for visitors.</p>
+  <table>
+    <thead><tr><th style="width:44%">Endpoint</th><th>Purpose</th></tr></thead>
+    <tr><td><code>POST /registrations</code></td><td class="plain">Sign up (guest)</td></tr>
+    <tr><td><code>GET | POST | DELETE /session</code></td><td class="plain">Current user, sign in, sign out</td></tr>
+    <tr><td><code>POST /google_session</code></td><td class="plain">Sign in with a Google ID token</td></tr>
+    <tr><td><code>PATCH | DELETE /profile</code>, <code>GET /profile/export</code></td><td class="plain">Update profile and settings, close account, download data</td></tr>
+    <tr><td><code>POST | PATCH /email_verification</code></td><td class="plain">Send a verification link, confirm it</td></tr>
+    <tr><td><code>POST | PATCH /password_reset</code></td><td class="plain">Send a reset link, set a new password (also accepts invite tokens)</td></tr>
+    <tr><td><code>POST /contact_messages</code></td><td class="plain">Contact form</td></tr>
+    <tr><td><code>GET /listings</code>, <code>GET /listings/:id</code></td><td class="plain">Search homes, one home (with quote and unavailable nights)</td></tr>
+    <tr><td><code>GET | POST | DELETE /saved_listings[/:listing_id]</code></td><td class="plain">Saved homes</td></tr>
+    <tr><td><code>GET | POST /bookings</code>, <code>GET /bookings/:id</code></td><td class="plain">A guest's trips, book</td></tr>
+    <tr><td><code>POST /bookings/:id/cancel | reschedule</code></td><td class="plain">Guest cancels or changes dates</td></tr>
+    <tr><td><code>POST /bookings/:id/payment</code>, <code>POST /bookings/:id/payment/verify</code></td><td class="plain">Start Paystack checkout; check the payment after returning</td></tr>
+    <tr><td><code>POST /bookings/:id/review</code></td><td class="plain">Review a past stay</td></tr>
+    <tr><td><code>GET | POST /conversations[/:id]</code>, <code>POST /conversations/:id/messages</code></td><td class="plain">Guest messaging</td></tr>
+    <tr><td><code>GET /notifications</code>, <code>POST /notifications/:id/read | read_all</code></td><td class="plain">Notification bell</td></tr>
+    <tr><td><code>POST /webhooks/paystack</code></td><td class="plain">Paystack "paid" messages (signed)</td></tr>
+    <tr><th colspan="2" style="padding-top:4mm">Team (<code>/api/v1/admin</code>)</th></tr>
+    <tr><td><code>GET /overview</code>, <code>GET /calendar</code>, <code>GET /finances</code></td><td class="plain">Dashboard, month calendar, money for a year</td></tr>
+    <tr><td><code>/listings</code> (list, show, create, update, delete)</td><td class="plain">Homes (delete archives a home with bookings)</td></tr>
+    <tr><td><code>POST /listings/:id/blocks</code>, <code>DELETE /blocks/:id</code></td><td class="plain">Block and reopen nights</td></tr>
+    <tr><td><code>/categories</code>, <code>/amenities</code></td><td class="plain">Owner's categories and amenities</td></tr>
+    <tr><td><code>POST /uploads</code></td><td class="plain">Upload photos or videos</td></tr>
+    <tr><td><code>GET /bookings[/:id]</code></td><td class="plain">All bookings, one booking</td></tr>
+    <tr><td><code>POST /bookings/:id/accept | decline | cancel | reschedule | refund | mark_refunded</code></td><td class="plain">Booking actions and refunds</td></tr>
+    <tr><td><code>GET /guests[/:id]</code></td><td class="plain">Guests and their history</td></tr>
+    <tr><td><code>/conversations</code>, <code>/conversations/:id/messages</code></td><td class="plain">Inbox</td></tr>
+    <tr><td><code>GET /contact_messages</code>, <code>POST /contact_messages/:id/handle</code></td><td class="plain">Contact form messages</td></tr>
+    <tr><td><code>GET /reviews</code>, <code>PATCH /reviews/:id</code></td><td class="plain">Reply, hide or show</td></tr>
+    <tr><td><code>GET | POST /staff</code>, <code>DELETE /staff/:id</code></td><td class="plain">Team members</td></tr>
+    <tr><td><code>GET /audit_logs</code></td><td class="plain">Activity log</td></tr>
+    <tr><th colspan="2" style="padding-top:4mm">Other</th></tr>
+    <tr><td><code>GET /up</code></td><td class="plain">Health check: 200 when the API is running</td></tr>
+  </table>
+</section>
+
+</body>
+</html>

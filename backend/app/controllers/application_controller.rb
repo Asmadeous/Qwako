@@ -47,7 +47,27 @@ class ApplicationController < ActionController::API
     end
 
     def user_json(user)
-      user.slice(:id, :email, :name, :role).merge(avatar_url: user.avatar_url)
+      user.slice(:id, :email, :name, :role, :phone, :email_messages).merge(
+        avatar_url: user.avatar_url,
+        email_verified: user.email_verified?,
+        marketing_consent: user.marketing_consent_at.present?,
+        google_linked: user.google_uid.present?
+      )
+    end
+
+    # Records what an owner-side account changed, for the admin log.
+    def audit(action, target, summary)
+      AuditLog.record!(admin: Current.user, action:, target:, summary:, ip_address: request.remote_ip)
+    end
+
+    def page_param
+      [ params[:page].to_i, 1 ].max
+    end
+
+    # One page of a query plus whether another follows.
+    def paginate(scope, per_page)
+      rows = scope.offset((page_param - 1) * per_page).limit(per_page + 1).to_a
+      [ rows.first(per_page), (page_param + 1 if rows.size > per_page) ]
     end
 
     def require_admin

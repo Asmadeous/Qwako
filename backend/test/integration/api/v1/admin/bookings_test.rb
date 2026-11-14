@@ -37,7 +37,7 @@ class Api::V1::Admin::BookingsTest < ActionDispatch::IntegrationTest
     sign_in_as users(:owner)
     get api_v1_admin_bookings_path, as: :json
     assert_response :ok
-    assert_equal [ [ "Cotswolds Cottage", "grace@example.com" ], [ "Kilimani Loft", "ada@example.com" ] ], titles_and_guests
+    assert_equal [ [ "Naivasha Cottage", "grace@example.com" ], [ "Kilimani Loft", "ada@example.com" ] ], titles_and_guests
 
     row = response.parsed_body["bookings"].last
     assert_equal "Ada Lovelace", row.dig("guest", "name")
@@ -61,8 +61,8 @@ class Api::V1::Admin::BookingsTest < ActionDispatch::IntegrationTest
     get api_v1_admin_bookings_path(q: "lovelace"), as: :json
     assert_equal [ [ "Kilimani Loft", "ada@example.com" ] ], titles_and_guests
     get api_v1_admin_bookings_path(q: "grace@"), as: :json
-    assert_equal [ [ "Cotswolds Cottage", "grace@example.com" ] ], titles_and_guests
-    get api_v1_admin_bookings_path(q: "cotswolds"), as: :json
+    assert_equal [ [ "Naivasha Cottage", "grace@example.com" ] ], titles_and_guests
+    get api_v1_admin_bookings_path(q: "naivasha"), as: :json
     assert_equal 1, titles_and_guests.size
     get api_v1_admin_bookings_path(q: "%"), as: :json
     assert_empty response.parsed_body["bookings"]

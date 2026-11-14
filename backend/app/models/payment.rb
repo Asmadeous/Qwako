@@ -12,13 +12,35 @@ class Payment < ApplicationRecord
     needs_refund? && refunded_at.nil?
   end
 
-  # The owner refunds in the Paystack dashboard, then records it here.
+  def refund_due_cents
+    refund_due? ? refund_cents.to_i : 0
+  end
+
+  # Marks money to go back to the guest: the full payment or part of it.
+  def flag_refund!(cents)
+    update!(needs_refund: true, refund_cents: cents.clamp(0, amount_cents))
+  end
+
+  # For refunds made outside the site (in the Paystack dashboard).
   def mark_refunded!
     with_lock do
       return false unless refund_due?
 
       update!(refunded_at: Time.current)
     end
+    Notify.refund_sent(self)
+    true
+  end
+
+  # Asks Paystack to send the refund back to the guest's card or M-Pesa.
+  def refund_through_paystack!
+    with_lock do
+      return false unless refund_due?
+
+      data = Paystack.client.refund(transaction: provider_transaction_id.presence || reference, amount: refund_cents)
+      update!(refunded_at: Time.current, provider_refund_id: data["id"].to_s)
+    end
+    Notify.refund_sent(self)
     true
   end
 
@@ -34,7 +56,7 @@ class Payment < ApplicationRecord
 
       unless transaction["amount"].to_i == amount_cents && transaction["currency"] == currency
         Rails.logger.warn("Payment #{reference}: Paystack reported #{transaction["amount"]} #{transaction["currency"]}")
-        update!(status: "failed", needs_refund: true)
+        update!(status: "failed", needs_refund: true, refund_cents: amount_cents)
         return self
       end
 
