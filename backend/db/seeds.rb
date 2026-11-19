@@ -16,7 +16,8 @@ admin_email = ENV["SEED_ADMIN_EMAIL"] || (Rails.env.production? ? nil : "admin@t
 admin_password = ENV["SEED_ADMIN_PASSWORD"] || (Rails.env.production? ? nil : "admin-dev-password")
 if admin_email && admin_password
   admin = User.find_or_initialize_by(email: admin_email)
-  admin.update!(name: admin.name.presence || "T&G Owner", password: admin_password, role: "admin")
+  admin.password = admin_password if admin.new_record? # never reset a password the owner changed
+  admin.update!(name: admin.name.presence || "T&G Owner", role: "admin")
 else
   warn "Skipping admin account: set SEED_ADMIN_EMAIL and SEED_ADMIN_PASSWORD."
 end
@@ -42,13 +43,17 @@ DEMO_TITLES = [
 ].freeze
 Listing.kept.where(title: DEMO_TITLES).find_each(&:delete_or_archive!)
 
+# Each home is created once, keyed by its slug (which survives a rename); after that
+# the owner manages it in the dashboard and a re-seed leaves it alone.
 listings = JSON.parse(File.read(Rails.root.join("db/seeds/listings.json")))
 listings.each do |attrs|
   attrs = attrs.dup
+  next if Listing.exists?(slug: attrs["title"].parameterize)
+
   category_name = attrs.delete("category")
-  listing = Listing.find_or_initialize_by(title: attrs["title"])
+  listing = Listing.new(attrs)
   listing.category = Category.find_or_create_by!(name: category_name) if category_name
-  listing.update!(attrs)
+  listing.save!
 end
 
 puts "Seeded #{Amenity.count} amenities, #{Category.count} categories, #{Listing.kept.count} listings, #{User.admin.count} admin(s)."

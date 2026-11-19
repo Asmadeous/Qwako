@@ -30,5 +30,24 @@
     "bedrooms": 2,
     "beds": 2,
     "bathrooms": 2
+  },
+  {
+    "title": "Githii Farm House",
+    "status": "draft",
+    "category": "Farmhouses",
+    "address": "Githii, Kenya",
+    "description": "Placeholder while we wait for the owner's details. Replace this text, the price and the photo, then publish.",
+    "house_rules": "",
+    "max_guests": 1,
+    "nightly_price_cents": 100,
+    "cleaning_charge_cents": 0,
+    "amenity_keys": [],
+    "photo_urls": [
+      "/listings/githii-farm-house/placeholder.svg"
+    ],
+    "property_type": "house",
+    "bedrooms": 1,
+    "beds": 1,
+    "bathrooms": 1
   }
 ]

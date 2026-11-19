@@ -83,9 +83,10 @@
   <h1>Technical document</h1>
   <p class="lede">How the direct-booking website for the T&amp;G holiday homes in Kenya is built and hosted, how bookings and payments work, and how to run and extend it.</p>
   <dl>
-    <dt>Website</dt><dd>tg-bnb-lake.vercel.app</dd>
-    <dt>API</dt><dd>tg-bnb-api.onrender.com</dd>
-    <dt>Describes</dt><dd>The code as of 14 Nov 2026</dd>
+    <dt>Test website</dt><dd>tg-bnb-lake.vercel.app</dd>
+    <dt>Test API</dt><dd>tg-bnb-api.onrender.com</dd>
+    <dt>Live hosting</dt><dd>The development team's servers, on the owner's own domain</dd>
+    <dt>Describes</dt><dd>The code as of 19 Nov 2026</dd>
     <dt>Written for</dt><dd>The owner, and any developer who takes over the code</dd>
   </dl>
 </div>
@@ -103,7 +104,7 @@
     <li><span class="n">8</span>Emails and notifications</li>
     <li><span class="n">9</span>Security and privacy</li>
     <li><span class="n">10</span>Hosting and settings</li>
-    <li><span class="n">11</span>Going live on the owner's accounts</li>
+    <li><span class="n">11</span>Going live</li>
     <li><span class="n">12</span>Planned enhancements</li>
     <li><span class="n">13</span>Developer guide: backend</li>
     <li><span class="n">14</span>Developer guide: website (client)</li>
@@ -112,12 +113,12 @@
   </ol>
 
   <h2><span class="n">1</span>Summary</h2>
-  <p class="intro">T&amp;G BnB is the owner's own booking website for their holiday homes in Kenya. Guests browse the homes, see the full price for their dates, and pay online in Kenyan shillings through Paystack (M-Pesa or card). The owner and their team run everything from a dashboard: homes, calendar, bookings, refunds, guests, messages, reviews and money.</p>
+  <p class="intro">T&amp;G BnB is the owner's own booking website for their two holiday homes in Kenya: Grace Apartments D8-09 in Tatu City, Ruiru, and Githii Farm House (being set up). Guests browse the homes, see the full price for their dates, and pay online in Kenyan shillings through Paystack (M-Pesa or card). The owner and their team run everything from a dashboard: homes, calendar, bookings, refunds, guests, messages, reviews and money.</p>
 
   <div class="glance">
     <div><b>Kenya only</b><span>Every home has a Kenyan address. Prices in KES. Times in Nairobi time.</span></div>
     <div><b>No fees</b><span>Price = nights × nightly rate + cleaning charge. Nothing added at checkout.</span></div>
-    <div><b>142 tests</b><span>Backend tests all pass, with lint and security scans clean.</span></div>
+    <div><b>142 tests</b><span>Backend tests, run with lint and security scans on every change (status in section 9).</span></div>
   </div>
 
   <h3>Highlights</h3>
@@ -144,13 +145,13 @@
 
       <rect x="185" y="100" width="150" height="94" rx="8" fill="#EDE6D6" stroke="#2A2725" stroke-width="1.5"/>
       <text x="260" y="127" text-anchor="middle" font-weight="700">Website (client)</text>
-      <text x="260" y="145" text-anchor="middle" fill="#57514A">React, hosted on Vercel</text>
+      <text x="260" y="145" text-anchor="middle" fill="#57514A">React, static files</text>
       <text x="260" y="163" text-anchor="middle" fill="#57514A">passes /api/v1 and /rails</text>
       <text x="260" y="179" text-anchor="middle" fill="#57514A">through to the API</text>
 
       <rect x="390" y="100" width="150" height="94" rx="8" fill="#EDE6D6" stroke="#2A2725" stroke-width="1.5"/>
       <text x="465" y="127" text-anchor="middle" font-weight="700">API (backend)</text>
-      <text x="465" y="145" text-anchor="middle" fill="#57514A">Ruby on Rails, on Render</text>
+      <text x="465" y="145" text-anchor="middle" fill="#57514A">Ruby on Rails, Docker</text>
       <text x="465" y="163" text-anchor="middle" fill="#57514A">rules, prices, emails,</text>
       <text x="465" y="179" text-anchor="middle" fill="#57514A">background jobs, photos</text>
 
@@ -164,7 +165,7 @@
 
       <rect x="430" y="232" width="110" height="52" rx="8" fill="#fff" stroke="#8C8270" stroke-dasharray="4 3"/>
       <text x="485" y="255" text-anchor="middle" font-weight="700">Email (SMTP)</text>
-      <text x="485" y="271" text-anchor="middle" fill="#57514A">owner's provider</text>
+      <text x="485" y="271" text-anchor="middle" fill="#57514A">mailbox on the domain</text>
 
       <rect x="185" y="232" width="150" height="52" rx="8" fill="#fff" stroke="#8C8270" stroke-dasharray="4 3"/>
       <text x="260" y="255" text-anchor="middle" font-weight="700">Google</text>
@@ -187,13 +188,14 @@
   </div>
 
   <table>
-    <thead><tr><th style="width:26%">Part</th><th>What it does</th><th style="width:28%">Where it runs today</th></tr></thead>
-    <tr><td>Website (client)</td><td>All pages guests and the owner see. Holds no data or rules of its own; it asks the API for everything.</td><td class="plain">Vercel project <code>tg-bnb</code></td></tr>
-    <tr><td>API (backend)</td><td>Accounts, homes, prices, availability, bookings, payments, refunds, messages, reviews, emails, the owner's tools, and uploaded photos and videos.</td><td class="plain">Render web service <code>tg-bnb-api</code>, Frankfurt, free plan</td></tr>
-    <tr><td>Database</td><td>Everything the site stores. Also holds the background job queue and cache, so no extra service is needed.</td><td class="plain">Render Postgres <code>tg-bnb-db</code>, free plan</td></tr>
-    <tr><td>Paystack</td><td>Takes the guest's payment on its own secure page and sends refunds. The site never sees card or M-Pesa details.</td><td class="plain">Owner's Paystack account</td></tr>
-    <tr><td>Email</td><td>Sends verification links, password resets, team invites, receipts and booking updates through any SMTP provider.</td><td class="plain">Owner's email provider</td></tr>
-    <tr><td>Google sign-in</td><td>Optional "Continue with Google" for guests. The API checks every Google token with Google.</td><td class="plain">Owner's Google Cloud project</td></tr>
+    <thead><tr><th style="width:22%">Part</th><th>What it does</th><th style="width:34%">Where it runs</th></tr></thead>
+    <tr><td>Website (client)</td><td>All pages guests and the owner see. Holds no data or rules of its own; it asks the API for everything.</td><td class="plain">Live: the development team's servers. Test: Vercel project <code>tg-bnb</code></td></tr>
+    <tr><td>API (backend)</td><td>Accounts, homes, prices, availability, bookings, payments, refunds, messages, reviews, emails, the owner's tools, and uploaded photos and videos.</td><td class="plain">Live: the development team's servers. Test: Render web service <code>tg-bnb-api</code>, free plan</td></tr>
+    <tr><td>Database</td><td>Everything the site stores. Also holds the background job queue and cache, so no extra service is needed.</td><td class="plain">Live: PostgreSQL on the development team's servers, with daily backups. Test: Render Postgres <code>tg-bnb-db</code>, free plan</td></tr>
+    <tr><td>Paystack</td><td>Takes the guest's payment on its own secure page and sends refunds. The site never sees card or M-Pesa details.</td><td class="plain">The owner's Paystack account</td></tr>
+    <tr><td>Email</td><td>Sends verification links, password resets, team invites, receipts and booking updates over SMTP.</td><td class="plain">A mailbox on the site's domain, set up by the development team</td></tr>
+    <tr><td>Google sign-in</td><td>Optional "Continue with Google" for guests. The API checks every Google token with Google.</td><td class="plain">A Google Cloud project, only if switched on</td></tr>
+    <tr><td>Code</td><td>The source code and its automatic checks (GitHub Actions).</td><td class="plain">The development team's GitHub repository</td></tr>
   </table>
 </section>
 
@@ -333,21 +335,33 @@
     <li><b>Private details</b>: a home's check-in instructions and wifi details are shown only to a guest with a confirmed stay.</li>
     <li><b>Audit log</b> of every team action, with the person and IP address.</li>
     <li><b>Data protection (Kenya, Data Protection Act 2019).</b> There are privacy and terms pages, and a cookie notice. Marketing consent is opt-in and recorded with a date. Guests can download all their data. Closing an account removes the person's name, email, phone, photo and sign-in, but keeps their bookings and payments for the owner's tax and dispute records.</li>
-    <li><b>Checks on every change</b>: a static security scan (Brakeman) and a check of known-vulnerable libraries (bundler-audit) run in GitHub Actions with the tests. Both are clean.</li>
+    <li><b>Checks on every change</b>: a static security scan (Brakeman) and a check of known-vulnerable libraries (bundler-audit) run in GitHub Actions with the tests and lint.</li>
   </ul>
+  <div class="note warn"><strong>Status of the checks on 19 Nov 2026</strong><p>On Ruby 4.0.9: all 142 backend tests pass, RuboCop finds no offences, Brakeman reports no warnings, and bundler-audit finds no vulnerable libraries (the web server library <code>puma</code> was upgraded from 8.0.2 to 8.1.2 to close known issues).</p></div>
 </section>
 
 <section class="newpage">
   <h2><span class="n">10</span>Hosting and settings</h2>
 
-  <h3>How a new version goes live</h3>
+  <p class="intro">The live site runs on the development team's servers, on the owner's own domain. The Render and Vercel addresses on the cover are a free test copy for showing and checking changes.</p>
+
+  <h3>What the live servers need</h3>
   <ul>
-    <li><b>API:</b> Render rebuilds from <code>backend/Dockerfile</code> on every push to the <code>main</code> branch that changes <code>backend/</code>. On start it runs any database updates (migrations). The first start on an empty database loads the schema and the demo homes.</li>
-    <li><b>Website:</b> deployed with <code>vercel deploy --prod</code> from <code>client/</code>. The Vercel project can also be connected to the Git repository to deploy on every push. <code>client/vercel.json</code> forwards <code>/api/v1</code> and <code>/rails</code> to the Render API. If the API address changes, update that file.</li>
+    <li><b>API:</b> the Docker image built from <code>backend/Dockerfile</code>, health check <code>GET /up</code>. On start it runs any database updates (migrations), then loads the seeds until the Githii Farm House draft exists.</li>
+    <li><b>Website:</b> the files from <code>yarn build</code> in <code>client/</code> (the <code>dist/</code> folder), served as static files. Any address that isn't a file must return <code>index.html</code>.</li>
+    <li><b>One domain:</b> the web server forwards <code>/api/v1</code> and <code>/rails</code> to the API, so the browser only talks to one address and sign-in cookies work.</li>
+    <li><b>Database:</b> PostgreSQL with the <code>pgcrypto</code>, <code>citext</code> and <code>btree_gist</code> extensions, and daily backups.</li>
+    <li><b>File storage:</b> a persistent volume for the API's <code>storage/</code> folder, or S3-compatible storage. Photos and videos the owner uploads are lost on every update without it.</li>
     <li><b>Background jobs</b> (emails, expiring holds) run inside the API process (<code>SOLID_QUEUE_IN_PUMA=1</code>), so no separate worker is needed.</li>
   </ul>
 
-  <h3>API settings (environment variables on Render)</h3>
+  <h3>Seed data</h3>
+  <p>The seeds add the amenities, the two homes (Grace Apartments D8-09, published; Githii Farm House, a hidden draft with a placeholder photo) and the first team account from <code>SEED_ADMIN_EMAIL</code> and <code>SEED_ADMIN_PASSWORD</code>. They only add what is missing. A home that already exists (matched by its web address, which survives a rename) and an existing team password are never changed.</p>
+
+  <h3>The test copy</h3>
+  <p>Render rebuilds the test API on every push to <code>main</code> that changes <code>backend/</code>. The test website is deployed with <code>vercel deploy --prod</code> from <code>client/</code>; <code>client/vercel.json</code> forwards <code>/api/v1</code> and <code>/rails</code> to the Render API. On the free plans the API sleeps when idle, uploaded photos are lost on each restart, and the database is deleted after 30 days, so the test copy must never take real bookings.</p>
+
+  <h3>API settings (environment variables)</h3>
   <table>
     <thead><tr><th style="width:30%">Setting</th><th>Purpose</th><th style="width:17%">Needed for</th></tr></thead>
     <tr><td><code>DATABASE_URL</code></td><td class="plain">Database connection.</td><td class="status">Always</td></tr>
@@ -355,36 +369,35 @@
     <tr><td><code>APP_URL</code></td><td class="plain">The website address, used in email links and Paystack's return link.</td><td class="status">Always</td></tr>
     <tr><td><code>SOLID_QUEUE_IN_PUMA</code></td><td class="plain"><code>1</code> runs background jobs inside the API.</td><td class="status">Always</td></tr>
     <tr><td><code>PAYSTACK_SECRET_KEY</code></td><td class="plain">Paystack secret key: <code>sk_test_…</code> for testing, <code>sk_live_…</code> for real payments. Find it under Settings, API Keys &amp; Webhooks in Paystack.</td><td class="status">Payments</td></tr>
-    <tr><td><code>SMTP_ADDRESS</code>, <code>SMTP_PORT</code>, <code>SMTP_USERNAME</code>, <code>SMTP_PASSWORD</code>, <code>MAIL_FROM</code></td><td class="plain">Any SMTP provider (Gmail, Zoho, Brevo, SendGrid and others). The port defaults to 587. Use an address on the owner's domain for <code>MAIL_FROM</code>.</td><td class="status">Emails</td></tr>
+    <tr><td><code>SMTP_ADDRESS</code>, <code>SMTP_PORT</code>, <code>SMTP_USERNAME</code>, <code>SMTP_PASSWORD</code>, <code>MAIL_FROM</code></td><td class="plain">The SMTP details of the site's mailbox. The port defaults to 587. <code>MAIL_FROM</code> is an address on the site's domain, for example <code>T&amp;G BnB &lt;bookings@&lt;domain&gt;&gt;</code>.</td><td class="status">Emails</td></tr>
     <tr><td><code>GOOGLE_CLIENT_ID</code></td><td class="plain">Google OAuth client ID, the same one as the website's.</td><td class="status">Google sign-in</td></tr>
-    <tr><td><code>SEED_ADMIN_EMAIL</code>, <code>SEED_ADMIN_PASSWORD</code></td><td class="plain">Create the first team account when seeding a production database. No admin is created without both.</td><td class="status">First setup</td></tr>
-    <tr><td><code>CORS_ORIGINS</code></td><td class="plain">Only if the website is served from a different address than the API. Not needed with the Vercel forwarding.</td><td class="status">Not needed</td></tr>
+    <tr><td><code>SEED_ADMIN_EMAIL</code>, <code>SEED_ADMIN_PASSWORD</code></td><td class="plain">Create the first team account when the seeds run on a production database. No admin is created without both, and an existing account's password is never changed.</td><td class="status">First setup</td></tr>
+    <tr><td><code>CORS_ORIGINS</code></td><td class="plain">Only if the website is served from a different address than the API. Not needed when both share one domain.</td><td class="status">Not needed</td></tr>
   </table>
 
-  <h3>Website settings (on Vercel, at build time)</h3>
+  <h3>Website settings (at build time)</h3>
   <table>
     <thead><tr><th style="width:30%">Setting</th><th>Purpose</th><th style="width:17%">Needed for</th></tr></thead>
     <tr><td><code>VITE_GOOGLE_CLIENT_ID</code></td><td class="plain">Shows the "Continue with Google" button. Hidden when not set.</td><td class="status">Google sign-in</td></tr>
-    <tr><td><code>VITE_API_URL</code></td><td class="plain">Only to call an API on another address. Leave unset with the Vercel forwarding.</td><td class="status">Not needed</td></tr>
+    <tr><td><code>VITE_API_URL</code></td><td class="plain">Only to call an API on another address. Leave unset when both share one domain.</td><td class="status">Not needed</td></tr>
   </table>
 
   <h3>Paystack dashboard</h3>
-  <p>Set the webhook URL to <code>https://&lt;website address&gt;/api/v1/webhooks/paystack</code>. For the current site: <code>https://tg-bnb-lake.vercel.app/api/v1/webhooks/paystack</code>. Enable M-Pesa and card for KES.</p>
+  <p>Set the webhook URL to <code>https://&lt;domain&gt;/api/v1/webhooks/paystack</code> (for the test copy: <code>https://tg-bnb-lake.vercel.app/api/v1/webhooks/paystack</code>). Enable M-Pesa and card for KES.</p>
 </section>
 
 <section>
-  <h2><span class="n">11</span>Going live on the owner's accounts</h2>
-  <p class="intro">The system is complete. Going live means connecting it to the owner's own accounts and production hosting. Each step is configuration only; no code changes are needed.</p>
+  <h2><span class="n">11</span>Going live</h2>
+  <p class="intro">Going live means setting up the live servers, the domain and email, and connecting the owner's Paystack account. Each step is configuration only; no code changes are needed.</p>
   <table>
     <thead><tr><th style="width:5%">#</th><th style="width:30%">Step</th><th>What to do</th></tr></thead>
-    <tr><td>1</td><td>Production hosting</td><td class="plain">Move the database to a paid plan with daily backups, and the API to an always-on plan so pages answer instantly at any hour. The same Docker image also runs on the owner's own server.</td></tr>
-    <tr><td>2</td><td>File storage</td><td class="plain">Attach a persistent disk or S3-compatible storage, so photos and videos the owner uploads are kept across updates.</td></tr>
-    <tr><td>3</td><td>Paystack</td><td class="plain">Set <code>PAYSTACK_SECRET_KEY</code> and the webhook URL (section 10). Make one booking and one refund with the test key, then switch to the live key.</td></tr>
-    <tr><td>4</td><td>Email</td><td class="plain">Set the SMTP settings and <code>MAIL_FROM</code>, then send a test sign-up, password reset and team invite.</td></tr>
-    <tr><td>5</td><td>Homes and team</td><td class="plain">Create the owner's team account, invite staff from Team, and replace the 12 demo homes with the real ones.</td></tr>
-    <tr><td>6</td><td>Domain</td><td class="plain">Point the owner's domain at the website, then update <code>APP_URL</code> and the Paystack webhook URL to match.</td></tr>
-    <tr><td>7</td><td>Google sign-in (optional)</td><td class="plain">Create an OAuth client in Google Cloud with the website address as an authorised origin. Set <code>GOOGLE_CLIENT_ID</code> and <code>VITE_GOOGLE_CLIENT_ID</code>, then redeploy the website.</td></tr>
-    <tr><td>8</td><td>Tax and registration</td><td class="plain">Confirm VAT on receipts, the tourism levy and short-stay registration with the owner's adviser, and review the privacy and terms wording.</td></tr>
+    <tr><td>1</td><td>Live servers</td><td class="plain">Set up the API, website, database with daily backups, and file storage on the development team's servers (section 10).</td></tr>
+    <tr><td>2</td><td>Domain</td><td class="plain">Buy the owner's domain and point it at the live servers. Set <code>APP_URL</code> to it.</td></tr>
+    <tr><td>3</td><td>Email</td><td class="plain">Create the booking mailbox on the domain, set the SMTP settings and <code>MAIL_FROM</code>, then send a test sign-up, password reset and team invite.</td></tr>
+    <tr><td>4</td><td>Paystack</td><td class="plain">Using the owner's verified Paystack account, set <code>PAYSTACK_SECRET_KEY</code> and the webhook URL (section 10). Make one booking and one refund with the test key, then switch to the live key.</td></tr>
+    <tr><td>5</td><td>Homes and team</td><td class="plain">Create the owner's team account and invite staff from Team. Fill in the Grace Apartments check-in details, Wi-Fi, rules and policies. Replace the Githii Farm House placeholder details and photo, then publish it.</td></tr>
+    <tr><td>6</td><td>Google sign-in (optional)</td><td class="plain">Create an OAuth client in Google Cloud with the domain as an authorised origin. Set <code>GOOGLE_CLIENT_ID</code> and <code>VITE_GOOGLE_CLIENT_ID</code>, then rebuild the website.</td></tr>
+    <tr><td>7</td><td>Tax and registration</td><td class="plain">Confirm VAT on receipts, the tourism levy and short-stay registration with the owner's adviser, and review the privacy and terms wording.</td></tr>
   </table>
 </section>
 
@@ -402,17 +415,17 @@
 
 <section class="newpage">
   <h2><span class="n">13</span>Developer guide: backend</h2>
-  <p class="intro">Rails 8.1 in API mode, Ruby 4.0.2, PostgreSQL (UUID keys; <code>pgcrypto</code>, <code>citext</code>, <code>btree_gist</code>). JSON under <code>/api/v1</code>. Uploaded files are served under <code>/rails</code> (Active Storage). Time zone: Nairobi.</p>
+  <p class="intro">Rails 8.1 in API mode, Ruby 4.0.9, PostgreSQL (UUID keys; <code>pgcrypto</code>, <code>citext</code>, <code>btree_gist</code>). JSON under <code>/api/v1</code>. Uploaded files are served under <code>/rails</code> (Active Storage). Time zone: Nairobi.</p>
 
   <h3>Run it</h3>
 <pre>cd backend
 bin/setup --skip-server     # gems, databases, migrations
-bin/rails db:seed           # amenities, 12 Kenyan demo homes, dev accounts
+bin/rails db:seed           # amenities, the two homes, dev accounts
 bin/rails server            # http://localhost:3000, health check GET /up</pre>
   <p>In development the seed creates a team account <code>admin@tgbnb.test</code> and a guest <code>guest@tgbnb.test</code>, with the passwords in <code>db/seeds.rb</code>. These work on a developer's machine only.</p>
 
-  <h3>Checks (all must pass; CI runs them on every change to <code>backend/</code>)</h3>
-<pre>bin/rails test              # Minitest, 142 tests
+  <h3>Checks (all must pass; CI runs them on every change to <code>backend/</code>; current status in section 9)</h3>
+<pre>bin/rails test              # Minitest, 142 tests (needs libvips installed)
 bin/rubocop                 # style
 bin/brakeman --no-pager     # security scan
 bin/bundler-audit           # vulnerable gems</pre>
@@ -430,7 +443,7 @@ bin/bundler-audit           # vulnerable gems</pre>
     <tr><td><code>app/models/google_identity.rb</code></td><td class="plain">Checks Google ID tokens with Google.</td></tr>
     <tr><td><code>app/mailers/</code></td><td class="plain">Account, password, booking receipt and notice emails.</td></tr>
     <tr><td><code>config/recurring.yml</code></td><td class="plain">Scheduled jobs (production only): expire holds every minute; clear finished jobs hourly.</td></tr>
-    <tr><td><code>db/seeds.rb</code>, <code>db/seeds/listings.json</code></td><td class="plain">Amenities, demo homes, dev accounts.</td></tr>
+    <tr><td><code>db/seeds.rb</code>, <code>db/seeds/listings.json</code></td><td class="plain">Amenities, the two homes, the first team account and dev accounts. Only adds what is missing.</td></tr>
   </table>
 
   <h3>Conventions</h3>
@@ -485,7 +498,7 @@ yarn build      # production files in dist/</pre>
     <li>Use explicit <code>h-* w-*</code> rather than <code>size-*</code> on components that already set a height or width: the installed tailwind-merge (1.14) does not recognise <code>size-*</code> as conflicting.</li>
     <li>React 18.2 needs the lowercase <code>fetchpriority</code> attribute on images.</li>
     <li>Every page must work at 360 px wide, by keyboard, with visible focus.</li>
-    <li><code>netlify.toml</code> is left over from an earlier host and is not used.</li>
+    <li><code>vercel.json</code> is only for the Vercel test copy. <code>netlify.toml</code> is left over from an earlier host and is not used.</li>
   </ul>
 </section>
 
@@ -531,7 +544,7 @@ yarn build      # production files in dist/</pre>
     <tr><td><code>POST /bookings/:id/payment</code>, <code>POST /bookings/:id/payment/verify</code></td><td class="plain">Start Paystack checkout; check the payment after returning</td></tr>
     <tr><td><code>POST /bookings/:id/review</code></td><td class="plain">Review a past stay</td></tr>
     <tr><td><code>GET | POST /conversations[/:id]</code>, <code>POST /conversations/:id/messages</code></td><td class="plain">Guest messaging</td></tr>
-    <tr><td><code>GET /notifications</code>, <code>POST /notifications/:id/read | read_all</code></td><td class="plain">Notification bell</td></tr>
+    <tr><td><code>GET /notifications</code>, <code>POST /notifications/:id/read</code>, <code>POST /notifications/read_all</code></td><td class="plain">Notification bell</td></tr>
     <tr><td><code>POST /webhooks/paystack</code></td><td class="plain">Paystack "paid" messages (signed)</td></tr>
     <tr><th colspan="2" style="padding-top:4mm">Team (<code>/api/v1/admin</code>)</th></tr>
     <tr><td><code>GET /overview</code>, <code>GET /calendar</code>, <code>GET /finances</code></td><td class="plain">Dashboard, month calendar, money for a year</td></tr>
