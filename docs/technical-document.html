@@ -337,7 +337,7 @@
     <li><b>Data protection (Kenya, Data Protection Act 2019).</b> There are privacy and terms pages, and a cookie notice. Marketing consent is opt-in and recorded with a date. Guests can download all their data. Closing an account removes the person's name, email, phone, photo and sign-in, but keeps their bookings and payments for the owner's tax and dispute records.</li>
     <li><b>Checks on every change</b>: a static security scan (Brakeman) and a check of known-vulnerable libraries (bundler-audit) run in GitHub Actions with the tests and lint.</li>
   </ul>
-  <div class="note warn"><strong>Status of the checks on 19 Nov 2026</strong><p>Brakeman reports no warnings. bundler-audit flags the web server library <code>puma</code> 8.0.2, which has known issues fixed in 8.0.3 and later; it must be upgraded before going live. The GitHub Actions checks currently stop before running, because the build machines no longer offer Ruby 4.0.2 (the version in <code>backend/.ruby-version</code>); moving to the latest Ruby 4.0 release fixes this.</p></div>
+  <div class="note warn"><strong>Status of the checks on 19 Nov 2026</strong><p>On Ruby 4.0.9: all 142 backend tests pass, RuboCop finds no offences, Brakeman reports no warnings, and bundler-audit finds no vulnerable libraries (the web server library <code>puma</code> was upgraded from 8.0.2 to 8.1.2 to close known issues).</p></div>
 </section>
 
 <section class="newpage">
@@ -388,7 +388,7 @@
 
 <section>
   <h2><span class="n">11</span>Going live</h2>
-  <p class="intro">Going live means setting up the live servers, the domain and email, and connecting the owner's Paystack account. Apart from the puma upgrade and the CI fix in section 9, each step is configuration only.</p>
+  <p class="intro">Going live means setting up the live servers, the domain and email, and connecting the owner's Paystack account. Each step is configuration only; no code changes are needed.</p>
   <table>
     <thead><tr><th style="width:5%">#</th><th style="width:30%">Step</th><th>What to do</th></tr></thead>
     <tr><td>1</td><td>Live servers</td><td class="plain">Set up the API, website, database with daily backups, and file storage on the development team's servers (section 10).</td></tr>
@@ -415,7 +415,7 @@
 
 <section class="newpage">
   <h2><span class="n">13</span>Developer guide: backend</h2>
-  <p class="intro">Rails 8.1 in API mode, Ruby 4.0.2, PostgreSQL (UUID keys; <code>pgcrypto</code>, <code>citext</code>, <code>btree_gist</code>). JSON under <code>/api/v1</code>. Uploaded files are served under <code>/rails</code> (Active Storage). Time zone: Nairobi.</p>
+  <p class="intro">Rails 8.1 in API mode, Ruby 4.0.9, PostgreSQL (UUID keys; <code>pgcrypto</code>, <code>citext</code>, <code>btree_gist</code>). JSON under <code>/api/v1</code>. Uploaded files are served under <code>/rails</code> (Active Storage). Time zone: Nairobi.</p>
 
   <h3>Run it</h3>
 <pre>cd backend
