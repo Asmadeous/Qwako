@@ -253,7 +253,7 @@ const PlacesFormPage = () => {
                 onChange={handleChange}
                 {...invalid('title')}
               />,
-              { hint: 'Short and clear, for example "Diani Beach Villa".' },
+              { hint: 'Short and clear, for example "Githii Farm House".' },
             )}
             {field(
               'address',
@@ -269,7 +269,7 @@ const PlacesFormPage = () => {
                 {...invalid('address')}
               />,
               {
-                hint: 'Town and county. For example "Diani Beach, Kwale". Kenya is added for you.',
+                hint: 'Town and county. For example "Tatu City, Kiambu". Kenya is added for you.',
                 error: 'country',
               },
             )}

@@ -123,7 +123,7 @@ const CategoryPicker = ({ value, onChange, error, manage }) => {
               type="text"
               maxLength={40}
               value={name}
-              placeholder="For example, Safari lodges"
+              placeholder="For example, Farmhouses"
               aria-invalid={createError ? 'true' : undefined}
               aria-describedby={createError ? 'new-category-error' : undefined}
               onChange={(e) => {

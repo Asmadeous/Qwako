@@ -29,7 +29,7 @@ const Hero = () => (
 
       <div className="mt-auto grid animate-[fadeUp_1.2s_ease-out_0.8s_both] grid-cols-2 gap-y-3 text-sm font-medium md:mt-[14vh] md:grid-cols-4">
         <span>Featured homes</span>
-        <span className="text-right md:text-center">Across Kenya</span>
+        <span className="text-right md:text-center">Tatu City &amp; Githii</span>
         <span className="md:text-center">2026</span>
         <a href="#featured" className="text-right">Explore</a>
       </div>

@@ -17,7 +17,7 @@ const CONFIGS = {
     intro: 'Guests filter the homes page by these. Renaming one updates every home that uses it.',
     noun: 'category',
     endpoint: '/admin/categories',
-    placeholder: 'For example, Safari lodges',
+    placeholder: 'For example, Farmhouses',
     deleteNote: (count) =>
       count ? `${count} ${count === 1 ? 'home uses' : 'homes use'} it. They stay listed, with no category.` : 'No homes use it.',
   },

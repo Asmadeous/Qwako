@@ -5,24 +5,12 @@ import { formatPrice } from '@/utils/currency';
 import { range, useSectionProgress } from './motion';
 import { unsplashSrcSet } from '@/utils/images';
 
-// The 3D "structure" walkthrough on the reference site becomes a full-screen
-// walk through seven featured stays, with the same numbering and progress UI.
-const PICKS = [
-  'Diani Beach Villa',
-  'Shela Village House',
-  'Karen Garden House',
-  'Nanyuki Forest Cabin',
-  'Watamu Ocean House',
-  'Naivasha Lakeside Cottage',
-  'Westlands Skyline Apartment',
-];
-
+// A full-screen walk through the published homes, with numbering and progress UI.
 const Featured = () => {
   const { places } = usePlaces();
   const [ref, p] = useSectionProgress();
 
-  const picked = PICKS.map((t) => places.find((pl) => pl.title === t)).filter(Boolean);
-  const stays = (picked.length >= 4 ? picked : places.slice(0, 7)).slice(0, 7);
+  const stays = places.slice(0, 7);
   const n = Math.max(stays.length, 1);
   const active = Math.min(n - 1, Math.floor(p * n));
 
