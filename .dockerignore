@@ -39,3 +39,13 @@
 # Ignore Docker-related files
 /.dockerignore
 /Dockerfile*
+
+# Ignore the website and project docs (not part of the Rails image).
+/client
+/node_modules
+/docs
+/blueprint
+/.claude
+/AGENTS.md
+/CLAUDE.md
+/README.md

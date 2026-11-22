@@ -3,22 +3,22 @@ node_modules
 .env.production
 .env.development
 qwako-home.png
-client/dist
+/client/dist
 .vercel
 
-# Rails backend
-backend/config/master.key
-backend/config/credentials/*.key
-backend/.env*
-backend/log/*
-!backend/log/.keep
-backend/tmp/*
-!backend/tmp/.keep
-backend/storage/*
-!backend/storage/.keep
-backend/public/assets
-backend/.bundle
-backend/vendor/bundle
+# Rails
+/config/master.key
+/config/credentials/*.key
+/.env*
+/log/*
+!/log/.keep
+/tmp/*
+!/tmp/.keep
+/storage/*
+!/storage/.keep
+/public/assets
+/.bundle
+/vendor/bundle
 
 # Editors and OS
 .DS_Store

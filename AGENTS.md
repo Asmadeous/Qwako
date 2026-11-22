@@ -20,8 +20,8 @@ from an admin dashboard. Not a marketplace.
 
 Layout:
 
-- `backend/` - Rails 8.1 API (Ruby 4.0, PostgreSQL), the only backend. JSON
-  under `/api/v1`; uploaded files through Active Storage (`/rails/...`).
+- Repository root - Rails 8.1 API (Ruby 4.0, PostgreSQL), the only backend.
+  JSON under `/api/v1`; uploaded files through Active Storage (`/rails/...`).
 - `client/` - React 18 + Vite + Tailwind site (JavaScript, shadcn-style UI).
 
 This project is built with the **AI Blueprint**, a workflow layer, not an
@@ -92,7 +92,7 @@ Skills: `adopt`, `audit`, `blueprint-doctor`, `blueprint-status`, `brief`,
 
 Run each from the folder named.
 
-Backend (`backend/`):
+Backend (repository root):
 
 - Setup: `bin/setup --skip-server` (installs gems, prepares databases)
 - Dev server: `bin/rails server` (http://localhost:3000, health check `GET /up`)
@@ -111,7 +111,7 @@ Backend (`backend/`):
   `<site>/api/v1/webhooks/paystack`. Without a key, Kenyan bookings show "We
   couldn't start the payment". Tests use a fake client and never call Paystack.
 - Email (password resets): in development, emails are written to
-  `backend/tmp/mails` instead of being sent. In production set `SMTP_ADDRESS`,
+  `tmp/mails` instead of being sent. In production set `SMTP_ADDRESS`,
   `SMTP_PORT` (default 587), `SMTP_USERNAME`, `SMTP_PASSWORD` and `MAIL_FROM`
   for any SMTP provider; without them "Forgot password" sends nothing.
 
@@ -130,8 +130,8 @@ same-origin. `VITE_API_URL` overrides the Rails host if needed.
 Deploy:
 
 - API: Render web service `tg-bnb-api` (https://tg-bnb-api.onrender.com,
-  Frankfurt, free plan), built from `backend/Dockerfile` on every push to `main`
-  that touches `backend/`. Database: Render Postgres `tg-bnb-db` (free; Render
+  Frankfurt, free plan), built from `backend/Dockerfile` in the old
+  `Asmadeous/Qwako` repo (before Rails moved to the root). Database: Render Postgres `tg-bnb-db` (free; Render
   deletes free databases after 30 days unless upgraded). Env: `DATABASE_URL`,
   `RAILS_MASTER_KEY`, `SOLID_QUEUE_IN_PUMA=1` (jobs run inside Puma), `APP_URL`
   (the Vercel site). The first boot loads the schema and seeds the demo homes.
@@ -146,7 +146,8 @@ Deploy:
   uploads.
 
 Backend CI runs from `.github/workflows/backend.yml` (brakeman, bundler-audit,
-rubocop, tests) on changes under `backend/`. There is no combined Verify command.
+rubocop, tests) on changes outside `client/`, `docs/`, `blueprint/`,
+`.claude/` and Markdown files. There is no combined Verify command.
 
 The backend `Test` command is the test gate for backend logic. The client has no
 test runner yet; run `/tests` to add Vitest when client logic needs it.

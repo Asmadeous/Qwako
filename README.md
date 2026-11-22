@@ -3,7 +3,7 @@
 The direct-booking website for one owner's UK holiday lets. Guests browse stays
 and book nights; the owner manages properties and bookings.
 
-- `backend/` - Rails 8.1 API (Ruby 4.0, PostgreSQL), JSON under `/api/v1`,
+- Repository root - Rails 8.1 API (Ruby 4.0, PostgreSQL), JSON under `/api/v1`,
   cookie sessions, Active Storage for photos.
 - `client/` - React 18 + Vite + Tailwind site.
 
@@ -12,7 +12,6 @@ and book nights; the owner manages properties and bookings.
 Requirements: Ruby 4.0, PostgreSQL, Node 20+ and Yarn.
 
 ```bash
-cd backend
 bin/setup --skip-server   # gems, databases, migrations
 bin/rails db:seed         # amenities, 24 UK demo listings, a dev admin
 bin/rails server          # http://localhost:3000
@@ -33,7 +32,7 @@ In development the seed creates the admin `admin@tgbnb.test` with password
 
 ## Checks
 
-Run these from `backend/`:
+Run these from the repository root:
 
 ```bash
 bin/rails test
