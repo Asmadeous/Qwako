@@ -60,6 +60,7 @@ Rails.application.configure do
   # Password-reset emails go out through any SMTP provider (Gmail, Zoho,
   # SendGrid, Brevo...) set with SMTP_ADDRESS, SMTP_PORT, SMTP_USERNAME and
   # SMTP_PASSWORD, from MAIL_FROM. Links in emails point at APP_URL.
+  config.action_cable.allowed_request_origins = [ ENV["APP_URL"] ].compact
   config.action_mailer.default_url_options = { host: URI(ENV.fetch("APP_URL", "https://example.com")).host }
   if ENV["SMTP_ADDRESS"].present?
     config.action_mailer.delivery_method = :smtp

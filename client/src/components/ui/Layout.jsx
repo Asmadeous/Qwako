@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useLayoutEffect } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 
 import { Header } from './Header';
@@ -10,6 +10,13 @@ const DASHBOARD = /^\/account(\/|$)/;
 
 const Layout = () => {
   const { pathname } = useLocation();
+  const dashboard = DASHBOARD.test(pathname);
+
+  // The dashboard has its own palette (.dash in index.css). It goes on <html>
+  // so dialogs and toasts, which render outside this tree, match it.
+  useLayoutEffect(() => {
+    document.documentElement.classList.toggle('dash', dashboard);
+  }, [dashboard]);
 
   // Each new page starts at the top; in-page anchors (/#featured) still scroll to their section.
   useEffect(() => {
@@ -24,8 +31,8 @@ const Layout = () => {
       >
         Skip to content
       </a>
-      {DASHBOARD.test(pathname) ? <DashboardHeader /> : <Header />}
-      <main id="main" className="mx-auto flex min-h-dvh max-w-screen-xl flex-col px-1 md:px-4">
+      {dashboard ? <DashboardHeader /> : <Header />}
+      <main id="main" className={`mx-auto flex min-h-dvh flex-col px-1 md:px-4 ${dashboard ? 'max-w-[1440px]' : 'max-w-screen-xl'}`}>
         <Outlet />
       </main>
       {/* The marketing footer belongs to browsing pages, not the dashboard or sign-in. */}

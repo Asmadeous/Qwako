@@ -1,0 +1,10 @@
+# Live updates (messages, notifications) go through PostgreSQL's LISTEN/NOTIFY,
+# so they reach every Puma and Solid Queue process without Redis.
+development:
+  adapter: postgresql
+
+test:
+  adapter: test
+
+production:
+  adapter: postgresql

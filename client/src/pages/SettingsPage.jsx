@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { Download, MailCheck } from 'lucide-react';
@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogTitle } from '@/components/ui/dialog';
 import { useAuth } from '../../hooks';
 import { api, errorMessageFrom, fieldErrorsFrom } from '@/utils/axios';
+import { currentPushSubscription, pushSupported, turnOffPush, turnOnPush } from '@/utils/push';
 
 const Section = ({ title, children, description }) => (
   <section className="grid gap-4 border-t border-ink/15 py-8 md:grid-cols-[16rem_minmax(0,1fr)] md:gap-10">
@@ -47,6 +48,31 @@ const SettingsPage = () => {
   const [password, setPassword] = useState('');
   const [closeError, setCloseError] = useState('');
   const [busyClose, setBusyClose] = useState(false);
+  const [pushOn, setPushOn] = useState(false);
+
+  useEffect(() => {
+    currentPushSubscription().then((subscription) => setPushOn(Boolean(subscription)));
+  }, []);
+
+  const togglePush = async (value) => {
+    setSaving('push');
+    try {
+      if (value) {
+        const problem = await turnOnPush();
+        if (problem) toast.error(problem);
+        else toast.success('Push notifications are on for this device.');
+        setPushOn(!problem);
+      } else {
+        await turnOffPush();
+        setPushOn(false);
+        toast.success('Push notifications are off for this device.');
+      }
+    } catch (err) {
+      toast.error(errorMessageFrom(err));
+    } finally {
+      setSaving('');
+    }
+  };
 
   const save = async (key, payload, message) => {
     setSaving(key);
@@ -57,20 +83,11 @@ const SettingsPage = () => {
       return true;
     } catch (err) {
       const fields = fieldErrorsFrom(err);
-      if (key === 'phone') setPhoneError(fields.phone ? `Phone ${fields.phone}` : errorMessageFrom(err));
+      if (key === 'phone') setPhoneError(fields.phone ? fields.phone : errorMessageFrom(err));
       else toast.error(errorMessageFrom(err));
       return false;
     } finally {
       setSaving('');
-    }
-  };
-
-  const resend = async () => {
-    try {
-      await api.post('/email_verification');
-      toast.success(`We sent a new link to ${user.email}.`);
-    } catch (err) {
-      toast.error(errorMessageFrom(err));
     }
   };
 
@@ -137,19 +154,10 @@ const SettingsPage = () => {
           </Section>
 
           <Section title="Email" description={user.email}>
-            {user.email_verified ? (
-              <p className="flex items-center gap-2 text-sm font-medium">
-                <MailCheck aria-hidden className="size-4" />
-                Email address confirmed
-              </p>
-            ) : (
-              <div className="grid gap-2 text-sm">
-                <p>Your email address isn't confirmed yet. Open the link we emailed you.</p>
-                <Button variant="outline" className="justify-self-start" onClick={resend}>
-                  Send the link again
-                </Button>
-              </div>
-            )}
+            <p className="flex items-center gap-2 text-sm font-medium">
+              <MailCheck aria-hidden className="size-4" />
+              Email address confirmed
+            </p>
             <Toggle
               label="Email me about new messages"
               hint="Booking confirmations, receipts and refunds are always emailed."
@@ -157,6 +165,15 @@ const SettingsPage = () => {
               disabled={saving === 'email_messages'}
               onChange={(value) => save('email_messages', { email_messages: value }, 'Email setting saved.')}
             />
+            {pushSupported() && (
+              <Toggle
+                label="Push notifications on this device"
+                hint="Bookings, messages and refunds pop up on this phone or computer, even when the site is closed."
+                checked={pushOn}
+                disabled={saving === 'push'}
+                onChange={togglePush}
+              />
+            )}
             <Toggle
               label="Send me offers and news"
               hint="At most once a month. You can stop at any time."

@@ -4,7 +4,7 @@ module Api
       # Today at a glance: arrivals, departures, requests waiting, occupancy,
       # unread messages and recent reviews.
       class OverviewController < ApplicationController
-        before_action :require_admin
+        before_action :require_team
         before_action -> { Booking.expire_stale_holds! }
 
         def show

@@ -3,14 +3,15 @@ module Api
     module Admin
       # Money in and out for one calendar year, per currency (all homes are in
       # Kenya, so in practice shillings). Refunds still owed and stays already
-      # booked ahead are shown as they stand today, whatever the year.
+      # booked ahead are shown as they stand today, whatever the year. The
+      # payments themselves are listed, a page at a time, by TransactionsController.
       class FinancesController < ApplicationController
         before_action :require_admin
 
         def show
           year = selected_year
           range = Time.zone.local(year).all_year
-          received = Payment.succeeded.where(paid_at: range).includes(booking: %i[guest listing]).order(paid_at: :desc).to_a
+          received = Payment.succeeded.where(paid_at: range).includes(booking: :listing).to_a
           refunded = Payment.succeeded.where(refunded_at: range).to_a
           currencies = (received + refunded).map(&:currency) | refunds_due.keys | booked_ahead.keys
 
@@ -19,8 +20,7 @@ module Api
             years: years_with_payments(year),
             currencies: currencies.sort_by { |c| [ c == "KES" ? 0 : 1, c ] }.map { |currency|
               summary(currency, received.select { |p| p.currency == currency }, refunded.select { |p| p.currency == currency })
-            },
-            payments: received.map { |payment| payment_row(payment) }
+            }
           }
         end
 
@@ -86,19 +86,6 @@ module Api
 
           def refunded_amount(payment)
             payment.refund_cents || payment.amount_cents
-          end
-
-          def payment_row(payment)
-            booking = payment.booking
-            payment.slice(:id, :reference, :amount_cents, :currency, :channel, :paid_at, :refunded_at, :refund_cents).merge(
-              refund_due: payment.refund_due?,
-              booking_id: booking.id,
-              guest_name: booking.guest.name,
-              guest_email: booking.guest.email,
-              listing_title: booking.listing.title,
-              check_in: booking.check_in,
-              check_out: booking.check_out
-            )
           end
       end
     end

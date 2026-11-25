@@ -39,7 +39,7 @@ const ReceiptPage = () => {
       <article className="mt-4 max-w-2xl rounded-3xl border border-ink/15 bg-paper p-6 md:p-10 print:border-0 print:p-0">
         <header className="flex flex-wrap items-start justify-between gap-4 border-b border-ink/15 pb-6">
           <div>
-            <p className="text-lg font-extrabold tracking-tight">T&amp;G BnB</p>
+            <p className="text-lg font-extrabold tracking-tight">TG Homes</p>
             <h1 className="mt-1 text-3xl font-bold tracking-tight">Receipt</h1>
           </div>
           <dl className="tabular text-right text-sm">

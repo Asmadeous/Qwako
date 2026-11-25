@@ -8,14 +8,17 @@ import ConversationThread from '@/components/ui/ConversationThread';
 import StartConversationDialog from '@/components/ui/StartConversationDialog';
 import { Button } from '@/components/ui/button';
 import { EmptyState, ErrorNote, ListSkeleton } from '@/components/ui/PageStates';
+import Pagination, { pageProps } from '@/components/ui/Pagination';
 import useFetch from '@/utils/useFetch';
+import usePageParam from '@/utils/usePageParam';
 
 // The guest's messages with the owner.
 const MessagesPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [writing, setWriting] = useState(false);
-  const { data, error, loading, reload } = useFetch(id ? null : '/conversations');
+  const [page, setPage] = usePageParam();
+  const { data, error, loading, reload } = useFetch(id ? null : '/conversations', { page });
 
   if (id) {
     return (
@@ -37,11 +40,14 @@ const MessagesPage = () => {
           </Button>
         }
       />
-      {loading && <ListSkeleton />}
+      {loading && !data && <ListSkeleton />}
       {error && <ErrorNote onRetry={reload}>{error}</ErrorNote>}
       {data &&
         (data.conversations.length ? (
-          <ConversationList conversations={data.conversations} linkBase="/account/messages" />
+          <>
+            <ConversationList conversations={data.conversations} linkBase="/account/messages" />
+            <Pagination {...pageProps(data)} onPage={setPage} label="conversations" className="mx-4" />
+          </>
         ) : (
           <EmptyState title="No messages yet.">
             Ask the owner about a home with "Message the owner" on its page, or press New message.

@@ -4,12 +4,13 @@ class Api::V1::BookingRulesTest < ActionDispatch::IntegrationTest
   include ActionMailer::TestHelper
 
   test "a paid stay is confirmed, emailed with a receipt, and both sides are notified" do
-    assert_enqueued_emails 2 do # guest receipt + owner
+    assert_enqueued_emails 3 do # guest receipt + owner + staff
       @booking = paid_booking(listing: listings(:cottage), guest: users(:ada), check_in: Date.current + 20, check_out: Date.current + 22)
     end
     assert @booking.confirmed?
     assert_equal "booking_confirmed", users(:ada).notifications.order(:created_at).last.kind
     assert_equal "new_booking", users(:owner).notifications.order(:created_at).last.kind
+    assert_equal "new_booking", users(:staff).notifications.order(:created_at).last.kind
   end
 
   test "check-in instructions and wifi are shown only once the stay is confirmed" do
@@ -89,6 +90,15 @@ class Api::V1::BookingRulesTest < ActionDispatch::IntegrationTest
     assert_equal booking.total_cents, booking.payments.first.reload.refund_cents
     assert_equal "Burst pipe", booking.reload.cancel_reason
     assert_equal "booking_cancelled", users(:ada).notifications.order(:created_at).last.kind
+    assert_match "will be refunded", users(:ada).notifications.order(:created_at).last.body
+  end
+
+  test "the cancellation notice states the refund the guest is getting" do
+    booking = paid_booking(listing: listings(:cottage), guest: users(:ada), check_in: Date.current + 30, check_out: Date.current + 32)
+    assert booking.cancel_by_guest!
+    money = Notify.send(:format_money, booking.total_cents, booking.currency)
+    assert_equal "#{money} will be refunded.", users(:ada).notifications.order(:created_at).last.body.split(". ").last
+    assert_match "#{money} will be refunded.", users(:owner).notifications.order(:created_at).last.body
   end
 
   test "a guest moves their stay to free dates; shorter refunds the difference, longer is refused" do

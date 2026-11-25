@@ -10,6 +10,7 @@ import AuthLayout, {
   checkField,
 } from '@/components/ui/AuthLayout';
 import Spinner from '@/components/ui/Spinner';
+import ResendConfirmation from '@/components/ui/ResendConfirmation';
 import { useAuth } from '../../hooks';
 import { returnPathFrom } from '@/utils';
 import { Button } from '@/components/ui/button';
@@ -23,6 +24,7 @@ const LoginPage = () => {
   const [formData, setFormData] = useState({ email: '', password: '' });
   const [fieldErrors, setFieldErrors] = useState({});
   const [formError, setFormError] = useState('');
+  const [unconfirmedEmail, setUnconfirmedEmail] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [redirect, setRedirect] = useState(false);
   const inFlight = useRef(false);
@@ -78,6 +80,7 @@ const LoginPage = () => {
       return;
     }
     setFormError(response.message);
+    setUnconfirmedEmail(response.code === 'email_unverified' ? formData.email.trim() : '');
     if (response.code === 'invalid_credentials') {
       setFormData((current) => ({ ...current, password: '' }));
       setFocusField('password');
@@ -95,7 +98,7 @@ const LoginPage = () => {
       intro="Welcome back. Sign in to book a home or see your bookings."
       footer={
         <>
-          New to T&amp;G BnB?{' '}
+          New to TG Homes?{' '}
           <Link className={authLinkClass} to="/register" state={location.state}>
             Create an account
           </Link>
@@ -104,6 +107,11 @@ const LoginPage = () => {
     >
       <form onSubmit={handleSubmit} noValidate>
         <FormError>{formError}</FormError>
+        {unconfirmedEmail && (
+          <p className="-mt-3 mb-6 text-sm">
+            <ResendConfirmation email={unconfirmedEmail} />
+          </p>
+        )}
         <AuthField
           id="login-email"
           ref={fieldRefs.email}

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_11_13_000002) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_23_000005) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gist"
   enable_extension "citext"
@@ -221,6 +221,26 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_13_000002) do
     t.index ["sender_id"], name: "index_messages_on_sender_id"
   end
 
+  create_table "newsletter_subscribers", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "email", null: false
+    t.datetime "confirmed_at"
+    t.datetime "unsubscribed_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["email"], name: "index_newsletter_subscribers_on_email", unique: true
+  end
+
+  create_table "newsletters", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "subject", null: false
+    t.text "body", default: "", null: false
+    t.uuid "sent_by_id"
+    t.datetime "sent_at"
+    t.integer "recipients_count", default: 0, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["sent_by_id"], name: "index_newsletters_on_sent_by_id"
+  end
+
   create_table "notifications", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "user_id", null: false
     t.string "kind", null: false
@@ -256,6 +276,33 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_13_000002) do
     t.check_constraint "amount_cents > 0", name: "payments_amount_positive"
     t.check_constraint "currency::text = ANY (ARRAY['KES'::character varying, 'GBP'::character varying]::text[])", name: "payments_currency_valid"
     t.check_constraint "status::text = ANY (ARRAY['pending'::character varying, 'succeeded'::character varying, 'failed'::character varying]::text[])", name: "payments_status_valid"
+  end
+
+  create_table "posts", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "title", null: false
+    t.string "slug", null: false
+    t.string "excerpt", default: "", null: false
+    t.text "body", default: "", null: false
+    t.string "cover_url"
+    t.datetime "published_at"
+    t.uuid "author_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["author_id"], name: "index_posts_on_author_id"
+    t.index ["published_at"], name: "index_posts_on_published_at"
+    t.index ["slug"], name: "index_posts_on_slug", unique: true
+  end
+
+  create_table "push_subscriptions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "user_id", null: false
+    t.text "endpoint", null: false
+    t.string "p256dh", null: false
+    t.string "auth", null: false
+    t.string "user_agent"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["endpoint"], name: "index_push_subscriptions_on_endpoint", unique: true
+    t.index ["user_id"], name: "index_push_subscriptions_on_user_id"
   end
 
   create_table "reviews", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -469,7 +516,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_13_000002) do
     t.datetime "deleted_at"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["google_uid"], name: "index_users_on_google_uid", unique: true
-    t.check_constraint "role::text = ANY (ARRAY['guest'::character varying, 'admin'::character varying]::text[])", name: "users_role_valid"
+    t.check_constraint "role::text = ANY (ARRAY['guest'::character varying, 'staff'::character varying, 'admin'::character varying]::text[])", name: "users_role_valid"
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
@@ -488,8 +535,11 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_13_000002) do
   add_foreign_key "listings", "categories", on_delete: :nullify
   add_foreign_key "messages", "conversations", on_delete: :cascade
   add_foreign_key "messages", "users", column: "sender_id"
+  add_foreign_key "newsletters", "users", column: "sent_by_id"
   add_foreign_key "notifications", "users", on_delete: :cascade
   add_foreign_key "payments", "bookings"
+  add_foreign_key "posts", "users", column: "author_id"
+  add_foreign_key "push_subscriptions", "users"
   add_foreign_key "reviews", "bookings"
   add_foreign_key "reviews", "listings"
   add_foreign_key "reviews", "users", column: "author_id"

@@ -11,6 +11,7 @@ class User < ApplicationRecord
   has_many :saved_homes, through: :saved_listings, source: :listing
   has_many :conversations, foreign_key: :guest_id, inverse_of: :guest, dependent: :restrict_with_error
   has_many :notifications, dependent: :delete_all
+  has_many :push_subscriptions, dependent: :delete_all
   has_many :reviews, foreign_key: :author_id, inverse_of: :author, dependent: :restrict_with_error
   has_one_attached :avatar
 
@@ -23,13 +24,17 @@ class User < ApplicationRecord
     password_salt.last(10)
   end
 
-  enum :role, { guest: "guest", admin: "admin" }, default: "guest", validate: true
+  # admin is the owner: everything. staff run the day to day: bookings,
+  # calendar, guests and messages, but not money, homes, marketing or the team.
+  enum :role, { guest: "guest", staff: "staff", admin: "admin" }, default: "guest", validate: true
+  TEAM_ROLES = %w[admin staff].freeze
 
   normalizes :email, with: ->(email) { email.strip.downcase }
   normalizes :name, with: ->(name) { name.strip }
   normalizes :phone, with: ->(phone) { phone.strip.presence }
 
   scope :kept, -> { where(deleted_at: nil) }
+  scope :team, -> { where(role: TEAM_ROLES) }
 
   validates :email, presence: true,
     format: { with: URI::MailTo::EMAIL_REGEXP, allow_blank: true },
@@ -37,6 +42,8 @@ class User < ApplicationRecord
   validates :name, presence: true, length: { maximum: 100 }
   validates :password, length: { minimum: 8 }, allow_nil: true
   validates :phone, format: { with: PHONE_FORMAT, message: "must be a phone number like +254 712 345 678", allow_nil: true }
+  # Guests signing up with email give a phone so the owner can reach them about a stay.
+  validates :phone, presence: true, on: :registration
   validate :avatar_is_a_small_image
 
   def avatar_url
@@ -44,6 +51,9 @@ class User < ApplicationRecord
   end
 
   def email_verified? = email_verified_at.present?
+
+  # Works on the owner's side of the site (owner or staff).
+  def team? = role.in?(TEAM_ROLES)
 
   def deleted? = deleted_at.present?
 
@@ -54,6 +64,7 @@ class User < ApplicationRecord
       sessions.destroy_all
       saved_listings.delete_all
       notifications.delete_all
+      push_subscriptions.delete_all
       avatar.purge_later if avatar.attached?
       update_columns(name: "Closed account", email: "closed-#{id}@closed.invalid", phone: nil, google_uid: nil,
                      password_digest: BCrypt::Password.create(SecureRandom.hex(32)), marketing_consent_at: nil,

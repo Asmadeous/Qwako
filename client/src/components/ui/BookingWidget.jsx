@@ -8,6 +8,7 @@ import { api, errorMessageFrom, fieldErrorsFrom } from '@/utils/axios';
 import DatePickerWithRange from './DatePickerWithRange';
 import { formatPrice } from '@/utils/currency';
 import { Button } from '@/components/ui/button';
+import { checkField } from '@/components/ui/AuthLayout';
 
 const toISODate = (date) => format(date, 'yyyy-MM-dd');
 
@@ -27,7 +28,7 @@ const initialChoice = (params, maxGuests) => {
 };
 
 const BookingWidget = ({ place }) => {
-  const { user } = useAuth();
+  const { user, setUser } = useAuth();
   const location = useLocation();
   const [searchParams] = useSearchParams();
   const [initial] = useState(() => initialChoice(searchParams, place.max_guests));
@@ -37,7 +38,28 @@ const BookingWidget = ({ place }) => {
   const [formError, setFormError] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [redirect, setRedirect] = useState(null);
+  const [phone, setPhone] = useState('');
+  const [phoneError, setPhoneError] = useState('');
   const inFlight = useRef(false);
+
+  // Booking needs a phone number (Google sign-ups may not have one yet).
+  const needsPhone = Boolean(user && !user.phone);
+
+  // Saves the phone to the guest's profile before the booking starts.
+  const savePhone = async () => {
+    const problem = checkField.phone(phone);
+    setPhoneError(problem);
+    if (problem) return false;
+    try {
+      const { data } = await api.patch('/profile', { phone: phone.trim() });
+      setUser(data.user);
+      return true;
+    } catch (error) {
+      const fields = fieldErrorsFrom(error);
+      setPhoneError(fields.phone ? fields.phone : errorMessageFrom(error));
+      return false;
+    }
+  };
 
   const nights =
     dateRange?.from && dateRange?.to ? differenceInCalendarDays(dateRange.to, dateRange.from) : 0;
@@ -66,6 +88,7 @@ const BookingWidget = ({ place }) => {
     setErrors({});
     setFormError('');
     try {
+      if (needsPhone && !(await savePhone())) return;
       const { data } = await api.post('/bookings', {
         booking: {
           listing_id: place.id,
@@ -159,6 +182,35 @@ const BookingWidget = ({ place }) => {
           )}
         </div>
       </div>
+
+      {needsPhone && (
+        <div className="mt-4 grid gap-1.5">
+          <label htmlFor="booking-phone" className="text-sm font-medium">
+            Phone number
+          </label>
+          <input
+            id="booking-phone"
+            type="tel"
+            inputMode="tel"
+            autoComplete="tel"
+            maxLength={20}
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
+            aria-invalid={phoneError ? 'true' : undefined}
+            aria-describedby={phoneError ? 'booking-phone-error' : 'booking-phone-hint'}
+            className="h-11 w-full rounded-xl border border-ink/25 bg-paper px-3 text-sm text-ink hover:border-ink/50 focus:border-ink focus:outline-none"
+          />
+          {phoneError ? (
+            <p id="booking-phone-error" className="text-sm text-red-700">
+              {phoneError}
+            </p>
+          ) : (
+            <p id="booking-phone-hint" className="text-sm text-ink/60">
+              So the owner can reach you about your stay, e.g. +254 712 345 678
+            </p>
+          )}
+        </div>
+      )}
 
       {formError && (
         <div role="alert" className="mt-4 rounded-xl border border-red-700/40 bg-red-50 p-3 text-sm text-red-800">

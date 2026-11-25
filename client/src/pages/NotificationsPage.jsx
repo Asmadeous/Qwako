@@ -4,20 +4,30 @@ import { CheckCheck } from 'lucide-react';
 import AccountNav from '@/components/ui/AccountNav';
 import { Button } from '@/components/ui/button';
 import { EmptyState, ErrorNote, ListSkeleton } from '@/components/ui/PageStates';
+import Pagination, { pageProps } from '@/components/ui/Pagination';
 import { useNotifications } from '@/providers/NotificationsProvider';
 import { api } from '@/utils/axios';
 import { timeAgo } from '@/utils/format';
+import useFetch from '@/utils/useFetch';
+import usePageParam from '@/utils/usePageParam';
 import { cn } from '@/lib/utils';
 
 const NotificationsPage = () => {
-  const { data, error, loading, reload } = useNotifications();
+  // The bell's count comes from the provider; this page loads its own page of the list.
+  const bell = useNotifications();
+  const [page, setPage] = usePageParam();
+  const { data, error, loading, reload } = useFetch('/notifications', { page });
+  const refresh = () => {
+    reload();
+    bell.reload();
+  };
 
   const markAll = async () => {
     await api.post('/notifications/read_all').catch(() => {});
-    reload();
+    refresh();
   };
   const open = (n) => {
-    if (!n.read_at) api.post(`/notifications/${n.id}/read`).then(reload).catch(() => {});
+    if (!n.read_at) api.post(`/notifications/${n.id}/read`).then(refresh).catch(() => {});
   };
 
   return (
@@ -37,7 +47,7 @@ const NotificationsPage = () => {
       {error && <ErrorNote onRetry={reload}>{error}</ErrorNote>}
       {data &&
         (data.notifications.length ? (
-          <ul className="mx-4 divide-y divide-ink/10 border-y border-ink/10">
+          <ul className="mx-4 divide-y divide-ink/10 rounded-[28px] bg-paper px-5 sm:px-6">
             {data.notifications.map((n) => (
               <li key={n.id}>
                 <Link
@@ -60,6 +70,7 @@ const NotificationsPage = () => {
         ) : (
           <EmptyState title="Nothing new.">Booking updates, refunds and replies to your messages appear here.</EmptyState>
         ))}
+      {data && <Pagination {...pageProps(data)} onPage={setPage} label="notifications" className="mx-4" />}
     </div>
   );
 };

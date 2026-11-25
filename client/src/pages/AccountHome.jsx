@@ -1,13 +1,15 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { differenceInCalendarDays, format, parseISO } from 'date-fns';
-import { AlertCircle, ChevronRight, Plus } from 'lucide-react';
+import { AlertCircle, CalendarCheck, ChevronRight, Home as House, Plus, Undo2, Wallet } from 'lucide-react';
 
 import AccountNav from '@/components/ui/AccountNav';
 import { buttonVariants } from '@/components/ui/button';
 import { useAuth } from '../../hooks';
 import { api, errorMessageFrom } from '@/utils/axios';
-import { formatPrice } from '@/utils/currency';
+import { formatPrice, formatPriceCompact } from '@/utils/currency';
+import { Card, DashBar, Legend, LineChart, PillLink, ShareBars, Toggle } from '@/components/ui/DashCards';
+import { isOwner, isTeam } from '@/utils/roles';
 import GuestOverview from './GuestOverview';
 
 const whenLabel = (iso) => {
@@ -18,55 +20,55 @@ const whenLabel = (iso) => {
   return format(parseISO(iso), 'd MMM');
 };
 
-const Figure = ({ label, value, note, to }) => {
-  const body = (
-    <>
-      <p className="text-sm font-medium text-ink/65">{label}</p>
-      <p className="tabular mt-2 text-2xl font-bold tracking-tight sm:text-3xl">{value}</p>
-      {note && <p className="mt-1 text-sm text-ink/60">{note}</p>}
-    </>
-  );
-  return to ? (
-    <Link to={to} className="block h-full p-4 sm:p-5 transition-colors hover:bg-ink/[0.04]">
-      {body}
-    </Link>
-  ) : (
-    <div className="p-4 sm:p-5">{body}</div>
-  );
-};
+const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
 const Skeleton = ({ className }) => <div className={`animate-pulse rounded-lg bg-ink/[0.07] ${className}`} />;
 
-const OwnerOverview = () => {
+const occupancyWord = (percent) => (percent >= 70 ? 'Busy' : percent >= 40 ? 'Steady' : 'Quiet');
+
+// Staff get today's work; money and homes are for the owner.
+const OwnerOverview = ({ owner }) => {
   const [finances, setFinances] = useState(null);
+  const [year, setYear] = useState(null);
   const [arrivals, setArrivals] = useState(null);
   const [homes, setHomes] = useState(null);
   const [today, setToday] = useState(null);
   const [error, setError] = useState('');
 
   useEffect(() => {
+    const empty = Promise.resolve({ data: null });
     Promise.all([
-      api.get('/admin/finances'),
       api.get('/admin/bookings', { params: { view: 'upcoming' } }),
-      api.get('/admin/listings'),
+      owner ? api.get('/admin/listings') : empty,
       api.get('/admin/overview'),
     ])
-      .then(([f, b, l, o]) => {
-        setFinances(f.data);
+      .then(([b, l, o]) => {
         setArrivals(b.data.bookings.slice(0, 6));
-        setHomes(l.data.listings);
+        setHomes(l.data?.listings ?? []);
         setToday(o.data);
       })
       .catch((err) => setError(errorMessageFrom(err)));
-  }, []);
+  }, [owner]);
 
-  const loading = !finances && !error;
+  // Money for the chosen year (this year to begin with).
+  useEffect(() => {
+    if (!owner) return;
+    api
+      .get('/admin/finances', { params: { year: year ?? undefined } })
+      .then(({ data }) => setFinances(data))
+      .catch((err) => setError(errorMessageFrom(err)));
+  }, [owner, year]);
+
   const main = finances?.currencies?.[0];
   const currency = main?.currency ?? 'KES';
+  const money = (cents) => formatPrice(cents, currency);
   const refundsDue = finances?.currencies?.reduce((n, c) => n + c.refunds_due_count, 0) ?? 0;
   const noPhotos = homes?.filter((h) => h.photos.length === 0) ?? [];
   const noCategory = homes?.filter((h) => !h.category) ?? [];
   const live = homes?.filter((h) => h.status === 'published').length ?? 0;
+  const months = main?.months ?? MONTHS.map((_, i) => ({ month: i + 1, received_cents: 0, refunded_cents: 0, net_cents: 0 }));
+  const bestMonth = Math.max(1, ...months.map((m) => m.net_cents));
+  const byHome = (main?.homes ?? []).filter((h) => h.net_cents > 0).slice(0, 4);
   const todos = [
     ...(today?.requests ?? []).map((r) => ({
       to: `/account/reservations/${r.id}`,
@@ -94,15 +96,81 @@ const OwnerOverview = () => {
     },
   ].filter(Boolean);
 
+  const occupancyCard = (
+    <Card
+      title="Occupancy"
+      kicker="Nights booked"
+      action={<PillLink to="/account/calendar">Calendar</PillLink>}
+      className={owner ? 'lg:col-span-4' : 'lg:col-span-6'}
+    >
+      {!today ? (
+        <Skeleton className="h-28 w-full" />
+      ) : (
+        <div className="grid grow content-end gap-5">
+          <div>
+            <DashBar value={today.occupancy_this_month} />
+            <p className="mt-3 flex items-baseline gap-2">
+              <span className="tabular text-3xl font-light tracking-tight">{today.occupancy_this_month}%</span>
+              <span className="text-sm text-ink/55">this month · {occupancyWord(today.occupancy_this_month)}</span>
+            </p>
+          </div>
+          <div>
+            <DashBar value={today.occupancy_next_30_days} color="rgb(var(--ink))" />
+            <p className="mt-3 flex items-baseline gap-2">
+              <span className="tabular text-3xl font-light tracking-tight">{today.occupancy_next_30_days}%</span>
+              <span className="text-sm text-ink/55">next 30 days · {occupancyWord(today.occupancy_next_30_days)}</span>
+            </p>
+          </div>
+        </div>
+      )}
+    </Card>
+  );
+
+  const todayCard = (
+    <Card title="Today" kicker={format(new Date(), 'EEEE d MMMM')} className={owner ? '' : 'lg:col-span-4'}>
+      {!today ? (
+        <Skeleton className="h-28 w-full" />
+      ) : (
+        <dl className="grid grow grid-cols-3 content-end gap-3">
+          {[
+            { label: 'Arriving', value: today.arrivals_today.length, names: today.arrivals_today },
+            { label: 'Leaving', value: today.departures_today.length, names: today.departures_today },
+            { label: 'Staying now', value: today.in_house },
+          ].map((item) => (
+            <div key={item.label} className="rounded-2xl bg-ink/[0.03] p-3">
+              <dt className="text-xs text-ink/55">{item.label}</dt>
+              <dd className="tabular mt-1 text-3xl font-light tracking-tight">{item.value}</dd>
+              {item.names?.length > 0 && (
+                <dd className="mt-0.5 truncate text-xs text-ink/55">{item.names.map((a) => a.guest_name).join(', ')}</dd>
+              )}
+            </div>
+          ))}
+        </dl>
+      )}
+    </Card>
+  );
+
   return (
     <div className="pb-16">
       <AccountNav
-        description={`Here is how your homes are doing in ${finances?.year ?? new Date().getFullYear()}.`}
+        description={
+          owner
+            ? `Here is how your homes are doing in ${finances?.year ?? new Date().getFullYear()}.`
+            : "Today's arrivals, departures and what needs answering."
+        }
         actions={
-          <Link to="/account/places/new" className={buttonVariants()}>
-            <Plus aria-hidden className="size-4" />
-            Add a home
-          </Link>
+          owner && (
+            <div className="flex flex-wrap gap-2">
+              <Link to="/account/reservations/new" className={buttonVariants({ variant: 'outline' })}>
+                <Plus aria-hidden className="size-4" />
+                New booking
+              </Link>
+              <Link to="/account/places/new" className={buttonVariants()}>
+                <Plus aria-hidden className="size-4" />
+                Add a home
+              </Link>
+            </div>
+          )
         }
       />
 
@@ -112,133 +180,202 @@ const OwnerOverview = () => {
         </p>
       )}
 
-      <section aria-label="Key figures" className="mx-4 grid overflow-hidden grid-cols-2 divide-ink/10 rounded-3xl border border-ink/15 bg-paper lg:grid-cols-4 lg:divide-x [&>*]:border-ink/10 [&>*:nth-child(-n+2)]:border-b [&>*:nth-child(odd)]:border-r lg:[&>*]:!border-b-0 lg:[&>*]:!border-r-0">
-        {loading ? (
-          Array.from({ length: 4 }, (_, i) => (
-            <div key={i} className="p-5">
-              <Skeleton className="h-4 w-24" />
-              <Skeleton className="mt-3 h-8 w-32" />
-            </div>
-          ))
-        ) : (
-          <>
-            <Figure
-              label="Received this year"
-              value={formatPrice(main?.net_cents ?? 0, currency)}
-              note={`${main?.payments_count ?? 0} payments, after refunds`}
-              to="/account/finances"
-            />
-            <Figure
-              label="Booked ahead"
-              value={formatPrice(main?.booked_ahead_cents ?? 0, currency)}
-              note={`${main?.booked_ahead_count ?? 0} confirmed stays`}
-              to="/account/reservations"
-            />
-            <Figure
-              label="Refunds due"
-              value={formatPrice(main?.refunds_due_cents ?? 0, currency)}
-              note={refundsDue ? `${refundsDue} to pay back` : 'Nothing owed'}
-              to={refundsDue ? '/account/reservations?view=refunds' : undefined}
-            />
-            <Figure
-              label="Homes"
-              value={homes?.length ?? 0}
-              note={`${live} listed for guests`}
-              to="/account/places"
-            />
-          </>
+      <div className="mx-4 grid gap-4 lg:grid-cols-12">
+        {owner && (
+          <Card
+            title="Money by home"
+            kicker={`Received in ${finances?.year ?? ''}, after refunds`}
+            action={
+              main && (
+                <span className="grid size-[76px] shrink-0 -rotate-6 content-center place-items-center gap-1 rounded-full bg-brand text-center text-sand shadow-[0_6px_16px_rgb(var(--brand)/0.35)]">
+                  <span className="text-[10px] leading-none opacity-80">Total</span>
+                  <span className="tabular text-xs font-semibold leading-none">{formatPriceCompact(main.net_cents, currency)}</span>
+                </span>
+              )
+            }
+            className="lg:col-span-4"
+          >
+            {!finances ? (
+              <Skeleton className="h-28 w-full" />
+            ) : byHome.length ? (
+              <ShareBars items={byHome.map((h) => ({ label: h.title, value: h.net_cents }))} format={money} />
+            ) : (
+              <p className="text-sm text-ink/55">No payments yet this year. Each home's share shows here once guests pay.</p>
+            )}
+            <PillLink to="/account/transactions" className="mt-4 self-start">
+              Transactions
+            </PillLink>
+          </Card>
         )}
-      </section>
 
-      {today && (
-        <section aria-labelledby="today-heading" className="mx-4 mt-6">
-          <h2 id="today-heading" className="sr-only">
-            Today
-          </h2>
-          <dl className="grid grid-cols-2 gap-3 text-sm md:grid-cols-4">
-            {[
-              { label: 'Arriving today', value: today.arrivals_today.length, note: today.arrivals_today.map((a) => a.guest_name).join(', ') },
-              { label: 'Leaving today', value: today.departures_today.length, note: today.departures_today.map((a) => a.guest_name).join(', ') },
-              { label: 'Booked this month', value: `${today.occupancy_this_month}%`, note: 'of nights across listed homes' },
-              { label: 'Next 30 days', value: `${today.occupancy_next_30_days}%`, note: `booked; ${today.in_house} staying now` },
-            ].map((item) => (
-              <div key={item.label} className="rounded-2xl border border-ink/15 p-4">
-                <dt className="font-medium text-ink/65">{item.label}</dt>
-                <dd className="tabular mt-1 text-2xl font-bold tracking-tight">{item.value}</dd>
-                {item.note && <dd className="mt-0.5 truncate text-ink/60">{item.note}</dd>}
+        {occupancyCard}
+
+        {owner && (
+          <Card title="Received this year" kicker="Payments in, refunds out" className="lg:col-span-4">
+            {!finances ? (
+              <Skeleton className="h-28 w-full" />
+            ) : (
+              <div className="grid grow content-end gap-4">
+                <p className="tabular text-4xl font-light tracking-tight">{money(main?.net_cents ?? 0)}</p>
+                <div aria-hidden className="flex gap-1">
+                  {months.map((m) => (
+                    <span
+                      key={m.month}
+                      title={`${MONTHS[m.month - 1]}: ${money(m.net_cents)}`}
+                      className="h-3 flex-1 rounded-full"
+                      style={{ background: m.net_cents > 0 ? `rgb(var(--brand) / ${0.2 + 0.8 * (m.net_cents / bestMonth)})` : 'rgb(var(--ink) / 0.07)' }}
+                    />
+                  ))}
+                </div>
+                <p className="text-xs text-ink/55">
+                  <span className="font-medium text-emerald-600">{main?.payments_count ?? 0} payments</span> · {money(main?.booked_ahead_cents ?? 0)} booked ahead
+                </p>
               </div>
-            ))}
-          </dl>
-        </section>
-      )}
+            )}
+          </Card>
+        )}
 
-      <div className="mx-4 mt-10 grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,22rem)]">
-        <section aria-labelledby="arrivals-heading">
-          <div className="flex items-baseline justify-between gap-4">
-            <h2 id="arrivals-heading" className="text-xl font-bold tracking-tight">
-              Next arrivals
-            </h2>
-            <Link to="/account/reservations" className="text-sm font-medium underline underline-offset-4">
-              All bookings
-            </Link>
-          </div>
+        {owner && (
+          <Card
+            title="Money flow"
+            kicker="Received and refunded, by month"
+            action={
+              finances?.years?.length > 1 && (
+                <Toggle
+                  label="Year"
+                  value={finances.year}
+                  onChange={setYear}
+                  options={finances.years.slice(0, 3).map((y) => ({ value: y, label: String(y) }))}
+                />
+              )
+            }
+            className="lg:col-span-8"
+          >
+            <Legend
+              items={[
+                { label: 'Received', color: '#22A75E' },
+                { label: 'Refunded', color: 'rgb(var(--brand))' },
+              ]}
+            />
+            {!finances ? (
+              <Skeleton className="mt-4 h-52 w-full" />
+            ) : (
+              <LineChart
+                ariaLabel={`Money received and refunded each month of ${finances.year}`}
+                labels={MONTHS}
+                bars={months.map((m) => Math.max(0, m.net_cents))}
+                series={[
+                  { label: 'Received', color: '#22A75E', values: months.map((m) => m.received_cents) },
+                  { label: 'Refunded', color: 'rgb(var(--brand))', values: months.map((m) => m.refunded_cents) },
+                ]}
+                format={(v) => formatPriceCompact(v, currency)}
+              />
+            )}
+          </Card>
+        )}
+
+        <Card
+          title="Needs your attention"
+          kicker="To do"
+          action={
+            todos.length > 0 && (
+              <span className="tabular grid size-9 place-items-center rounded-full bg-brand text-sm font-semibold text-sand">{todos.length}</span>
+            )
+          }
+          className={owner ? 'lg:col-span-4' : 'lg:col-span-6'}
+        >
+          {today && (homes || !owner) && todos.length === 0 && (
+            <p className="text-sm text-ink/55">
+              {owner
+                ? 'Nothing right now. Requests, unread messages, refunds owed and homes missing photos show up here.'
+                : 'Nothing right now. Requests and unread messages show up here.'}
+            </p>
+          )}
+          {todos.length > 0 && (
+            <ul className="grid gap-2">
+              {todos.map((todo) => (
+                <li key={todo.text}>
+                  <Link
+                    to={todo.to}
+                    className="flex min-h-12 items-center gap-3 rounded-2xl bg-ink/[0.03] px-4 py-3 text-sm transition-colors hover:bg-ink/[0.06]"
+                  >
+                    <span aria-hidden className="grid size-7 shrink-0 place-items-center rounded-full bg-brand/10 text-brand">
+                      <AlertCircle className="size-4" />
+                    </span>
+                    <span className="grow">{todo.text}</span>
+                    <ChevronRight aria-hidden className="size-4 shrink-0 text-ink/40" />
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          )}
+        </Card>
+
+        <Card
+          title="Next arrivals"
+          kicker="Upcoming stays"
+          action={<PillLink to="/account/reservations">All bookings</PillLink>}
+          className="lg:col-span-8"
+        >
           {!arrivals && !error ? (
-            <div className="mt-4 grid gap-2">
+            <div className="grid gap-2">
               {Array.from({ length: 3 }, (_, i) => (
-                <Skeleton key={i} className="h-16 w-full" />
+                <Skeleton key={i} className="h-14 w-full" />
               ))}
             </div>
           ) : arrivals?.length ? (
-            <ul className="mt-4 divide-y divide-ink/10 border-y border-ink/10">
+            <ul className="divide-y divide-ink/[0.06]">
               {arrivals.map((b) => (
                 <li key={b.id}>
                   <Link
                     to={`/account/reservations/${b.id}`}
-                    className="grid grid-cols-[5.5rem_minmax(0,1fr)_auto] items-center gap-4 py-3 transition-colors hover:bg-ink/[0.03]"
+                    className="-mx-2 grid grid-cols-[5.5rem_minmax(0,1fr)_auto] items-center gap-4 rounded-xl px-2 py-3 transition-colors hover:bg-ink/[0.03]"
                   >
-                    <span className="text-sm font-semibold">{whenLabel(b.check_in)}</span>
+                    <span className="w-fit rounded-full bg-ink/[0.05] px-2.5 py-1 text-xs font-medium">{whenLabel(b.check_in)}</span>
                     <span className="min-w-0">
-                      <span className="block truncate font-medium">{b.guest.name}</span>
-                      <span className="block truncate text-sm text-ink/60">
+                      <span className="block truncate text-sm font-medium">{b.guest.name}</span>
+                      <span className="block truncate text-xs text-ink/55">
                         {b.listing.title}, {b.nights} {b.nights === 1 ? 'night' : 'nights'}
                       </span>
                     </span>
-                    <span className="tabular text-sm">{formatPrice(b.total_cents, b.currency)}</span>
+                    <span className="tabular text-sm">
+                      {owner ? formatPrice(b.total_cents, b.currency) : `${b.guests_count} ${b.guests_count === 1 ? 'guest' : 'guests'}`}
+                    </span>
                   </Link>
                 </li>
               ))}
             </ul>
           ) : (
-            <p className="mt-4 rounded-2xl border border-dashed border-ink/25 p-6 text-sm text-ink/70">
-              No upcoming stays. New bookings show up here as soon as guests book.
-            </p>
+            <p className="text-sm text-ink/55">No upcoming stays. New bookings show up here as soon as guests book.</p>
           )}
-        </section>
+        </Card>
 
-        <section aria-labelledby="todo-heading">
-          <h2 id="todo-heading" className="text-xl font-bold tracking-tight">
-            Needs your attention
-          </h2>
-          {homes && todos.length === 0 && (
-            <p className="mt-4 text-sm text-ink/70">Nothing right now. Requests, unread messages, refunds owed and homes missing photos show up here.</p>
-          )}
-          {todos.length > 0 && (
-            <ul className="mt-4 grid gap-2">
-              {todos.map((todo) => (
-                <li key={todo.text}>
-                  <Link
-                    to={todo.to}
-                    className="flex min-h-12 items-center gap-3 rounded-xl border border-ink/15 bg-paper px-4 py-3 text-sm font-medium transition-colors hover:border-ink/40"
-                  >
-                    <AlertCircle aria-hidden className="size-4 shrink-0 text-red-800" />
-                    <span className="grow">{todo.text}</span>
-                    <ChevronRight aria-hidden className="size-4 shrink-0 text-ink/50" />
+        {owner ? (
+          <div className="grid content-start gap-4 lg:col-span-4">
+            {todayCard}
+            <Card title="At a glance" kicker="Right now">
+              <dl className="grid grid-cols-2 gap-3">
+                {[
+                  { label: 'Booked ahead', value: money(main?.booked_ahead_cents ?? 0), note: `${main?.booked_ahead_count ?? 0} confirmed stays`, to: '/account/reservations', icon: CalendarCheck },
+                  { label: 'Refunds due', value: money(main?.refunds_due_cents ?? 0), note: refundsDue ? `${refundsDue} to pay back` : 'Nothing owed', to: '/account/reservations?view=refunds', icon: Undo2 },
+                  { label: 'Homes', value: homes?.length ?? 0, note: `${live} listed for guests`, to: '/account/places', icon: House },
+                  { label: 'Payments', value: main?.payments_count ?? 0, note: `in ${finances?.year ?? ''}`, to: '/account/transactions', icon: Wallet },
+                ].map(({ icon: Icon, ...item }) => (
+                  <Link key={item.label} to={item.to} className="group rounded-2xl bg-ink/[0.03] p-4 transition-colors hover:bg-ink/[0.06]">
+                    <span aria-hidden className="grid size-9 place-items-center rounded-xl bg-brand/10 text-brand">
+                      <Icon className="size-4" />
+                    </span>
+                    <dt className="mt-3 text-xs text-ink/55">{item.label}</dt>
+                    <dd className="tabular mt-0.5 truncate text-xl font-light tracking-tight">{finances || homes ? item.value : '…'}</dd>
+                    <dd className="truncate text-xs text-ink/50">{item.note}</dd>
                   </Link>
-                </li>
-              ))}
-            </ul>
-          )}
-        </section>
+                ))}
+              </dl>
+            </Card>
+          </div>
+        ) : (
+          todayCard
+        )}
       </div>
     </div>
   );
@@ -247,7 +384,7 @@ const OwnerOverview = () => {
 // /account: the owner's overview, or the guest's.
 const AccountHome = () => {
   const { user } = useAuth();
-  return user?.role === 'admin' ? <OwnerOverview /> : <GuestOverview />;
+  return isTeam(user) ? <OwnerOverview owner={isOwner(user)} /> : <GuestOverview />;
 };
 
 export default AccountHome;

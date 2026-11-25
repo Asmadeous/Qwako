@@ -5,7 +5,7 @@ class AvailabilityBlock < ApplicationRecord
 
   validates :starts_on, :ends_on, presence: true
   validates :reason, length: { maximum: 120 }
-  validate :dates_ordered, :no_stays_in_the_way, on: :create
+  validate :dates_ordered, :no_stays_in_the_way
 
   scope :overlapping, ->(from, to) { where("daterange(starts_on, ends_on) && daterange(?, ?)", from, to) }
 

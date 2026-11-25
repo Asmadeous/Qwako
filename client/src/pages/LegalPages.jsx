@@ -17,7 +17,7 @@ export const PrivacyPage = () => (
     <section>
       <h2>Who we are</h2>
       <p className="mt-2">
-        T&amp;G BnB lets you book the owner's holiday homes in Kenya directly. The owner is the data controller for the
+        TG Homes lets you book the owner's holiday homes in Kenya directly. The owner is the data controller for the
         personal data on this site, under Kenya's Data Protection Act 2019. Questions:{' '}
         <Link to="/contact" className="underline underline-offset-4">contact us</Link>.
       </p>

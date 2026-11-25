@@ -58,7 +58,7 @@ const ContactPage = () => {
                 aria-invalid={errors[key] ? 'true' : undefined}
                 className={field}
               />
-              {errors[key] && <span className="text-sm text-red-800">{label.replace(' (optional)', '')} {errors[key]}</span>}
+              {errors[key] && <span className="text-sm text-red-800">{errors[key]}</span>}
             </label>
           ))}
           <label className="grid gap-1.5">
@@ -71,7 +71,7 @@ const ContactPage = () => {
               aria-invalid={errors.body ? 'true' : undefined}
               className="rounded-xl border border-ink/25 bg-paper px-3 py-2 text-sm focus:border-ink focus:outline-none aria-[invalid=true]:border-red-700"
             />
-            {errors.body && <span className="text-sm text-red-800">Message {errors.body}</span>}
+            {errors.body && <span className="text-sm text-red-800">{errors.body}</span>}
           </label>
           {formError && !Object.keys(errors).length && (
             <p role="alert" className="text-sm font-semibold text-red-800">

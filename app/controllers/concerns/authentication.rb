@@ -24,8 +24,10 @@ module Authentication
       Current.session ||= find_session_by_cookie
     end
 
+    # An account whose email is not confirmed yet cannot use a session.
     def find_session_by_cookie
-      Session.find_by(id: cookies.signed[:session_id]) if cookies.signed[:session_id]
+      session = Session.includes(:user).find_by(id: cookies.signed[:session_id]) if cookies.signed[:session_id]
+      session if session&.user&.email_verified?
     end
 
     def start_new_session_for(user)

@@ -3,7 +3,7 @@ module Api
     module Admin
       # One month across every home: booked, blocked and free nights.
       class CalendarController < ApplicationController
-        before_action :require_admin
+        before_action :require_team
         before_action -> { Booking.expire_stale_holds! }
 
         # ?month=2026-11 (defaults to this month)

@@ -1,0 +1,22 @@
+Hello <%= @user.name %>,
+
+Welcome to TG Homes, and thank you for joining us. We're glad you're here.
+
+<% if @confirm_url %>One step first: confirm this is your email address so you can sign in. The link works for 3 days.
+<%= @confirm_url %>
+
+<% end %>With your account you can:
+- book a stay at our homes and pay by M-Pesa or card
+- save homes you like for later
+- message us about a home or your stay, and send any files we need
+- see your bookings, receipts and check-in details in one place
+
+Browse the homes: <%= @homes_url %>
+Your account: <%= @account_url %>
+
+Warm regards,
+TG Homes
+<% if @confirm_url %>
+
+If you didn't make an account, ignore this email.
+<% end %>

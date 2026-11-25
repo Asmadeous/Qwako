@@ -15,9 +15,9 @@ import './home.css';
 
 const HomePage = () => {
   useEffect(() => {
-    document.title = 'T&G BnB | Holiday homes in Kenya';
+    document.title = 'TG Homes | Holiday homes in Kenya';
     return () => {
-      document.title = 'T&G BnB';
+      document.title = 'TG Homes';
     };
   }, []);
 

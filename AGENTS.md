@@ -13,7 +13,7 @@ for optional tool settings.
 
 ## What this is
 
-T&G BnB is the direct-booking website for one owner's holiday homes in Kenya
+TG Homes is the direct-booking website for one owner's holiday homes in Kenya
 (Kenya only; prices in Kenyan shillings, paid through Paystack): guests
 browse and book nights, and the owner manages properties, bookings and payments
 from an admin dashboard. Not a marketplace.
@@ -100,7 +100,8 @@ Backend (repository root):
 - Seed: `bin/rails db:seed` (amenities, 12 Kenyan demo listings, and an admin from
   `SEED_ADMIN_EMAIL`/`SEED_ADMIN_PASSWORD`; dev default `admin@tgbnb.test` /
   `admin-dev-password`; no admin is seeded in production without both vars; dev
-  also gets a guest `guest@tgbnb.test` / `guest-dev-password`)
+  also gets a guest `guest@tgbnb.test` / `guest-dev-password` and a staff member
+  `staff@tgbnb.test` / `staff-dev-password`)
 - Test: `bin/rails test` (Minitest)
 - Lint: `bin/rubocop`
 - Security scans: `bin/brakeman --no-pager` and `bin/bundler-audit`

@@ -42,16 +42,19 @@ export const Header = () => {
     >
       <div className="mx-auto flex max-w-screen-xl items-center justify-between gap-4 px-5 py-2 md:px-8">
         <Link to="/" className="inline-flex min-h-11 items-center whitespace-nowrap text-base font-extrabold tracking-tight">
-          T&amp;G BnB
+          TG Homes
         </Link>
 
         <nav className="flex items-center gap-5 md:gap-7" aria-label="Main">
           <NavLink to="/homes" className={navClass}>
             Homes
           </NavLink>
+          <NavLink to="/blog" className={navClass}>
+            Journal
+          </NavLink>
           {user ? (
             <Link to="/account" className="flex min-h-11 items-center gap-2 text-sm font-medium hover:underline">
-              <span className="hidden md:inline">{user.role === 'admin' ? 'Dashboard' : 'Account'}</span>
+              <span className="hidden md:inline">{user.role === 'admin' || user.role === 'staff' ? 'Dashboard' : 'Account'}</span>
               <Avatar className="flex h-8 w-8 overflow-hidden rounded-full">
                 {user.avatar_url && (
                   <AvatarImage src={user.avatar_url} alt="" className="h-full w-full object-cover" />

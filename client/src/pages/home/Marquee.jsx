@@ -1,7 +1,7 @@
 import { IMG } from './images';
 import { ease, lerp, range, useSectionProgress, photoProps } from './motion';
 
-const WORD = 'T&G BnB';
+const WORD = 'TG Homes';
 
 const Marquee = () => {
   const [ref, p] = useSectionProgress();

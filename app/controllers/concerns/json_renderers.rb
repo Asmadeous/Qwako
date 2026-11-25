@@ -70,14 +70,16 @@ module JsonRenderers
         guest: conversation.guest.slice(:id, :name, :email),
         listing_title: conversation.listing&.title,
         unread: conversation.unread_for?(viewer),
-        preview: last&.body.to_s.truncate(120)
+        preview: last&.summary.to_s.truncate(120)
       )
     end
 
     def message_json(message)
-      message.slice(:id, :body, :created_at).merge(
-        sender_name: message.sender.name, from_owner: message.sender.admin?, sender_id: message.sender_id
-      )
+      message.payload
+    end
+
+    def post_summary_json(post)
+      post.slice(:id, :title, :slug, :excerpt, :cover_url, :published_at).merge(author: post.author&.name)
     end
 
     def notification_json(notification)

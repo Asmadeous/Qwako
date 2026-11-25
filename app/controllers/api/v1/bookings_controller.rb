@@ -9,9 +9,25 @@ module Api
 
       before_action -> { Booking.expire_stale_holds! }
 
+      VIEWS = %w[upcoming past cancelled].freeze
+
+      # ?page= (with ?view=upcoming|past|cancelled) for the Bookings page; without
+      # it every booking (for the overview).
       def index
-        bookings = Current.user.bookings.includes(*INCLUDES).order(check_in: :desc)
-        render json: { bookings: bookings.map { |booking| booking_json(booking) } }
+        bookings = Current.user.bookings.includes(*INCLUDES)
+        return render json: { bookings: bookings.order(check_in: :desc).map { |booking| booking_json(booking) } } if params[:page].blank?
+
+        view = VIEWS.include?(params[:view]) ? params[:view] : "upcoming"
+        views = {
+          "upcoming" => bookings.where.not(status: Booking::ENDED_STATUSES).where(check_out: Time.zone.today..).order(check_in: :asc, id: :asc),
+          "past" => bookings.where.not(status: Booking::ENDED_STATUSES).where(check_out: ...Time.zone.today).order(check_in: :desc, id: :desc),
+          "cancelled" => bookings.where(status: Booking::ENDED_STATUSES).order(check_in: :desc, id: :desc)
+        }
+        rows, meta = page_of(views[view], 10)
+        render json: {
+          bookings: rows.map { |booking| booking_json(booking) }, view:, **meta,
+          counts: views.transform_values { |scope| scope.unscope(:includes, :order).count }
+        }
       end
 
       def show
@@ -19,8 +35,14 @@ module Api
         render json: { booking: booking_json(booking).merge(payments: booking.payments.sort_by(&:created_at).map { |p| receipt_payment_json(p) }) }
       end
 
-      # The dates are held while the guest pays through Paystack.
+      # The dates are held while the guest pays through Paystack. The owner needs a
+      # phone number to reach the guest (Google sign-ups may not have one yet).
       def create
+        if Current.user.phone.blank?
+          return render_error(:phone_required, "Add a phone number so the owner can reach you about your stay.",
+            status: :unprocessable_content)
+        end
+
         booking = Current.user.bookings.new(booking_params.merge(status: "pending_payment"))
         booking.listing = Listing.find_by(id: booking_params[:listing_id])
         return render_validation_errors(booking) unless save_booking(booking)

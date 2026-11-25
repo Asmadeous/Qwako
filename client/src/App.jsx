@@ -7,7 +7,7 @@ import Layout from './components/ui/Layout';
 import RequireSignIn from './components/ui/RequireSignIn';
 import DashboardLayout from './components/ui/DashboardLayout';
 import AccountHome from './pages/AccountHome';
-import FinancesPage from './pages/FinancesPage';
+import TransactionsPage from './pages/TransactionsPage';
 import IndexPage from './pages/IndexPage';
 import HomePage from './pages/home/HomePage';
 import RegisterPage from './pages/RegisterPage';
@@ -38,9 +38,14 @@ import ReviewsPage from './pages/ReviewsPage';
 import TeamPage from './pages/TeamPage';
 import ActivityPage from './pages/ActivityPage';
 import RequireOwner from './components/ui/RequireOwner';
+import NewBookingPage from './pages/NewBookingPage';
 import { PrivacyPage, TermsPage } from './pages/LegalPages';
 import ContactPage from './pages/ContactPage';
 import VerifyEmailPage from './pages/VerifyEmailPage';
+import NewsletterPage from './pages/NewsletterPage';
+import { BlogPage, BlogPostPage } from './pages/BlogPages';
+import { BlogAdminPage, BlogPostFormPage } from './pages/BlogAdminPages';
+import { NewsletterConfirmPage, NewsletterUnsubscribePage } from './pages/NewsletterLinkPages';
 import CookieNotice from './components/ui/CookieNotice';
 import { NotificationsProvider } from './providers/NotificationsProvider';
 
@@ -72,6 +77,10 @@ function App() {
               <Route path="/terms" element={<TermsPage />} />
               <Route path="/contact" element={<ContactPage />} />
               <Route path="/verify-email" element={<VerifyEmailPage />} />
+              <Route path="/blog" element={<BlogPage />} />
+              <Route path="/blog/:slug" element={<BlogPostPage />} />
+              <Route path="/newsletter/confirm" element={<NewsletterConfirmPage />} />
+              <Route path="/newsletter/unsubscribe" element={<NewsletterUnsubscribePage />} />
               <Route element={<RequireSignIn />}>
                 <Route element={<DashboardLayout />}>
                 <Route path="/account" element={<AccountHome />} />
@@ -84,11 +93,9 @@ function App() {
                 <Route path="/account/saved" element={<SavedPage />} />
                 <Route path="/account/messages" element={<MessagesPage />} />
                 <Route path="/account/messages/:id" element={<MessagesPage />} />
+                <Route path="/account/transactions" element={<TransactionsPage />} />
+                <Route path="/account/finances" element={<Navigate to="/account/transactions" replace />} />
                 <Route element={<RequireOwner />}>
-                  <Route path="/account/finances" element={<FinancesPage />} />
-                  <Route path="/account/places" element={<PlacesPage />} />
-                  <Route path="/account/places/new" element={<PlacesFormPage />} />
-                  <Route path="/account/places/:id" element={<PlacesFormPage />} />
                   <Route path="/account/reservations" element={<OwnerBookingsPage />} />
                   <Route path="/account/reservations/:id" element={<OwnerBookingPage />} />
                   <Route path="/account/calendar" element={<CalendarPage />} />
@@ -97,8 +104,18 @@ function App() {
                   <Route path="/account/guests" element={<GuestsPage />} />
                   <Route path="/account/guests/:id" element={<GuestsPage />} />
                   <Route path="/account/reviews" element={<ReviewsPage />} />
+                </Route>
+                <Route element={<RequireOwner ownerOnly />}>
+                  <Route path="/account/reservations/new" element={<NewBookingPage />} />
+                  <Route path="/account/places" element={<PlacesPage />} />
+                  <Route path="/account/places/new" element={<PlacesFormPage />} />
+                  <Route path="/account/places/:id" element={<PlacesFormPage />} />
                   <Route path="/account/team" element={<TeamPage />} />
                   <Route path="/account/activity" element={<ActivityPage />} />
+                  <Route path="/account/newsletter" element={<NewsletterPage />} />
+                  <Route path="/account/blog" element={<BlogAdminPage />} />
+                  <Route path="/account/blog/new" element={<BlogPostFormPage />} />
+                  <Route path="/account/blog/:id" element={<BlogPostFormPage />} />
                 </Route>
                 </Route>
               </Route>

@@ -33,7 +33,7 @@ const ActivityPage = () => {
       {data &&
         (data.entries.length ? (
           <div className="mx-4">
-            <ol className="divide-y divide-ink/10 border-y border-ink/10">
+            <ol className="divide-y divide-ink/10 rounded-[28px] bg-paper px-5 sm:px-6">
               {data.entries.map((e) => (
                 <li key={e.id} className="grid gap-1 py-3 text-sm sm:grid-cols-[11rem_minmax(0,1fr)]">
                   <span className="tabular text-ink/60">{formatDateTime(e.created_at)}</span>

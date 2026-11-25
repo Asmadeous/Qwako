@@ -50,10 +50,7 @@ class Api::V1::Admin::FinancesTest < ActionDispatch::IntegrationTest
     assert_equal Booking.confirmed.where(check_in: Date.current..).sum(:total_cents), kes["booked_ahead_cents"]
     assert_operator kes["booked_ahead_cents"], :>=, bookings(:grace_cottage).total_cents
 
-    assert_equal 3, body["payments"].size
-    owed_row = body["payments"].find { |p| p["reference"] == @owed.reference }
-    assert owed_row["refund_due"]
-    assert_equal "Grace", owed_row["guest_name"].split.first
+    assert_nil body["payments"]
   end
 
   test "an earlier year shows only that year's payments" do
@@ -62,7 +59,6 @@ class Api::V1::Admin::FinancesTest < ActionDispatch::IntegrationTest
     assert_response :ok
     kes = response.parsed_body["currencies"].find { |c| c["currency"] == "KES" }
     assert_equal 1, kes["payments_count"]
-    assert_equal 1, response.parsed_body["payments"].size
   end
 
   test "an out-of-range year falls back to this year" do

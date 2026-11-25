@@ -10,17 +10,25 @@ export const BOOKING_STATUS_LABELS = {
   completed: 'Completed',
 };
 
-// The owner sees the same statuses from the other side.
+// The owner and staff see the same statuses from the other side.
 const OWNER_LABELS = {
   ...BOOKING_STATUS_LABELS,
   cancelled_by_guest: 'Cancelled by the guest',
-  cancelled_by_owner: 'Cancelled by you',
+  cancelled_by_owner: 'Cancelled by us',
 };
 
 export const bookingStatusLabel = (status, { owner = false } = {}) =>
   (owner ? OWNER_LABELS : BOOKING_STATUS_LABELS)[status] ?? status;
 
-const CHANNELS = { mobile_money: 'M-Pesa', card: 'card', bank: 'bank', bank_transfer: 'bank transfer', ussd: 'USSD' };
+const CHANNELS = {
+  mobile_money: 'M-Pesa',
+  mpesa: 'M-Pesa',
+  cash: 'cash',
+  card: 'card',
+  bank: 'bank',
+  bank_transfer: 'bank transfer',
+  ussd: 'USSD',
+};
 
 // "Paid by M-Pesa", "Refund due" and so on, for the owner's booking lists.
 export const paymentSummary = (booking) => {

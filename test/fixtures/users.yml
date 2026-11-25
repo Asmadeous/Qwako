@@ -3,15 +3,29 @@
 ada:
   email: ada@example.com
   name: Ada Lovelace
+  phone: +254 712 345 678
+  email_verified_at: <%= Time.current %>
   password_digest: <%= password_digest %>
 
 grace:
   email: grace@example.com
   name: Grace Hopper
+  phone: +254 712 345 678
+  email_verified_at: <%= Time.current %>
   password_digest: <%= password_digest %>
 
 owner:
   email: owner@example.com
   name: Owner
+  phone: +254 712 345 678
+  email_verified_at: <%= Time.current %>
   role: admin
+  password_digest: <%= password_digest %>
+
+staff:
+  email: staff@example.com
+  name: Wambui Staff
+  phone: +254 712 345 679
+  email_verified_at: <%= Time.current %>
+  role: staff
   password_digest: <%= password_digest %>

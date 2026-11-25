@@ -1,0 +1,14 @@
+# Browsers and phones that asked for push notifications (Web Push).
+class CreatePushSubscriptions < ActiveRecord::Migration[8.1]
+  def change
+    create_table :push_subscriptions, id: :uuid do |t|
+      t.references :user, null: false, foreign_key: true, type: :uuid
+      t.text :endpoint, null: false
+      t.string :p256dh, null: false
+      t.string :auth, null: false
+      t.string :user_agent
+      t.timestamps
+    end
+    add_index :push_subscriptions, :endpoint, unique: true
+  end
+end

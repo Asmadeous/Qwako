@@ -1,59 +1,39 @@
-import React, { useEffect, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
-import { format } from 'date-fns';
 import { ViewTabs } from '@/components/ui/PageStates';
 
 import AccountNav from '@/components/ui/AccountNav';
 import PlaceImg from '@/components/ui/PlaceImg';
 import BookingDates from '@/components/ui/BookingDates';
 import Spinner from '@/components/ui/Spinner';
-import { api } from '@/utils/axios';
+import Pagination, { pageProps } from '@/components/ui/Pagination';
+import useFetch from '@/utils/useFetch';
+import usePageParam from '@/utils/usePageParam';
 import { formatPrice } from '@/utils/currency';
 import { bookingStatusLabel } from '@/utils/bookingStatus';
 import { buttonVariants } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
+// The guest's bookings, a tab and a page at a time: upcoming soonest first,
+// past and cancelled latest first.
 const BookingsPage = () => {
-  const [bookings, setBookings] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
   const [searchParams, setSearchParams] = useSearchParams();
   const view = ['upcoming', 'past', 'cancelled'].includes(searchParams.get('view')) ? searchParams.get('view') : 'upcoming';
+  const [page, setPage] = usePageParam();
+  const { data, error, loading } = useFetch('/bookings', { view, page });
 
-  useEffect(() => {
-    const getBookings = async () => {
-      try {
-        const { data } = await api.get('/bookings');
-        setBookings(data.bookings);
-      } catch {
-        setError('We could not load your bookings. Please try again.');
-      } finally {
-        setLoading(false);
-      }
-    };
-    getBookings();
-  }, []);
-
-  if (loading) return <Spinner />;
+  if (loading && !data) return <Spinner />;
   if (error) {
     return (
       <div>
         <AccountNav />
-        <p role="alert" className="mx-4">{error}</p>
+        <p role="alert" className="mx-4">We could not load your bookings. Please try again.</p>
       </div>
     );
   }
 
-  const today = format(new Date(), 'yyyy-MM-dd');
-  const ended = ['declined', 'expired', 'cancelled_by_guest', 'cancelled_by_owner'];
-  const groups = {
-    upcoming: bookings.filter((b) => !ended.includes(b.status) && b.check_out >= today).reverse(),
-    past: bookings.filter((b) => !ended.includes(b.status) && b.check_out < today),
-    cancelled: bookings.filter((b) => ended.includes(b.status)),
-  };
-  const shown = groups[view];
+  const shown = data.bookings;
   const emptyText = {
-    upcoming: 'No trips coming up.',
+    upcoming: 'No bookings coming up.',
     past: 'No past stays yet.',
     cancelled: 'No cancelled bookings.',
   };
@@ -62,12 +42,12 @@ const BookingsPage = () => {
     <div>
       <AccountNav />
       <ViewTabs
-        label="Trips"
+        label="Bookings"
         current={view}
         onChange={(id) => setSearchParams(id === 'upcoming' ? {} : { view: id })}
         tabs={[
-          { id: 'upcoming', label: 'Upcoming', count: groups.upcoming.length },
-          { id: 'past', label: 'Past', count: groups.past.length },
+          { id: 'upcoming', label: 'Upcoming', count: data.counts.upcoming },
+          { id: 'past', label: 'Past', count: data.counts.past },
           { id: 'cancelled', label: 'Cancelled' },
         ]}
       />
@@ -113,6 +93,7 @@ const BookingsPage = () => {
           </div>
         )}
       </div>
+      <Pagination {...pageProps(data)} onPage={setPage} label="bookings" className="mx-4 pb-8" />
     </div>
   );
 };

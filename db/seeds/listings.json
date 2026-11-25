@@ -19,6 +19,7 @@
       "/listings/grace-d8-09/01-exterior.jpg",
       "/listings/grace-d8-09/03-living-room.jpg",
       "/listings/grace-d8-09/04-kitchen.jpg",
+      "/listings/grace-d8-09/10-kitchen-oven.jpg",
       "/listings/grace-d8-09/05-breakfast-bar.jpg",
       "/listings/grace-d8-09/06-main-bedroom.jpg",
       "/listings/grace-d8-09/07-second-bedroom.jpg",
@@ -35,19 +36,39 @@
     "title": "Githii Farm House",
     "status": "draft",
     "category": "Farmhouses",
-    "address": "Githii, Kenya",
-    "description": "Placeholder while we wait for the owner's details. Replace this text, the price and the photo, then publish.",
+    "address": "Githii, Nyandarua County, Kenya",
+    "description": "Exclusive use of the entire four-bedroom farmhouse in Nyandarua, which sleeps 6–8 guests. The nightly rate includes fresh farm produce for breakfast, such as eggs, milk and seasonal vegetables, subject to availability.\n\nBedrooms and bathrooms\nFour bedrooms with warm bedding, four en-suite bathrooms with hot showers, towels and toiletries, and electric blankets or hot water bottles.\n\nLiving and dining\nA lounge with sofas, a dining table for 6–8 guests and an indoor fireplace or wood stove.\n\nSelf-catering kitchen\nCooker, fridge, microwave, kettle, toaster, cookware, crockery and cutlery for eight, drinking water and tea and coffee supplies.\n\nWi-Fi, entertainment and power\nWi-Fi, a smart TV with Netflix or DStv, backup power and a dedicated workspace.\n\nOutdoor space\nA garden with outdoor seating, a fire pit and BBQ grill, a veranda or balcony overlooking the Aberdares, secure parking and an on-site caretaker.\n\nFarm experiences\nDepending on the season, guests can tour the farm, watch milking, feed animals, pick strawberries or visit the vegetable garden.\n\nIncluded in the nightly rate\nCaretaker support, daily housekeeping, fresh linen, firewood and farm produce for breakfast.\n\nAvailable at an extra charge\nA private chef and guided outings in Nakuru and Nyandarua.",
     "house_rules": "",
-    "max_guests": 1,
-    "nightly_price_cents": 100,
+    "max_guests": 8,
+    "nightly_price_cents": 910000,
     "cleaning_charge_cents": 0,
-    "amenity_keys": [],
+    "amenity_keys": [
+      "wifi",
+      "kitchen",
+      "tv",
+      "parking",
+      "balcony",
+      "hot_showers",
+      "fireplace",
+      "workspace",
+      "backup_power",
+      "garden",
+      "fire_pit",
+      "bbq_grill",
+      "caretaker",
+      "housekeeping"
+    ],
     "photo_urls": [
-      "/listings/githii-farm-house/placeholder.svg"
+      "/listings/githii-farm-house/01-garden.jpg",
+      "/listings/githii-farm-house/02-living-room-fireplace.jpg",
+      "/listings/githii-farm-house/03-gate.jpg",
+      "/listings/githii-farm-house/04-dairy-cows.jpg",
+      "/listings/githii-farm-house/05-farmland.jpg",
+      "/listings/githii-farm-house/06-farm-eggs.jpg"
     ],
     "property_type": "house",
-    "bedrooms": 1,
+    "bedrooms": 4,
     "beds": 1,
-    "bathrooms": 1
+    "bathrooms": 4
   }
 ]

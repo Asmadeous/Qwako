@@ -8,7 +8,7 @@ import ConfirmDialog from '@/components/ui/ConfirmDialog';
 
 const nameError = (error) => {
   const field = fieldErrorsFrom(error).name;
-  return field ? `That name ${field}.` : errorMessageFrom(error);
+  return field ? `${field}.` : errorMessageFrom(error);
 };
 
 const CONFIGS = {

@@ -33,7 +33,7 @@ module Api
           },
           saved_homes: user.saved_homes.pluck(:title),
           messages: user.conversations.includes(messages: :sender).flat_map { |c|
-            c.messages.map { |m| { conversation: c.subject, from: m.sender.name, body: m.body, sent_at: m.created_at } }
+            c.messages.map { |m| { conversation: c.subject, from: m.sender.name, body: m.body, files: m.files.map { |f| f.filename.to_s }, sent_at: m.created_at } }
           }
         }
         send_data JSON.pretty_generate(data), filename: "tg-bnb-my-data.json", type: :json, disposition: :attachment

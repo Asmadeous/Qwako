@@ -8,10 +8,14 @@ import { useAuth } from '../../hooks';
 import AccountNav from '@/components/ui/AccountNav';
 import InfoCard from '@/components/ui/InfoCard';
 import Spinner from '@/components/ui/Spinner';
+import Pagination, { pageProps } from '@/components/ui/Pagination';
+import usePageParam from '@/utils/usePageParam';
 import { buttonVariants } from '@/components/ui/button';
 
 const PlacesPage = () => {
-  const [places, setPlaces] = useState([]);
+  const [result, setResult] = useState(null);
+  const places = result?.listings ?? [];
+  const [page, setPage] = usePageParam();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const auth = useAuth();
@@ -19,24 +23,26 @@ const PlacesPage = () => {
 
   const loadPlaces = () =>
     api
-      .get('/admin/listings')
-      .then(({ data }) => setPlaces(data.listings))
+      .get('/admin/listings', { params: { page } })
+      .then(({ data }) => setResult(data))
       .catch(() => setError('We could not load your homes. Please try again.'))
       .finally(() => setLoading(false));
 
   useEffect(() => {
     if (isAdmin) loadPlaces();
-  }, [isAdmin]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isAdmin, page]);
 
   if (auth.loading) return <Spinner />;
   if (!auth.user) return <Navigate to="/login" />;
   if (!isAdmin) return <Navigate to="/account" />;
-  if (loading) return <Spinner />;
+  if (loading && !result) return <Spinner />;
+  const total = result?.total ?? 0;
 
   return (
     <div>
       <AccountNav
-        description={`${places.length} ${places.length === 1 ? 'home' : 'homes'}. Open one to edit its details, photos and prices.`}
+        description={`${total} ${total === 1 ? 'home' : 'homes'}. Open one to edit its details, photos and prices.`}
         actions={
           <Link className={buttonVariants()} to="/account/places/new">
             <Plus aria-hidden className="size-4" />
@@ -50,6 +56,7 @@ const PlacesPage = () => {
           <InfoCard place={place} key={place.id} onChange={loadPlaces} />
         ))}
       </div>
+      {result && <Pagination {...pageProps(result)} onPage={setPage} label="homes" className="mx-4" />}
       <div className="mb-24" />
     </div>
   );

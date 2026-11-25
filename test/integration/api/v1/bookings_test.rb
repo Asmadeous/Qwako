@@ -12,6 +12,15 @@ class Api::V1::BookingsTest < ActionDispatch::IntegrationTest
     assert_error :unauthorized, "unauthenticated"
   end
 
+  test "a guest must have a phone number before booking" do
+    users(:ada).update!(phone: nil)
+    sign_in_as users(:ada)
+    assert_no_difference "Booking.count" do
+      book
+    end
+    assert_error :unprocessable_content, "phone_required"
+  end
+
   test "the server prices the stay and ignores any client total" do
     sign_in_as users(:ada)
     assert_difference "Booking.count", 1 do

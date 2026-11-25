@@ -8,9 +8,8 @@ module Api
         user = User.new(registration_params)
 
         if save_user(user)
-          start_new_session_for user
-          EmailVerificationsController.send_link(user, app_url)
-          render json: { user: user_json(user) }, status: :created
+          EmailVerificationsController.send_link(user, app_url, welcome: true)
+          render json: { email: user.email }, status: :created
         else
           render_validation_errors user
         end
@@ -25,7 +24,7 @@ module Api
         # The uniqueness validation can lose a race with a concurrent sign-up;
         # the unique index is the final word.
         def save_user(user)
-          user.save
+          user.save(context: %i[create registration])
         rescue ActiveRecord::RecordNotUnique
           user.errors.add(:email, "is already registered")
           false

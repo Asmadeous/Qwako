@@ -10,8 +10,12 @@ Rails.application.routes.draw do
       resource :email_verification, only: %i[create update]
       resource :password_reset, only: %i[create update]
       resources :contact_messages, only: :create
-      resources :listings, only: %i[index show]
+      resources :listings, only: %i[index show] do
+        get :reviews, on: :member
+      end
+      resources :posts, only: %i[index show]
       resources :saved_listings, only: %i[index create destroy], param: :listing_id
+      resources :transactions, only: :index
       resources :bookings, only: %i[index show create] do
         member do
           post :cancel
@@ -24,6 +28,12 @@ Rails.application.routes.draw do
       end
       resources :conversations, only: %i[index show create] do
         resources :messages, only: :create
+      end
+      resources :message_files, only: :show
+      resource :push_subscription, only: %i[show create destroy]
+      resource :newsletter_subscription, only: :create do
+        post :confirm
+        post :unsubscribe
       end
       resources :notifications, only: :index do
         post :read, on: :member
@@ -39,13 +49,18 @@ Rails.application.routes.draw do
         resources :listings, only: %i[index show create update destroy] do
           resources :blocks, only: :create
         end
-        resources :blocks, only: :destroy
+        resources :blocks, only: %i[update destroy]
         resources :categories, only: %i[index create update destroy]
         resources :amenities, only: %i[index create update destroy]
         resource :finances, only: :show
+        resources :transactions, only: :index do
+          get :export, on: :collection
+        end
         resources :uploads, only: :create
-        resources :bookings, only: %i[index show] do
+        resources :bookings, only: %i[index show create update destroy] do
           member do
+            post :record_payment
+            post :remove_payment
             post :cancel
             post :mark_refunded
             post :refund
@@ -54,16 +69,24 @@ Rails.application.routes.draw do
             post :reschedule
           end
         end
-        resources :guests, only: %i[index show]
-        resources :conversations, only: %i[index show create] do
+        resources :guests, only: %i[index show create update destroy]
+        resources :conversations, only: %i[index show create destroy] do
           resources :messages, only: :create
         end
-        resources :contact_messages, only: :index do
+        resources :contact_messages, only: %i[index destroy] do
           post :handle, on: :member
         end
-        resources :reviews, only: %i[index update]
-        resources :staff, only: %i[index create destroy]
+        resources :reviews, only: %i[index update destroy]
+        resources :staff, only: %i[index create update destroy]
+        resources :newsletter_subscribers, only: %i[index create destroy], constraints: { id: %r{[^/]+} }, format: false
         resources :audit_logs, only: :index
+        resources :posts, only: %i[index show create update destroy]
+        resources :newsletters, only: %i[index show create update destroy] do
+          member do
+            post :test
+            post :deliver
+          end
+        end
       end
     end
   end

@@ -141,7 +141,7 @@ class Api::V1::GuestFeaturesTest < ActionDispatch::IntegrationTest
 
   test "sign-up sends an email confirmation link that confirms the address" do
     assert_enqueued_emails 1 do
-      post api_v1_registrations_path, params: { user: { name: "Sam", email: "sam@example.com", password: "password123" } }, as: :json
+      post api_v1_registrations_path, params: { user: { name: "Sam", email: "sam@example.com", password: "password123", phone: "+254 712 345 678" } }, as: :json
     end
     user = User.find_by!(email: "sam@example.com")
     assert_not user.email_verified?

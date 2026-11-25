@@ -200,6 +200,9 @@ class Booking < ApplicationRecord
         payment.flag_refund!(payment.refund_cents.to_i + share)
         remaining -= share
       end
+      # The refunds were saved on fresh copies; drop the loaded ones so the
+      # notification and the reply that follow see the refund.
+      payments.reset
     end
 
     def valid_new_dates?(new_check_in, new_check_out)

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>T&amp;G BnB: Technical document</title>
+<title>TG Homes: Technical document</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -79,9 +79,9 @@
 <body>
 
 <div class="cover">
-  <div class="mark">T&amp;G BnB</div>
+  <div class="mark">TG Homes</div>
   <h1>Technical document</h1>
-  <p class="lede">How the direct-booking website for the T&amp;G holiday homes in Kenya is built and hosted, how bookings and payments work, and how to run and extend it.</p>
+  <p class="lede">How the direct-booking website for the TG Homes holiday homes in Kenya is built and hosted, how bookings and payments work, and how to run and extend it.</p>
   <dl>
     <dt>Test website</dt><dd>tg-bnb-lake.vercel.app</dd>
     <dt>Test API</dt><dd>tg-bnb-api.onrender.com</dd>
@@ -113,7 +113,7 @@
   </ol>
 
   <h2><span class="n">1</span>Summary</h2>
-  <p class="intro">T&amp;G BnB is the owner's own booking website for their two holiday homes in Kenya: Grace Apartments D8-09 in Tatu City, Ruiru, and Githii Farm House (being set up). Guests browse the homes, see the full price for their dates, and pay online in Kenyan shillings through Paystack (M-Pesa or card). The owner and their team run everything from a dashboard: homes, calendar, bookings, refunds, guests, messages, reviews and money.</p>
+  <p class="intro">TG Homes is the owner's own booking website for their two holiday homes in Kenya: Grace Apartments D8-09 in Tatu City, Ruiru, and Githii Farm House (being set up). Guests browse the homes, see the full price for their dates, and pay online in Kenyan shillings through Paystack (M-Pesa or card). The owner and their team run everything from a dashboard: homes, calendar, bookings, refunds, guests, messages, reviews and money.</p>
 
   <div class="glance">
     <div><b>Kenya only</b><span>Every home has a Kenyan address. Prices in KES. Times in Nairobi time.</span></div>
@@ -369,7 +369,7 @@
     <tr><td><code>APP_URL</code></td><td class="plain">The website address, used in email links and Paystack's return link.</td><td class="status">Always</td></tr>
     <tr><td><code>SOLID_QUEUE_IN_PUMA</code></td><td class="plain"><code>1</code> runs background jobs inside the API.</td><td class="status">Always</td></tr>
     <tr><td><code>PAYSTACK_SECRET_KEY</code></td><td class="plain">Paystack secret key: <code>sk_test_…</code> for testing, <code>sk_live_…</code> for real payments. Find it under Settings, API Keys &amp; Webhooks in Paystack.</td><td class="status">Payments</td></tr>
-    <tr><td><code>SMTP_ADDRESS</code>, <code>SMTP_PORT</code>, <code>SMTP_USERNAME</code>, <code>SMTP_PASSWORD</code>, <code>MAIL_FROM</code></td><td class="plain">The SMTP details of the site's mailbox. The port defaults to 587. <code>MAIL_FROM</code> is an address on the site's domain, for example <code>T&amp;G BnB &lt;bookings@&lt;domain&gt;&gt;</code>.</td><td class="status">Emails</td></tr>
+    <tr><td><code>SMTP_ADDRESS</code>, <code>SMTP_PORT</code>, <code>SMTP_USERNAME</code>, <code>SMTP_PASSWORD</code>, <code>MAIL_FROM</code></td><td class="plain">The SMTP details of the site's mailbox. The port defaults to 587. <code>MAIL_FROM</code> is an address on the site's domain, for example <code>TG Homes &lt;bookings@&lt;domain&gt;&gt;</code>.</td><td class="status">Emails</td></tr>
     <tr><td><code>GOOGLE_CLIENT_ID</code></td><td class="plain">Google OAuth client ID, the same one as the website's.</td><td class="status">Google sign-in</td></tr>
     <tr><td><code>SEED_ADMIN_EMAIL</code>, <code>SEED_ADMIN_PASSWORD</code></td><td class="plain">Create the first team account when the seeds run on a production database. No admin is created without both, and an existing account's password is never changed.</td><td class="status">First setup</td></tr>
     <tr><td><code>CORS_ORIGINS</code></td><td class="plain">Only if the website is served from a different address than the API. Not needed when both share one domain.</td><td class="status">Not needed</td></tr>

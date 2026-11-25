@@ -21,22 +21,16 @@ module.exports = {
         sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
       },
       colors: {
-        sand: '#EDE6D6',
-        ink: '#2A2725',
-        paper: '#F7F3EA',
+        // Read from CSS variables (see :root in index.css).
+        sand: 'rgb(var(--sand) / <alpha-value>)',
+        ink: 'rgb(var(--ink) / <alpha-value>)',
+        paper: 'rgb(var(--paper) / <alpha-value>)',
+        // The dashboard's one accent colour.
+        brand: 'rgb(var(--brand) / <alpha-value>)',
         // Warm greys so inner pages match the sand and ink of the home page.
-        gray: {
-          50: '#F7F3EA',
-          100: '#F1EBDF',
-          200: '#E4DCCB',
-          300: '#D3C8B3',
-          400: '#B3A890',
-          500: '#8C8270',
-          600: '#6B6355',
-          700: '#4D473F',
-          800: '#38332E',
-          900: '#2A2725',
-        },
+        gray: Object.fromEntries(
+          [50, 100, 200, 300, 400, 500, 600, 700, 800, 900].map((n) => [n, `rgb(var(--gray-${n}) / <alpha-value>)`]),
+        ),
         border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',
         ring: 'hsl(var(--ring))',

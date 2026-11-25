@@ -5,7 +5,7 @@ import { cn } from '@/lib/utils';
 
 // Rows of conversations, unread ones in bold with a dot.
 const ConversationList = ({ conversations, linkBase, owner = false }) => (
-  <ul className="mx-4 divide-y divide-ink/10 border-y border-ink/10">
+  <ul className="mx-4 divide-y divide-ink/10 rounded-[28px] bg-paper px-5 sm:px-6">
     {conversations.map((c) => (
       <li key={c.id}>
         <Link

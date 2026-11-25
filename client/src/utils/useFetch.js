@@ -14,7 +14,7 @@ export const useFetch = (path, params) => {
       const { data } = await api.get(path, { params });
       setState({ data, error: '', loading: false });
     } catch (err) {
-      setState({ data: null, error: errorMessageFrom(err), loading: false });
+      setState({ data: null, error: errorMessageFrom(err), loading: false, status: err?.response?.status });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [key]);
@@ -23,7 +23,8 @@ export const useFetch = (path, params) => {
     load();
   }, [load]);
 
-  return { ...state, reload: load, setData: (data) => setState((s) => ({ ...s, data })) };
+  return { ...state, reload: load, setData: (next) =>
+      setState((s) => ({ ...s, data: typeof next === 'function' ? next(s.data) : next })) };
 };
 
 export default useFetch;

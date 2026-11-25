@@ -2,10 +2,11 @@ module Api
   module V1
     class NotificationsController < ApplicationController
       def index
-        notifications = Current.user.notifications.order(created_at: :desc).limit(50)
+        rows, meta = page_of(Current.user.notifications.order(created_at: :desc, id: :desc), 25)
         render json: {
-          notifications: notifications.map { |n| notification_json(n) },
-          unread: Current.user.notifications.unread.count
+          notifications: rows.map { |n| notification_json(n) },
+          unread: Current.user.notifications.unread.count,
+          **meta
         }
       end
 

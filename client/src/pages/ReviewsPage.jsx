@@ -1,19 +1,43 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { Trash2 } from 'lucide-react';
 
 import AccountNav from '@/components/ui/AccountNav';
 import { Button } from '@/components/ui/button';
+import ConfirmDialog from '@/components/ui/ConfirmDialog';
 import { EmptyState, ErrorNote, ListSkeleton } from '@/components/ui/PageStates';
+import Pagination, { pageProps } from '@/components/ui/Pagination';
 import { Stars } from '@/components/ui/StarRating';
 import { api, errorMessageFrom } from '@/utils/axios';
 import { formatDate } from '@/utils/format';
 import useFetch from '@/utils/useFetch';
+import usePageParam from '@/utils/usePageParam';
 import { cn } from '@/lib/utils';
+import { isOwner } from '@/utils/roles';
+import { useAuth } from '../../hooks';
 
-const ReviewRow = ({ review, onChange }) => {
+// Staff reply; hiding and deleting are for the owner. Reviews come only from guests.
+const ReviewRow = ({ review, onChange, onDeleted, owner }) => {
   const [reply, setReply] = useState(review.owner_reply ?? '');
   const [busy, setBusy] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+  const [deleteError, setDeleteError] = useState('');
+
+  const remove = async () => {
+    setBusy(true);
+    setDeleteError('');
+    try {
+      await api.delete(`/admin/reviews/${review.id}`);
+      setDeleting(false);
+      onDeleted(review);
+      toast.success('Review deleted.');
+    } catch (err) {
+      setDeleteError(errorMessageFrom(err));
+    } finally {
+      setBusy(false);
+    }
+  };
 
   const save = async (payload, message) => {
     setBusy(true);
@@ -63,26 +87,52 @@ const ReviewRow = ({ review, onChange }) => {
           <Button type="submit" variant="outline" disabled={busy}>
             Save reply
           </Button>
-          <Button
-            variant={review.hidden ? 'outline' : 'danger-outline'}
-            disabled={busy}
-            onClick={() => save({ hidden: !review.hidden }, review.hidden ? 'Review shown again.' : 'Review hidden.')}
-          >
-            {review.hidden ? 'Show on the home page' : 'Hide (breaks the rules)'}
-          </Button>
+          {owner && (
+            <>
+              <Button
+                variant={review.hidden ? 'outline' : 'danger-outline'}
+                disabled={busy}
+                onClick={() => save({ hidden: !review.hidden }, review.hidden ? 'Review shown again.' : 'Review hidden.')}
+              >
+                {review.hidden ? 'Show on the home page' : 'Hide (breaks the rules)'}
+              </Button>
+              <Button variant="danger-outline" disabled={busy} onClick={() => { setDeleteError(''); setDeleting(true); }}>
+                <Trash2 aria-hidden className="size-4" />
+                Delete
+              </Button>
+            </>
+          )}
         </div>
       </form>
+      <ConfirmDialog
+        open={deleting}
+        onOpenChange={(open) => !open && setDeleting(false)}
+        title="Delete this review?"
+        confirmLabel="Delete review"
+        busyLabel="Deleting..."
+        busy={busy}
+        error={deleteError}
+        tone="danger"
+        onConfirm={remove}
+      >
+        <p>
+          {review.author_name}'s {review.rating}-star review of {review.listing_title} is removed for good, and the home's
+          rating is worked out again. To keep it on record but off the home's page, hide it instead. You can't undo this.
+        </p>
+      </ConfirmDialog>
     </li>
   );
 };
 
 // Guest reviews: reply in public, or hide abusive ones.
 const ReviewsPage = () => {
-  const { data, error, loading, reload, setData } = useFetch('/admin/reviews');
+  const { user } = useAuth();
+  const [page, setPage] = usePageParam();
+  const { data, error, loading, reload, setData } = useFetch('/admin/reviews', { page });
   return (
     <div className="pb-16">
       <AccountNav description="What guests said after their stays. Replies show under the review on the home's page." />
-      {loading && <ListSkeleton />}
+      {loading && !data && <ListSkeleton />}
       {error && <ErrorNote onRetry={reload}>{error}</ErrorNote>}
       {data &&
         (data.reviews.length ? (
@@ -91,13 +141,16 @@ const ReviewsPage = () => {
               <ReviewRow
                 key={review.id}
                 review={review}
+                owner={isOwner(user)}
                 onChange={(updated) => setData({ ...data, reviews: data.reviews.map((r) => (r.id === updated.id ? updated : r)) })}
+                onDeleted={reload}
               />
             ))}
           </ul>
         ) : (
           <EmptyState title="No reviews yet.">Guests are asked to review after they check out.</EmptyState>
         ))}
+      {data && <Pagination {...pageProps(data)} onPage={setPage} label="reviews" className="mx-4" />}
     </div>
   );
 };

@@ -48,7 +48,7 @@ const Perks = ({ selected, handleFormData, onAdded, manage }) => {
       closeAdd();
     } catch (err) {
       const field = fieldErrorsFrom(err).name;
-      setCreateError(field ? `That name ${field}.` : errorMessageFrom(err));
+      setCreateError(field ? `${field}.` : errorMessageFrom(err));
       nameRef.current?.focus();
     } finally {
       setCreating(false);

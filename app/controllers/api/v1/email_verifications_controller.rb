@@ -2,13 +2,14 @@ module Api
   module V1
     # Confirming the email address with the link sent at sign-up.
     class EmailVerificationsController < ApplicationController
-      allow_unauthenticated_access only: :update
+      allow_unauthenticated_access
       rate_limit to: 3, within: 10.minutes, only: :create, with: -> { render_rate_limited }
       rate_limit to: 10, within: 10.minutes, only: :update, with: -> { render_rate_limited }
 
-      # Sends the link again.
+      # Sends the link again to an unconfirmed address.
       def create
-        EmailVerificationsController.send_link(Current.user, app_url) unless Current.user.email_verified?
+        user = User.kept.find_by(email: params[:email].to_s.strip.downcase)
+        EmailVerificationsController.send_link(user, app_url) if user && !user.email_verified?
         head :accepted
       end
 
@@ -22,9 +23,11 @@ module Api
         head :no_content
       end
 
-      def self.send_link(user, base_url)
+      # At sign-up the link goes in the welcome email; later requests get it on its own.
+      def self.send_link(user, base_url, welcome: false)
         url = "#{base_url}/verify-email?#{{ token: user.generate_token_for(:email_verification) }.to_query}"
-        AccountMailer.verify_email(user, url).deliver_later
+        mail = welcome ? AccountMailer.welcome(user, confirm_url: url) : AccountMailer.verify_email(user, url)
+        mail.deliver_later
       end
     end
   end

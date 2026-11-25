@@ -1,4 +1,4 @@
-# T&G BnB
+# TG Homes
 
 The direct-booking website for one owner's UK holiday lets. Guests browse stays
 and book nights; the owner manages properties and bookings.

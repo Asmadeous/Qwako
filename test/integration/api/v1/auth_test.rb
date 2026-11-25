@@ -3,8 +3,8 @@ require "test_helper"
 class Api::V1::AuthTest < ActionDispatch::IntegrationTest
   USER_KEYS = %w[id email name role phone email_messages avatar_url email_verified marketing_consent google_linked].freeze
 
-  def sign_up(name: "Sam Taylor", email: "sam@example.com", password: "password123")
-    post api_v1_registrations_path, params: { user: { name:, email:, password: } }, as: :json
+  def sign_up(name: "Sam Taylor", email: "sam@example.com", password: "password123", phone: "+254 712 345 678")
+    post api_v1_registrations_path, params: { user: { name:, email:, password:, phone: } }, as: :json
   end
 
   def sign_in(email: "ada@example.com", password: "password123")
@@ -16,24 +16,64 @@ class Api::V1::AuthTest < ActionDispatch::IntegrationTest
     response.parsed_body["user"]
   end
 
-  test "sign-up creates a guest, signs them in and returns only public fields" do
-    assert_difference [ "User.count", "Session.count" ], 1 do
-      sign_up(email: " Sam@Example.com ")
+  test "sign-up creates a guest and sends a confirmation link without signing them in" do
+    assert_difference "User.count", 1 do
+      assert_no_difference "Session.count" do
+        assert_enqueued_emails 1 do
+          sign_up(email: " Sam@Example.com ")
+        end
+      end
     end
 
     assert_response :created
-    assert_equal USER_KEYS, response.parsed_body["user"].keys
-    assert_equal "sam@example.com", response.parsed_body.dig("user", "email")
-    assert_no_match(/password/, response.body)
-    assert_equal "sam@example.com", current_user_json["email"]
+    assert_equal({ "email" => "sam@example.com" }, response.parsed_body)
+    assert_nil current_user_json
+
+    # The one email is the welcome, with the confirmation link in it.
+    perform_enqueued_jobs
+    mail = ActionMailer::Base.deliveries.last
+    assert_equal "Welcome to TG Homes", mail.subject
+    assert_match %r{/verify-email\?token=}, mail.text_part.body.to_s
   end
 
-  test "sign-up sets an httponly SameSite=Lax session cookie" do
+  test "an unconfirmed account cannot sign in until the email is confirmed" do
     sign_up
+    sign_in(email: "sam@example.com")
+    assert_error :forbidden, "email_unverified"
+    assert_includes response.parsed_body.dig("error", "message"), "sam@example.com"
+    assert_nil response.headers["Set-Cookie"]
+
+    user = User.find_by!(email: "sam@example.com")
+    patch api_v1_email_verification_path, params: { token: user.generate_token_for(:email_verification) }, as: :json
+    sign_in(email: "sam@example.com")
+    assert_response :success
+    assert_equal USER_KEYS, response.parsed_body["user"].keys
+    assert_no_match(/password/, response.body)
     set_cookie = Array(response.headers["Set-Cookie"]).join("\n")
     assert_match(/session_id=/, set_cookie)
     assert_match(/httponly/i, set_cookie)
     assert_match(/samesite=lax/i, set_cookie)
+  end
+
+  test "a session for an unconfirmed account is treated as signed out" do
+    sign_in
+    users(:ada).update!(email_verified_at: nil)
+    assert_nil current_user_json
+    get api_v1_bookings_path, as: :json
+    assert_error :unauthorized, "unauthenticated"
+  end
+
+  test "the confirmation link can be resent while signed out, without revealing accounts" do
+    sign_up
+    assert_enqueued_emails 1 do
+      post api_v1_email_verification_path, params: { email: " SAM@example.com " }, as: :json
+    end
+    assert_response :accepted
+    assert_no_enqueued_emails do
+      post api_v1_email_verification_path, params: { email: "ada@example.com" }, as: :json
+      post api_v1_email_verification_path, params: { email: "nobody@example.com" }, as: :json
+    end
+    assert_response :accepted
   end
 
   test "sign-up with a taken email returns field details" do
@@ -45,9 +85,17 @@ class Api::V1::AuthTest < ActionDispatch::IntegrationTest
   end
 
   test "sign-up with missing fields reports each field" do
-    post api_v1_registrations_path, params: { user: { name: "", email: "", password: "" } }, as: :json
+    post api_v1_registrations_path, params: { user: { name: "", email: "", password: "", phone: "" } }, as: :json
     assert_error :unprocessable_content, "validation_failed"
-    assert_equal %w[email name password].sort, response.parsed_body.dig("error", "details").keys.sort
+    assert_equal %w[email name password phone].sort, response.parsed_body.dig("error", "details").keys.sort
+  end
+
+  test "sign-up needs a phone number" do
+    assert_no_difference "User.count" do
+      sign_up(phone: "")
+    end
+    assert_error :unprocessable_content, "validation_failed"
+    assert_equal [ "Phone can't be blank" ], response.parsed_body.dig("error", "details", "phone")
   end
 
   test "sign-up without a user object is a validation failure, not a crash" do

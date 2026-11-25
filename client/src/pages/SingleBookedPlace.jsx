@@ -309,9 +309,9 @@ const SingleBookedPlace = () => {
               tone="danger"
               onConfirm={cancelBooking}
             >
-              <p>
+              <div>
                 {listing.title}, <BookingDates booking={booking} className="inline-flex" />
-              </p>
+              </div>
               {booking.paid_cents > 0 && (
                 <p className="font-semibold text-ink">
                   {booking.cancel_refund_cents > 0

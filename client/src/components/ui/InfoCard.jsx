@@ -158,7 +158,7 @@ const InfoCard = ({ place, onChange }) => {
           {booked ? (
             <p>
               It disappears from the site and from your homes. Its {place.bookings_count}{' '}
-              {place.bookings_count === 1 ? 'booking' : 'bookings'} and their payments stay in Bookings and Finances.
+              {place.bookings_count === 1 ? 'booking' : 'bookings'} and their payments stay in Bookings and Transactions.
               You can't undo this.
             </p>
           ) : (

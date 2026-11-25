@@ -10,8 +10,8 @@ module Notify
   def guest_booking_url(booking) = "/account/bookings/#{booking.id}"
   def owner_booking_url(booking) = "/account/reservations/#{booking.id}"
 
-  def admins
-    User.admin.kept
+  def team
+    User.team.kept
   end
 
   def stay(booking)
@@ -27,7 +27,7 @@ module Notify
   end
 
   def tell_owners(kind:, title:, body:, url:, email: true)
-    admins.each { |admin| tell(admin, kind:, title:, body:, url:, email:) }
+    team.each { |member| tell(member, kind:, title:, body:, url:, email:) }
   end
 
   def booking_confirmed(booking)
@@ -85,13 +85,13 @@ module Notify
 
   def new_message(message)
     conversation = message.conversation
-    preview = message.body.truncate(140)
-    if message.sender.admin?
+    preview = message.summary.truncate(140)
+    if message.sender.team?
       guest = conversation.guest
-      tell(guest, kind: "message", title: "New message from T&G BnB", body: preview,
+      tell(guest, kind: "message", title: "New message from TG Homes", body: preview,
            url: "/account/messages/#{conversation.id}", email: guest.email_messages?)
     else
-      admins.each do |admin|
+      team.each do |admin|
         tell(admin, kind: "message", title: "Message from #{message.sender.name}", body: preview,
              url: "/account/inbox/#{conversation.id}", email: admin.email_messages?)
       end

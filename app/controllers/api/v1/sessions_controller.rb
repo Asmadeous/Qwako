@@ -10,6 +10,12 @@ module Api
 
       def create
         if (user = User.authenticate_by(email: params[:email].to_s, password: params[:password].to_s))
+          unless user.email_verified?
+            return render_error(:email_unverified,
+              "Confirm your email first. Click the link we sent to #{user.email}, or send a new one.",
+              status: :forbidden)
+          end
+
           start_new_session_for user
           render json: { user: user_json(user) }
         else

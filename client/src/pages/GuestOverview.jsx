@@ -22,7 +22,7 @@ const countdown = (iso) => {
   return `Check-in in ${days} days`;
 };
 
-// The guest's home page: their next trip first, then what needs doing.
+// The guest's home page: their next booking first, then what needs doing.
 const GuestOverview = () => {
   const { user } = useAuth();
   const { savedIds } = useSaved();
@@ -43,9 +43,9 @@ const GuestOverview = () => {
       <AccountNav description={`Welcome back, ${user.name.split(' ')[0]}.`} />
       {bookings.error && <ErrorNote onRetry={bookings.reload}>{bookings.error}</ErrorNote>}
 
-      <section aria-labelledby="next-trip" className="mx-4">
-        <h2 id="next-trip" className="sr-only">
-          Your next trip
+      <section aria-labelledby="next-booking" className="mx-4">
+        <h2 id="next-booking" className="sr-only">
+          Your next booking
         </h2>
         {bookings.loading ? (
           <Skeleton className="h-56 w-full rounded-3xl" />
@@ -63,14 +63,14 @@ const GuestOverview = () => {
               <BookingDates booking={next} className="text-sm text-ink/75" />
               <p className="text-sm text-ink/65">{bookingStatusLabel(next.status)}</p>
               <span className="mt-2 inline-flex items-center gap-1 text-sm font-semibold underline underline-offset-4">
-                Trip details, check-in and receipt <ChevronRight aria-hidden className="size-4" />
+                Booking details, check-in and receipt <ChevronRight aria-hidden className="size-4" />
               </span>
             </div>
           </Link>
         ) : (
           <div className="rounded-3xl border border-dashed border-ink/25 p-8">
-            <p className="text-2xl font-bold tracking-tight">No trips coming up.</p>
-            <p className="mt-2 text-sm text-ink/70">Pick a home and your dates; your next trip shows here.</p>
+            <p className="text-2xl font-bold tracking-tight">No bookings coming up.</p>
+            <p className="mt-2 text-sm text-ink/70">Pick a home and your dates; your next booking shows here.</p>
             <Link to="/homes" className={cn(buttonVariants(), 'mt-5')}>
               Browse homes
             </Link>
@@ -80,7 +80,7 @@ const GuestOverview = () => {
 
       <section aria-label="Your account at a glance" className="mx-4 mt-6 grid grid-cols-2 overflow-hidden rounded-3xl border border-ink/15 bg-paper md:grid-cols-4">
         {[
-          { label: 'Upcoming trips', value: upcoming.length, to: '/account/bookings' },
+          { label: 'Upcoming bookings', value: upcoming.length, to: '/account/bookings' },
           { label: 'Saved homes', value: savedIds.size, to: '/account/saved' },
           { label: 'Unread messages', value: unread, to: '/account/messages' },
           { label: 'Notifications', value: notifications.data?.unread ?? 0, to: '/account/notifications' },

@@ -42,11 +42,10 @@ export const useProvideAuth = () => {
         return () => { cancelled = true }
     }, [])
 
-    const register = async ({ name, email, password }) => {
+    const register = async ({ name, email, phone, password }) => {
         try {
-            const { data } = await api.post('/registrations', { user: { name, email, password } })
-            setUser(data.user)
-            return { success: true, message: 'Welcome to T&G BnB. You are signed in.' }
+            const { data } = await api.post('/registrations', { user: { name, email, phone, password } })
+            return { success: true, email: data.email }
         } catch (error) {
             return authFailure(error)
         }

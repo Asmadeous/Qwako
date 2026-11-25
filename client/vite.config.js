@@ -15,6 +15,8 @@ export default defineConfig({
       // Rails serves the API and uploaded photos (Active Storage).
       '/api/v1': { target: process.env.RAILS_API_URL || 'http://localhost:3000', changeOrigin: true },
       '/rails': { target: process.env.RAILS_API_URL || 'http://localhost:3000', changeOrigin: true },
+      // Live messages and notifications (Action Cable websocket).
+      '/cable': { target: process.env.RAILS_API_URL || 'http://localhost:3000', changeOrigin: true, ws: true },
     },
   },
 });

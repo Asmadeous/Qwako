@@ -567,7 +567,7 @@ const PlacesFormPage = () => {
             <>
               <p className="mt-1 max-w-prose text-sm text-ink/70">
                 {counts.bookings > 0
-                  ? `It disappears from the site and from your homes. Its ${counts.bookings} ${counts.bookings === 1 ? 'booking' : 'bookings'} and their payments stay in Bookings and Finances.`
+                  ? `It disappears from the site and from your homes. Its ${counts.bookings} ${counts.bookings === 1 ? 'booking' : 'bookings'} and their payments stay in Bookings and Transactions.`
                   : 'Nobody has booked this home yet, so it is removed for good.'}
               </p>
               <Button

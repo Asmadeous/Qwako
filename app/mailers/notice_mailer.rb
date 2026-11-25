@@ -5,6 +5,6 @@ class NoticeMailer < ApplicationMailer
     @user = user
     @body = body
     @url = url
-    mail to: user.email, subject: "#{subject} | T&G BnB"
+    mail to: user.email, subject: "#{subject} | TG Homes"
   end
 end

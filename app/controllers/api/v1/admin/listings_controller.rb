@@ -8,10 +8,13 @@ module Api
           listings = Listing.kept.includes(:photos, :videos, :amenities, :category).order(:created_at)
           bookings = Booking.group(:listing_id).count
           upcoming = Booking.active.where(check_out: Time.zone.today..).group(:listing_id).count
+          # ?page= for the Homes page; without it every home (for pickers and filters).
+          rows, meta = params[:page].present? ? page_of(listings.order(:id), 25) : [ listings, {} ]
           render json: {
-            listings: listings.map { |listing|
+            listings: rows.map { |listing|
               admin_listing_json(listing).merge(bookings_count: bookings.fetch(listing.id, 0), upcoming_count: upcoming.fetch(listing.id, 0))
-            }
+            },
+            **meta
           }
         end
 

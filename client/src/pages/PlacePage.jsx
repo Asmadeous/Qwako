@@ -32,6 +32,8 @@ const PlacePage = () => {
   const [notFound, setNotFound] = useState(false);
   const [bookingInView, setBookingInView] = useState(false);
   const [asking, setAsking] = useState(false);
+  const [loadingReviews, setLoadingReviews] = useState(false);
+  const [reviewsError, setReviewsError] = useState('');
   const { user } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
@@ -51,10 +53,10 @@ const PlacePage = () => {
 
   useEffect(() => {
     if (!place) return undefined;
-    document.title = `${place.title} | T&G BnB`;
+    document.title = `${place.title} | TG Homes`;
     rememberViewed(place);
     return () => {
-      document.title = 'T&G BnB';
+      document.title = 'TG Homes';
     };
   }, [place]);
 
@@ -77,6 +79,20 @@ const PlacePage = () => {
   const askOwner = () => {
     if (!user) return navigate('/login', { state: { from: location.pathname } });
     setAsking(true);
+  };
+
+  // The page brings the newest 20 reviews; older ones load 20 at a time.
+  const showMoreReviews = async () => {
+    setLoadingReviews(true);
+    setReviewsError('');
+    try {
+      const { data } = await api.get(`/listings/${place.id}/reviews`, { params: { page: place.reviews_next_page } });
+      setPlace({ ...place, reviews: [...place.reviews, ...data.reviews], reviews_next_page: data.next_page });
+    } catch {
+      setReviewsError('We could not load more reviews. Please try again.');
+    } finally {
+      setLoadingReviews(false);
+    }
   };
 
   const scrollToBooking = () =>
@@ -132,7 +148,7 @@ const PlacePage = () => {
             </li>
             <li className="flex items-center gap-2">
               <BedDouble aria-hidden strokeWidth={1.5} className="size-5" />
-              {place.bedrooms === 0 ? 'Studio' : plural(place.bedrooms, 'bedroom')}, {plural(place.beds, 'bed')}
+              {place.bedrooms === 0 ? 'Studio' : plural(place.bedrooms, 'bedroom')}
             </li>
             <li className="flex items-center gap-2">
               <Bath aria-hidden strokeWidth={1.5} className="size-5" />
@@ -211,6 +227,16 @@ const PlacePage = () => {
               </ul>
             ) : (
               <p className="mt-4 text-ink/70">No reviews yet. Guests can review after their stay.</p>
+            )}
+            {place.reviews_next_page && (
+              <Button variant="outline" className="mt-6" onClick={showMoreReviews} disabled={loadingReviews}>
+                {loadingReviews ? 'Loading...' : 'Show more reviews'}
+              </Button>
+            )}
+            {reviewsError && (
+              <p role="alert" className="mt-3 text-sm font-semibold text-red-800">
+                {reviewsError}
+              </p>
             )}
           </section>
         </div>

@@ -16,7 +16,9 @@ module Api
                           password: SecureRandom.base58(24))
         user.google_uid ||= profile[:uid]
         user.email_verified_at ||= Time.current
+        new_account = user.new_record?
         user.save!
+        AccountMailer.welcome(user).deliver_later if new_account
         start_new_session_for user
         render json: { user: user_json(user) }
       rescue GoogleIdentity::NotConfigured

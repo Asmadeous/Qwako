@@ -21,3 +21,10 @@ export const errorMessageFrom = (error) =>
   'Could not reach the server. Check your connection and try again.';
 
 export default api;
+
+// What each field got wrong, as sentences, for forms that don't highlight fields.
+export const fullErrorFrom = (error) => {
+  const details = error?.response?.data?.error?.details;
+  const lines = details ? Object.values(details).flat() : [];
+  return lines.length ? lines.join(' ') : errorMessageFrom(error);
+};

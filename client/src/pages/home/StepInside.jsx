@@ -20,7 +20,7 @@ const StepInside = () => {
 
       <div className="relative flex h-full flex-col px-5 pt-14 pb-8 md:px-8">
         <div className="flex flex-wrap items-center justify-between gap-4">
-          <span className="text-sm font-medium text-white/80">Explore T&amp;G homes</span>
+          <span className="text-sm font-medium text-white/80">Explore TG Homes</span>
           <ul className="flex flex-wrap items-center gap-4 text-sm font-medium">
             {KEYS.map((k) => (
               <li key={k.label} className="flex items-center gap-2">
@@ -41,7 +41,7 @@ const StepInside = () => {
           </h2>
           <div className={`${r(250).className} max-w-sm`} style={r(250).style}>
             <p className="text-sm leading-snug">
-              Go beyond the photographs. Browse every T&amp;G home, filter by place, price
+              Go beyond the photographs. Browse every home, filter by place, price
               and amenities, and book your dates in minutes.
             </p>
             <Link

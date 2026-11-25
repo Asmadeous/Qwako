@@ -34,6 +34,34 @@
     --ring: 20 6% 15%;
 
     --radius: 1rem;
+
+    /* Tailwind's sand, ink, paper, gray and brand colours, as R G B. */
+    --sand: 237 230 214;
+    --ink: 42 39 37;
+    --paper: 247 243 234;
+    --brand: 42 39 37;
+    --btn: var(--ink);
+    --btn-fg: var(--sand);
+    --gray-50: 247 243 234;
+    --gray-100: 241 235 223;
+    --gray-200: 228 220 203;
+    --gray-300: 211 200 179;
+    --gray-400: 179 168 144;
+    --gray-500: 140 130 112;
+    --gray-600: 107 99 85;
+    --gray-700: 77 71 63;
+    --gray-800: 56 51 46;
+    --gray-900: 42 39 37;
+  }
+
+  /* Lighter, tighter type in the dashboard. */
+  .dash :is(h1, h2, h3, h4):not(.font-light, .font-normal) {
+    font-weight: 500;
+    letter-spacing: -0.03em;
+  }
+
+  .dash .font-bold {
+    font-weight: 600;
   }
 }
 
@@ -62,9 +90,24 @@
 
   /* One visible focus ring for keyboard users, everywhere. */
   :focus-visible {
-    outline: 2px solid #2a2725;
+    outline: 2px solid rgb(var(--ink));
     outline-offset: 2px;
   }
+}
+
+/* Attribute selectors, so Tailwind's @apply of border / bg-paper on inputs doesn't copy these rules. */
+/* Cards in the dashboard: no outline, a soft shadow. */
+.dash main :is(div, section, li, a, form, dl, ul, article)[class~='border'][class~='bg-paper']:is([class~='rounded-2xl'], [class~='rounded-3xl']) {
+  border-color: transparent;
+  box-shadow: 0 1px 2px rgb(0 0 0 / 0.04);
+}
+
+.dash main :is(div, section, li, a, form, dl, ul, article)[class~='border'][class~='bg-paper']:is([class~='rounded-2xl'], [class~='rounded-3xl']):hover {
+  box-shadow: 0 4px 16px rgb(0 0 0 / 0.06);
+}
+
+.dash main [class~='rounded-3xl'] {
+  border-radius: 28px;
 }
 
 @layer utilities {
@@ -107,11 +150,11 @@ textarea {
   align-items: center;
   margin-bottom: 0.5rem;
   padding: 0.875rem 1rem;
-  border: 1px solid rgb(237 230 214 / 0.12);
+  border: 1px solid rgb(var(--sand) / 0.12);
   border-radius: 1rem;
-  background: #2a2725;
-  color: #ede6d6;
-  box-shadow: 0 10px 30px rgb(42 39 37 / 0.25);
+  background: rgb(var(--ink));
+  color: rgb(var(--sand));
+  box-shadow: 0 10px 30px rgb(var(--ink) / 0.25);
   font-size: 0.9375rem;
   font-weight: 500;
   line-height: 1.4;
@@ -130,7 +173,7 @@ textarea {
 
 .Toastify__close-button {
   align-self: center;
-  color: #ede6d6;
+  color: rgb(var(--sand));
   opacity: 0.6;
 }
 

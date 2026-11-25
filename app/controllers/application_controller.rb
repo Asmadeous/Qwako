@@ -70,7 +70,24 @@ class ApplicationController < ActionController::API
       [ rows.first(per_page), (page_param + 1 if rows.size > per_page) ]
     end
 
+    # One numbered page of a query (or an array), with what the page numbers
+    # need: page, pages, total and per_page. A page past the end shows the last.
+    def page_of(scope, per_page)
+      total = scope.count
+      pages = [ (total / per_page.to_f).ceil, 1 ].max
+      page = [ page_param, pages ].min
+      offset = (page - 1) * per_page
+      rows = scope.is_a?(Array) ? scope[offset, per_page] : scope.offset(offset).limit(per_page).to_a
+      [ rows, { page:, pages:, total:, per_page:, next_page: (page + 1 if page < pages) } ]
+    end
+
+    # Owner only.
     def require_admin
       render_error(:forbidden, "You do not have access to this.", status: :forbidden) unless Current.user&.admin?
+    end
+
+    # Owner or staff.
+    def require_team
+      render_error(:forbidden, "You do not have access to this.", status: :forbidden) unless Current.user&.team?
     end
 end

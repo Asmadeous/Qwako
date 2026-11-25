@@ -51,6 +51,9 @@ en:
         ends_on: "Last night"
       review:
         rating: "Rating"
+      contact_message:
+        name: "Your name"
+        body: "Message"
   date:
     formats:
       stay: "%-d %b %Y"

@@ -8,6 +8,46 @@ class Payment < ApplicationRecord
 
   scope :refund_due, -> { where(needs_refund: true, refunded_at: nil) }
 
+  STATES = %w[paid refund_due refunded].freeze
+
+  # Money that went through, narrowed by the transactions page's filters:
+  # q (reference, guest, home), listing_id, state, channel, from and to (paid dates).
+  def self.search(filters)
+    scope = succeeded.joins(booking: %i[guest listing])
+    if (query = filters[:q].to_s.strip).present?
+      pattern = "%#{sanitize_sql_like(query)}%"
+      scope = scope.where("payments.reference ILIKE :pattern OR users.name ILIKE :pattern OR users.email ILIKE :pattern " \
+                          "OR listings.title ILIKE :pattern", pattern:)
+    end
+    scope = scope.where(bookings: { listing_id: filters[:listing_id] }) if filters[:listing_id].present?
+    scope = scope.where(channel: filters[:channel]) if filters[:channel].present?
+    scope = case filters[:state]
+    when "paid" then scope.where(needs_refund: false)
+    when "refund_due" then scope.refund_due
+    when "refunded" then scope.where.not(refunded_at: nil)
+    else scope
+    end
+    if (from = parse_date(filters[:from]))
+      scope = scope.where(paid_at: from.beginning_of_day..)
+    end
+    if (to = parse_date(filters[:to]))
+      scope = scope.where(paid_at: ...(to + 1).beginning_of_day)
+    end
+    scope
+  end
+
+  def self.parse_date(value)
+    Date.iso8601(value.to_s) if value.present?
+  rescue Date::Error
+    nil
+  end
+  private_class_method :parse_date
+
+  # The refund on this payment, sent or still owed.
+  def refund_amount_cents
+    refund_cents || amount_cents
+  end
+
   def refund_due?
     needs_refund? && refunded_at.nil?
   end

@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link, Navigate, useLocation } from 'react-router-dom';
 import GoogleButton from '@/components/ui/GoogleButton';
-import { toast } from 'react-toastify';
 import { Check } from 'lucide-react';
 
 import AuthField from '@/components/ui/AuthField';
@@ -11,14 +10,15 @@ import AuthLayout, {
   checkField,
 } from '@/components/ui/AuthLayout';
 import Spinner from '@/components/ui/Spinner';
+import ResendConfirmation from '@/components/ui/ResendConfirmation';
 import { useAuth } from '../../hooks';
-import { returnPathFrom } from '@/utils';
 import { Button } from '@/components/ui/button';
 
-const FIELDS = ['name', 'email', 'password'];
+const FIELDS = ['name', 'email', 'phone', 'password'];
 const check = {
   name: checkField.name,
   email: checkField.email,
+  phone: checkField.phone,
   password: checkField.newPassword,
 };
 
@@ -28,16 +28,18 @@ const RegisterPage = () => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
+    phone: '',
     password: '',
   });
   const [fieldErrors, setFieldErrors] = useState({});
   const [formError, setFormError] = useState('');
   const [submitting, setSubmitting] = useState(false);
-  const [redirect, setRedirect] = useState(false);
+  const [sentTo, setSentTo] = useState('');
   const inFlight = useRef(false);
   const fieldRefs = {
     name: useRef(null),
     email: useRef(null),
+    phone: useRef(null),
     password: useRef(null),
   };
   const [focusField, setFocusField] = useState(null);
@@ -82,13 +84,13 @@ const RegisterPage = () => {
       ...formData,
       name: formData.name.trim(),
       email: formData.email.trim(),
+      phone: formData.phone.trim(),
     });
     inFlight.current = false;
     setSubmitting(false);
 
     if (response.success) {
-      toast.success(response.message);
-      setRedirect(true);
+      setSentTo(response.email);
       return;
     }
     const serverErrors = response.fieldErrors || {};
@@ -99,9 +101,27 @@ const RegisterPage = () => {
     else setFormError(response.message);
   };
 
-  if (redirect)
-    return <Navigate to={returnPathFrom(location.state, '/homes')} replace />;
   if (auth.loading) return <Spinner />;
+  if (sentTo)
+    return (
+      <AuthLayout
+        title="Check your email"
+        intro={`We sent a link to ${sentTo}. Click it to confirm your email, then sign in.`}
+        footer={
+          <>
+            Confirmed it?{' '}
+            <Link className={authLinkClass} to="/login" state={location.state}>
+              Sign in
+            </Link>
+          </>
+        }
+      >
+        <p className="text-sm text-ink/70">
+          No email after a few minutes? Check your spam folder, or{' '}
+          <ResendConfirmation email={sentTo} />.
+        </p>
+      </AuthLayout>
+    );
   if (auth.user) return <Navigate to="/account" />;
 
   const longEnough = formData.password.length >= 8;
@@ -147,6 +167,22 @@ const RegisterPage = () => {
           required
           value={formData.email}
           error={fieldErrors.email}
+          onChange={handleChange}
+          onBlur={handleBlur}
+        />
+        <AuthField
+          id="register-phone"
+          ref={fieldRefs.phone}
+          label="Phone number"
+          name="phone"
+          type="tel"
+          inputMode="tel"
+          autoComplete="tel"
+          required
+          maxLength={20}
+          value={formData.phone}
+          error={fieldErrors.phone}
+          hint="So the owner can reach you about your stay, e.g. +254 712 345 678"
           onChange={handleChange}
           onBlur={handleBlur}
         />

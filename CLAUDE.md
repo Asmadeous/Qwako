@@ -1,4 +1,4 @@
-# T&G BnB
+# TG Homes
 
 Agent instructions for this project live in **AGENTS.md** (shared across AI coding
 tools). Blueprint skills load planning context, coding standards, and the active

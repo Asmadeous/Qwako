@@ -1,9 +1,9 @@
 module Api
   module V1
     module Admin
-      # Taking nights off sale for a home, and putting them back.
+      # Taking nights off sale for a home, changing those dates, and putting them back.
       class BlocksController < ApplicationController
-        before_action :require_admin
+        before_action :require_team
 
         def create
           listing = Listing.kept.find(params[:listing_id])
@@ -16,6 +16,19 @@ module Api
           return render_validation_errors(block) unless block.persisted?
 
           render json: { block: block.slice(:id, :starts_on, :ends_on, :reason) }, status: :created
+        end
+
+        def update
+          block = AvailabilityBlock.find(params[:id])
+          before = block.nights_label
+          block.listing.with_lock do
+            next unless block.update(params.permit(:starts_on, :ends_on, :reason))
+
+            audit("change_block", block.listing, "Changed blocked nights at #{block.listing.title}: was #{before}, now #{block.nights_label}")
+          end
+          return render_validation_errors(block) unless block.errors.empty?
+
+          render json: { block: block.slice(:id, :starts_on, :ends_on, :reason) }
         end
 
         def destroy

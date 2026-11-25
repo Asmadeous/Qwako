@@ -34,6 +34,8 @@ export const FormError = ({ children }) =>
   ) : null;
 
 const EMAIL_FORMAT = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+// Same rule as the server: digits, spaces, brackets and dashes, optional leading +.
+export const PHONE_FORMAT = /^\+?[0-9][0-9 ()-]{6,19}$/;
 
 // Field checks run when a field loses focus and again on submit.
 export const checkField = {
@@ -45,6 +47,12 @@ export const checkField = {
         ? ''
         : 'Enter an email like name@example.com.',
   password: (value) => (value ? '' : 'Enter your password.'),
+  phone: (value) =>
+    !value.trim()
+      ? 'Enter your phone number.'
+      : PHONE_FORMAT.test(value.trim())
+        ? ''
+        : 'Enter a phone number like +254 712 345 678.',
   newPassword: (value) =>
     value.length >= 8 ? '' : 'Use at least 8 characters.',
 };

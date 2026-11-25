@@ -10,7 +10,7 @@ class Api::V1::Admin::TeamAndOverviewTest < ActionDispatch::IntegrationTest
     end
     assert_response :created
     juma = User.find_by!(email: "juma@example.com")
-    assert juma.admin?
+    assert juma.staff?, "new team members start as staff"
     assert_equal "add_staff", AuditLog.last.action
 
     token = juma.generate_token_for(:invitation)

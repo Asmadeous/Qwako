@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
-import { Link, Navigate, useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { format, parseISO } from 'date-fns';
 import { toast } from 'react-toastify';
-import { CalendarClock, ChevronLeft, Mail, MessageSquare, Phone, Users } from 'lucide-react';
+import { CalendarClock, ChevronLeft, Mail, MessageSquare, Pencil, Phone, Plus, Trash2, Users } from 'lucide-react';
 
 import AccountNav from '@/components/ui/AccountNav';
 import { useAuth } from '../../hooks';
@@ -17,6 +17,7 @@ import { formatPrice } from '@/utils/currency';
 import { bookingStatusLabel, channelName } from '@/utils/bookingStatus';
 import RescheduleDialog from '@/components/ui/RescheduleDialog';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogTitle } from '@/components/ui/dialog';
+import { isOwner } from '@/utils/roles';
 
 const when = (iso) => format(parseISO(iso), 'd MMM yyyy, HH:mm');
 
@@ -26,7 +27,18 @@ const PAYMENT_STATUS = {
   failed: 'Failed',
 };
 
-const OwnerBookingPageContent = () => {
+const METHODS = [
+  { id: 'cash', label: 'Cash' },
+  { id: 'mpesa', label: 'M-Pesa' },
+  { id: 'bank', label: 'Bank transfer' },
+  { id: 'card', label: 'Card' },
+];
+
+// One booking. Staff run the stay (accept, dates, guest count, messages);
+// money, cancelling, declining and deleting are for the owner.
+const OwnerBookingPage = () => {
+  const { user } = useAuth();
+  const owner = isOwner(user);
   const { id } = useParams();
   const [booking, setBooking] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -39,6 +51,9 @@ const OwnerBookingPageContent = () => {
   const [rescheduling, setRescheduling] = useState(false);
   const [messaging, setMessaging] = useState(false);
   const [message, setMessage] = useState('');
+  const [guestsCount, setGuestsCount] = useState(1);
+  const [amount, setAmount] = useState('');
+  const [method, setMethod] = useState('cash');
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -78,6 +93,28 @@ const OwnerBookingPageContent = () => {
   const cancelBooking = () => run(() => api.post(`/admin/bookings/${id}/cancel`, { reason }), 'Booking cancelled. The guest has been told.');
   const accept = () => run(() => api.post(`/admin/bookings/${id}/accept`), 'Request accepted. The guest has been told.');
   const decline = () => run(() => api.post(`/admin/bookings/${id}/decline`, { reason }), 'Request declined. The refund is due.');
+  const changeGuests = (e) => {
+    e.preventDefault();
+    run(() => api.patch(`/admin/bookings/${id}`, { guests_count: guestsCount }), 'Number of guests saved.');
+  };
+  const recordPayment = (e) => {
+    e.preventDefault();
+    run(() => api.post(`/admin/bookings/${id}/record_payment`, { payment_amount: amount, payment_method: method }), 'Payment recorded.');
+  };
+  const removePayment = (payment) =>
+    run(() => api.post(`/admin/bookings/${id}/remove_payment`, { payment_id: payment.id }), 'Payment removed.');
+  const deleteBooking = async () => {
+    setBusy(true);
+    setActionError('');
+    try {
+      await api.delete(`/admin/bookings/${id}`);
+      toast.success('Booking deleted.');
+      navigate('/account/reservations', { replace: true });
+    } catch (error) {
+      setActionError(errorMessageFrom(error));
+      setBusy(false);
+    }
+  };
   const markRefunded = (payment) =>
     run(() => api.post(`/admin/bookings/${id}/mark_refunded`, { payment_id: payment.id }), 'Refund recorded.');
   const refundThroughPaystack = (payment) =>
@@ -102,6 +139,8 @@ const OwnerBookingPageContent = () => {
   const paid = booking?.payments.filter((p) => p.status === 'succeeded' && !p.refunded_at) ?? [];
   const paidTotal = paid.reduce((sum, p) => sum + p.amount_cents, 0);
   const refundsDue = booking?.payments.filter((p) => p.refund_due) ?? [];
+  // What the guest still owes, after refunds made or due (as the API counts it).
+  const owed = booking ? booking.total_cents - (booking.paid_cents - booking.refund_cents) : 0;
 
   return (
     <div>
@@ -131,10 +170,13 @@ const OwnerBookingPageContent = () => {
                 </p>
                 <div className="mt-4 flex flex-wrap gap-2">
                   <Button onClick={() => openConfirm('accept')}>Accept</Button>
-                  <Button variant="danger-outline" onClick={() => openConfirm('decline')}>
-                    Decline
-                  </Button>
+                  {owner && (
+                    <Button variant="danger-outline" onClick={() => openConfirm('decline')}>
+                      Decline
+                    </Button>
+                  )}
                 </div>
+                {!owner && <p className="mt-3 text-sm text-ink/65">Only the owner can decline, because the guest is refunded.</p>}
               </section>
             )}
 
@@ -149,14 +191,18 @@ const OwnerBookingPageContent = () => {
                     : booking.status === 'confirmed'
                       ? 'The stay was shortened, so part of the payment goes back.'
                       : 'Paystack took this payment, but it could not confirm the stay (the hold had ended and the dates were taken, or the amount was wrong).'}{' '}
-                  Send it through Paystack from here, back to the M-Pesa number or card the guest paid with.
+                  {payment.provider === 'manual'
+                    ? `This was paid by ${channelName(payment.channel)}, outside the website. Give the money back yourself, then record it here.`
+                    : 'Send it through Paystack from here, back to the M-Pesa number or card the guest paid with.'}
                 </p>
                 <div className="mt-4 flex flex-wrap gap-2">
-                  <Button onClick={() => openConfirm({ type: 'refund', payment })}>
-                    Refund {formatPrice(payment.refund_cents ?? payment.amount_cents, payment.currency)} through Paystack
-                  </Button>
+                  {payment.provider !== 'manual' && (
+                    <Button onClick={() => openConfirm({ type: 'refund', payment })}>
+                      Refund {formatPrice(payment.refund_cents ?? payment.amount_cents, payment.currency)} through Paystack
+                    </Button>
+                  )}
                   <Button variant="outline" onClick={() => openConfirm({ type: 'mark', payment })}>
-                    I refunded it in Paystack
+                    {payment.provider === 'manual' ? 'I gave the money back' : 'I refunded it in Paystack'}
                   </Button>
                 </div>
               </section>
@@ -178,6 +224,20 @@ const OwnerBookingPageContent = () => {
                   <p className="flex items-center gap-2">
                     <Users aria-hidden strokeWidth={1.5} className="size-4" />
                     {booking.guests_count} {booking.guests_count === 1 ? 'guest' : 'guests'}
+                    {booking.can_edit_guests && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setActionError('');
+                          setGuestsCount(booking.guests_count);
+                          setConfirm('guests');
+                        }}
+                        className="ml-1 inline-flex min-h-11 items-center gap-1 text-sm font-medium underline underline-offset-4"
+                      >
+                        <Pencil aria-hidden className="size-3.5" />
+                        Change
+                      </button>
+                    )}
                   </p>
                 </div>
                 {booking.cancel_reason && <p className="mt-3 text-sm text-ink/70">Reason: {booking.cancel_reason}</p>}
@@ -202,9 +262,11 @@ const OwnerBookingPageContent = () => {
                 </div>
               </div>
 
-              <div className="md:col-start-2 md:row-span-2 md:row-start-1">
-                <PriceBreakdown booking={booking} />
-              </div>
+              {owner && (
+                <div className="md:col-start-2 md:row-span-2 md:row-start-1">
+                  <PriceBreakdown booking={booking} />
+                </div>
+              )}
 
               <div className="md:col-start-1">
                 <section className="border-t border-ink/15 pt-6 md:mt-2">
@@ -231,8 +293,25 @@ const OwnerBookingPageContent = () => {
                   <p className="text-sm text-ink/55">Booked {when(booking.created_at)}</p>
                 </section>
 
+                {owner && (
                 <section className="mt-8 border-t border-ink/15 pt-6">
-                  <h3 className="font-bold tracking-tight text-2xl">Payments</h3>
+                  <div className="flex flex-wrap items-center justify-between gap-3">
+                    <h3 className="font-bold tracking-tight text-2xl">Payments</h3>
+                    {booking.can_record_payment && (
+                      <Button
+                        variant="outline"
+                        onClick={() => {
+                          setActionError('');
+                          setAmount(String(Math.max(owed, 0) / 100));
+                          setMethod('cash');
+                          setConfirm('payment');
+                        }}
+                      >
+                        <Plus aria-hidden className="size-4" />
+                        Record a payment
+                      </Button>
+                    )}
+                  </div>
                   {booking.payments.length === 0 ? (
                     <p className="mt-2 text-sm text-ink/70">
                       The guest has not paid yet.
@@ -253,12 +332,25 @@ const OwnerBookingPageContent = () => {
                               </span>
                             )}
                           </span>
-                          <span className="sm:text-right">{formatPrice(payment.amount_cents, payment.currency)}</span>
+                          <span className="sm:text-right">
+                            {formatPrice(payment.amount_cents, payment.currency)}
+                            {payment.provider === 'manual' && !payment.needs_refund && (
+                              <button
+                                type="button"
+                                onClick={() => openConfirm({ type: 'remove', payment })}
+                                className="mt-1 flex min-h-11 items-center gap-1 text-sm font-medium text-red-800 underline underline-offset-4 sm:ml-auto"
+                              >
+                                <Trash2 aria-hidden className="size-3.5" />
+                                Remove
+                              </button>
+                            )}
+                          </span>
                         </li>
                       ))}
                     </ul>
                   )}
                 </section>
+                )}
 
                 {['confirmed', 'requested', 'pending_payment'].includes(booking.status) && (
                 <section className="mt-8 border-t border-ink/15 pt-6">
@@ -271,9 +363,11 @@ const OwnerBookingPageContent = () => {
                   {booking.private_details?.wifi_details && (
                     <p className="mt-2 whitespace-pre-line text-sm text-ink/80">Wifi: {booking.private_details.wifi_details}</p>
                   )}
-                  <Link to={`/account/places/${booking.listing.id}`} className="mt-2 inline-block text-sm font-medium underline underline-offset-4">
-                    Edit in the home's settings
-                  </Link>
+                  {owner && (
+                    <Link to={`/account/places/${booking.listing.id}`} className="mt-2 inline-block text-sm font-medium underline underline-offset-4">
+                      Edit in the home's settings
+                    </Link>
+                  )}
                 </section>
                 )}
 
@@ -286,6 +380,19 @@ const OwnerBookingPageContent = () => {
                     </p>
                     <Button variant="danger-outline" className="mt-4" onClick={() => openConfirm('cancel')}>
                       Cancel booking
+                    </Button>
+                  </section>
+                )}
+
+                {booking.can_delete && (
+                  <section className="mt-8 border-t border-ink/15 pt-6">
+                    <h3 className="font-bold tracking-tight text-2xl">Delete this booking</h3>
+                    <p className="mt-1 max-w-prose text-sm text-ink/70">
+                      Removes it from your records for good. Only bookings with no money taken can be deleted.
+                    </p>
+                    <Button variant="danger-outline" className="mt-4" onClick={() => openConfirm('delete')}>
+                      <Trash2 aria-hidden className="size-4" />
+                      Delete booking
                     </Button>
                   </section>
                 )}
@@ -303,9 +410,9 @@ const OwnerBookingPageContent = () => {
               tone="danger"
               onConfirm={cancelBooking}
             >
-              <p>
+              <div>
                 {booking.listing.title} for {booking.guest.name}, <BookingDates booking={booking} className="inline-flex" />
-              </p>
+              </div>
               {paidTotal > 0 && (
                 <p>
                   {formatPrice(paidTotal, booking.currency)} was paid. It will be due back to the guest in full; you can
@@ -404,6 +511,115 @@ const OwnerBookingPageContent = () => {
             </Dialog>
 
             <ConfirmDialog
+              open={confirm === 'delete'}
+              onOpenChange={(open) => !open && setConfirm(null)}
+              title="Delete this booking?"
+              confirmLabel="Delete booking"
+              busyLabel="Deleting..."
+              busy={busy}
+              error={actionError}
+              tone="danger"
+              onConfirm={deleteBooking}
+            >
+              <div>
+                {booking.listing.title} for {booking.guest.name}, <BookingDates booking={booking} className="inline-flex" />
+              </div>
+              <p>It is removed for good. You can't undo this.</p>
+            </ConfirmDialog>
+
+            <ConfirmDialog
+              open={confirm?.type === 'remove'}
+              onOpenChange={(open) => !open && setConfirm(null)}
+              title="Remove this payment?"
+              confirmLabel="Remove payment"
+              busyLabel="Removing..."
+              busy={busy}
+              error={actionError}
+              tone="danger"
+              onConfirm={() => removePayment(confirm.payment)}
+            >
+              <p>
+                Only for a payment recorded by mistake:{' '}
+                {confirm?.payment && formatPrice(confirm.payment.amount_cents, confirm.payment.currency)} by{' '}
+                {confirm?.payment && channelName(confirm.payment.channel)}. It's removed from your transactions.
+              </p>
+            </ConfirmDialog>
+
+            <Dialog open={confirm === 'guests'} onOpenChange={(next) => !busy && !next && setConfirm(null)}>
+              <DialogContent className="max-w-sm">
+                <form onSubmit={changeGuests} className="grid gap-4">
+                  <DialogTitle className="text-3xl font-bold leading-tight tracking-tight">Number of guests</DialogTitle>
+                  <DialogDescription className="text-sm text-ink/70">
+                    {booking.listing.title} takes up to {booking.listing.max_guests} guests. The price stays the same.
+                  </DialogDescription>
+                  <label className="grid gap-1.5 text-sm font-medium">
+                    Guests
+                    <input
+                      type="number"
+                      min={1}
+                      max={booking.listing.max_guests}
+                      value={guestsCount}
+                      onChange={(e) => setGuestsCount(e.target.value)}
+                      className="!my-0"
+                    />
+                  </label>
+                  {actionError && (
+                    <p role="alert" className="text-sm font-semibold text-red-800">
+                      {actionError}
+                    </p>
+                  )}
+                  <DialogFooter className="gap-2">
+                    <Button variant="outline" onClick={() => setConfirm(null)} disabled={busy}>
+                      Close
+                    </Button>
+                    <Button type="submit" disabled={busy}>
+                      {busy ? 'Saving...' : 'Save'}
+                    </Button>
+                  </DialogFooter>
+                </form>
+              </DialogContent>
+            </Dialog>
+
+            <Dialog open={confirm === 'payment'} onOpenChange={(next) => !busy && !next && setConfirm(null)}>
+              <DialogContent className="max-w-sm">
+                <form onSubmit={recordPayment} className="grid gap-4">
+                  <DialogTitle className="text-3xl font-bold leading-tight tracking-tight">Record a payment</DialogTitle>
+                  <DialogDescription className="text-sm text-ink/70">
+                    Money {booking.guest.name} paid you outside the website. Still owed:{' '}
+                    {formatPrice(Math.max(owed, 0), booking.currency)}.
+                  </DialogDescription>
+                  <label className="grid gap-1.5 text-sm font-medium">
+                    Amount (Ksh)
+                    <input type="number" min={1} step="1" value={amount} onChange={(e) => setAmount(e.target.value)} className="!my-0" required />
+                  </label>
+                  <label className="grid gap-1.5 text-sm font-medium">
+                    Paid by
+                    <select value={method} onChange={(e) => setMethod(e.target.value)} className="h-11 rounded-xl border border-ink/25 bg-paper px-3">
+                      {METHODS.map((m) => (
+                        <option key={m.id} value={m.id}>
+                          {m.label}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+                  {actionError && (
+                    <p role="alert" className="text-sm font-semibold text-red-800">
+                      {actionError}
+                    </p>
+                  )}
+                  <DialogFooter className="gap-2">
+                    <Button variant="outline" onClick={() => setConfirm(null)} disabled={busy}>
+                      Close
+                    </Button>
+                    <Button type="submit" disabled={busy || !amount}>
+                      {busy ? 'Saving...' : 'Record payment'}
+                    </Button>
+                  </DialogFooter>
+                </form>
+              </DialogContent>
+            </Dialog>
+
+            <ConfirmDialog
               open={confirm?.type === 'mark'}
               onOpenChange={(open) => !open && setConfirm(null)}
               title="Record this refund?"
@@ -414,9 +630,12 @@ const OwnerBookingPageContent = () => {
               onConfirm={() => markRefunded(confirm.payment)}
             >
               <p>
-                Only do this if you already refunded{' '}
-                {confirm?.payment && formatPrice(confirm.payment.refund_cents ?? confirm.payment.amount_cents, confirm.payment.currency)}{' '}
-                in your Paystack dashboard (search Transactions for {confirm?.payment?.reference}). The guest is told it's on its way.
+                Only do this if you already gave back{' '}
+                {confirm?.payment && formatPrice(confirm.payment.refund_cents ?? confirm.payment.amount_cents, confirm.payment.currency)}
+                {confirm?.payment?.provider === 'manual'
+                  ? ' yourself.'
+                  : ` in your Paystack dashboard (search Transactions for ${confirm?.payment?.reference}).`}{' '}
+                The guest is told it's on its way.
               </p>
             </ConfirmDialog>
           </>
@@ -438,12 +657,5 @@ const ReasonField = ({ value, onChange, label }) => (
     />
   </label>
 );
-
-// Owner only: guests are sent to their own account.
-const OwnerBookingPage = () => {
-  const { user } = useAuth();
-  if (user?.role !== 'admin') return <Navigate to="/account" replace />;
-  return <OwnerBookingPageContent />;
-};
 
 export default OwnerBookingPage;

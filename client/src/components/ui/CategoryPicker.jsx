@@ -59,7 +59,7 @@ const CategoryPicker = ({ value, onChange, error, manage }) => {
     } catch (err) {
       setCreateError(
         fieldErrorsFrom(err).name
-          ? `That name ${fieldErrorsFrom(err).name}.`
+          ? `${fieldErrorsFrom(err).name}.`
           : errorMessageFrom(err),
       );
       nameRef.current?.focus();

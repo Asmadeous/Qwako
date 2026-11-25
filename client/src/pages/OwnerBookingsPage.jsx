@@ -1,14 +1,15 @@
 import { useEffect, useState } from 'react';
-import { Link, Navigate, useSearchParams } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { format, parseISO } from 'date-fns';
-import { Search } from 'lucide-react';
+import { Plus, Search } from 'lucide-react';
 
 import AccountNav from '@/components/ui/AccountNav';
 import { useAuth } from '../../hooks';
 import { api, errorMessageFrom } from '@/utils/axios';
 import { formatPrice } from '@/utils/currency';
 import { bookingStatusLabel, paymentSummary } from '@/utils/bookingStatus';
-import { Button } from '@/components/ui/button';
+import { Button, buttonVariants } from '@/components/ui/button';
+import { isOwner } from '@/utils/roles';
 
 const VIEWS = [
   { id: 'upcoming', label: 'Upcoming', empty: 'No upcoming bookings. New bookings appear here as soon as guests book.' },
@@ -25,13 +26,20 @@ const TONES = {
   muted: 'text-ink/55',
 };
 
+// Staff rows have no Total column.
+const COLUMNS = {
+  true: 'md:grid-cols-[10rem_minmax(0,1.3fr)_minmax(0,1fr)_7rem_9rem]',
+  false: 'md:grid-cols-[10rem_minmax(0,1.3fr)_minmax(0,1fr)_9rem]',
+};
+
 const shortDate = (iso) => format(parseISO(iso), 'd MMM');
 const dateRange = (booking) => {
   const year = format(parseISO(booking.check_out), 'yyyy');
   return `${shortDate(booking.check_in)} to ${shortDate(booking.check_out)} ${year}`;
 };
 
-const BookingRow = ({ booking }) => {
+// Staff don't see money: no total or payment state.
+const BookingRow = ({ booking, owner }) => {
   const payment = paymentSummary(booking);
   const town = booking.listing.address.split(',')[0].trim();
 
@@ -39,7 +47,7 @@ const BookingRow = ({ booking }) => {
     <li>
       <Link
         to={`/account/reservations/${booking.id}`}
-        className="grid gap-x-6 gap-y-1 rounded-2xl border border-ink/15 p-4 transition-colors hover:border-ink/40 hover:bg-paper md:grid-cols-[10rem_minmax(0,1.3fr)_minmax(0,1fr)_7rem_9rem] md:items-center"
+        className={`grid gap-x-6 gap-y-1 rounded-2xl border border-ink/15 bg-paper p-4 transition-colors hover:border-ink/40 md:items-center ${COLUMNS[owner]}`}
       >
         <span className="tabular text-sm">
           {dateRange(booking)}
@@ -56,19 +64,22 @@ const BookingRow = ({ booking }) => {
           <span className="block truncate">{booking.guest.name}</span>
           <span className="block truncate text-ink/55">{booking.guest.email}</span>
         </span>
-        <span className="tabular text-sm md:text-right">{formatPrice(booking.total_cents, booking.currency)}</span>
+        {owner && <span className="tabular text-sm md:text-right">{formatPrice(booking.total_cents, booking.currency)}</span>}
         <span className="text-sm md:text-right">
           <span className="block">{bookingStatusLabel(booking.status, { owner: true })}</span>
-          <span className={`block ${TONES[payment.tone]}`}>{payment.label}</span>
+          {owner && <span className={`block ${TONES[payment.tone]}`}>{payment.label}</span>}
         </span>
       </Link>
     </li>
   );
 };
 
-const OwnerBookingsPageContent = () => {
+const OwnerBookingsPage = () => {
+  const { user } = useAuth();
+  const owner = isOwner(user);
+  const views = owner ? VIEWS : VIEWS.filter((v) => v.id !== 'refunds');
   const [searchParams, setSearchParams] = useSearchParams();
-  const view = VIEWS.some((v) => v.id === searchParams.get('view')) ? searchParams.get('view') : 'upcoming';
+  const view = views.some((v) => v.id === searchParams.get('view')) ? searchParams.get('view') : 'upcoming';
   const q = searchParams.get('q') ?? '';
   const [query, setQuery] = useState(q);
   const [bookings, setBookings] = useState([]);
@@ -125,15 +136,24 @@ const OwnerBookingsPageContent = () => {
     }
   };
 
-  const viewInfo = VIEWS.find((v) => v.id === view);
+  const viewInfo = views.find((v) => v.id === view);
 
   return (
     <div>
-      <AccountNav />
+      <AccountNav
+        actions={
+          owner && (
+            <Link to="/account/reservations/new" className={buttonVariants()}>
+              <Plus aria-hidden className="size-4" />
+              New booking
+            </Link>
+          )
+        }
+      />
       <div className="mx-4 pb-24">
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <div className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none]" role="group" aria-label="Show bookings">
-            {VIEWS.map((v) => (
+            {views.map((v) => (
               <button
                 key={v.id}
                 type="button"
@@ -165,7 +185,7 @@ const OwnerBookingsPageContent = () => {
           </label>
         </div>
 
-        {refundsDue > 0 && view !== 'refunds' && (
+        {owner && refundsDue > 0 && view !== 'refunds' && (
           <p role="status" className="mt-5 rounded-2xl border border-red-700/30 bg-red-50 p-4 text-sm text-red-900">
             {refundsDue === 1 ? 'One booking has' : `${refundsDue} bookings have`} a refund due.{' '}
             <button type="button" className="font-semibold underline underline-offset-4" onClick={() => updateParams({ view: 'refunds' })}>
@@ -174,11 +194,11 @@ const OwnerBookingsPageContent = () => {
           </p>
         )}
 
-        <div className="mt-6 hidden gap-x-6 px-4 pb-2 text-xs text-ink/55 md:grid md:grid-cols-[10rem_minmax(0,1.3fr)_minmax(0,1fr)_7rem_9rem]" aria-hidden>
+        <div className={`mt-6 hidden gap-x-6 px-4 pb-2 text-xs text-ink/55 md:grid ${COLUMNS[owner]}`} aria-hidden>
           <span>Dates</span>
           <span>Home</span>
           <span>Guest</span>
-          <span className="text-right">Total</span>
+          {owner && <span className="text-right">Total</span>}
           <span className="text-right">Status</span>
         </div>
 
@@ -208,7 +228,7 @@ const OwnerBookingsPageContent = () => {
           <>
             <ul className="mt-3 grid gap-3 md:mt-0">
               {bookings.map((booking) => (
-                <BookingRow key={booking.id} booking={booking} />
+                <BookingRow key={booking.id} booking={booking} owner={owner} />
               ))}
             </ul>
             {nextPage && (
@@ -227,13 +247,6 @@ const OwnerBookingsPageContent = () => {
       </div>
     </div>
   );
-};
-
-// Owner only: guests are sent to their own account.
-const OwnerBookingsPage = () => {
-  const { user } = useAuth();
-  if (user?.role !== 'admin') return <Navigate to="/account" replace />;
-  return <OwnerBookingsPageContent />;
 };
 
 export default OwnerBookingsPage;

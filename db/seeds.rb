@@ -2,7 +2,8 @@
 #
 # Admin account: SEED_ADMIN_EMAIL / SEED_ADMIN_PASSWORD. Outside production they
 # default to the development-only values below; production requires both.
-# Outside production a guest account (guest@tgbnb.test) is also seeded.
+# Outside production a guest account (guest@tgbnb.test) and a staff account
+# (staff@tgbnb.test) are also seeded.
 
 AMENITIES = {
   "wifi" => "Wi-Fi", "parking" => "Free parking", "tv" => "TV",
@@ -17,7 +18,7 @@ admin_password = ENV["SEED_ADMIN_PASSWORD"] || (Rails.env.production? ? nil : "a
 if admin_email && admin_password
   admin = User.find_or_initialize_by(email: admin_email)
   admin.password = admin_password if admin.new_record? # never reset a password the owner changed
-  admin.update!(name: admin.name.presence || "T&G Owner", role: "admin")
+  admin.update!(name: admin.name.presence || "TG Homes owner", role: "admin", email_verified_at: admin.email_verified_at || Time.current)
 else
   warn "Skipping admin account: set SEED_ADMIN_EMAIL and SEED_ADMIN_PASSWORD."
 end
@@ -25,13 +26,23 @@ end
 # A guest account for trying the booking flow locally. Never created in production.
 unless Rails.env.production?
   guest = User.find_or_initialize_by(email: "guest@tgbnb.test")
-  guest.update!(name: guest.name.presence || "Test Guest", password: "guest-dev-password", role: "guest")
+  guest.update!(name: guest.name.presence || "Test Guest", password: "guest-dev-password", role: "guest",
+    phone: guest.phone || "+254 700 000 000", email_verified_at: guest.email_verified_at || Time.current)
+
+  # A staff account, for trying what staff can and can't do.
+  staff = User.find_or_initialize_by(email: "staff@tgbnb.test")
+  staff.update!(name: staff.name.presence || "Test Staff", password: "staff-dev-password", role: "staff",
+    phone: staff.phone || "+254 700 000 001", email_verified_at: staff.email_verified_at || Time.current)
 end
 
 # The owner's real homes, priced in shillings. Addresses end with the country.
 # Photos live in client/public/listings and are served by the site itself.
 { "kitchen" => "Fully fitted kitchen", "washing_machine" => "Washing machine",
-  "dishwasher" => "Dishwasher", "balcony" => "Balcony" }.each do |key, name|
+  "dishwasher" => "Dishwasher", "balcony" => "Balcony",
+  "hot_showers" => "Hot showers", "fireplace" => "Fireplace or wood stove",
+  "workspace" => "Dedicated workspace", "backup_power" => "Backup power", "garden" => "Garden",
+  "fire_pit" => "Fire pit", "bbq_grill" => "BBQ grill", "caretaker" => "On-site caretaker",
+  "housekeeping" => "Daily housekeeping" }.each do |key, name|
   Amenity.find_or_create_by!(key:) { |amenity| amenity.name = name }
 end
 

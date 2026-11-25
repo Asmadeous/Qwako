@@ -11,12 +11,25 @@ require "action_mailer/railtie"
 require "action_mailbox/engine"
 require "action_text/engine"
 require "action_view/railtie"
-# require "action_cable/engine"
+require "action_cable/engine"
 require "rails/test_unit/railtie"
 
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
+
+# Development only: local settings such as the Paystack test key are kept in the
+# git-ignored file .env.development.local (one KEY=value per line), so they
+# survive restarts. A value already set in the shell wins.
+if (ENV["RAILS_ENV"] || ENV["RACK_ENV"] || "development") == "development"
+  local_env = File.expand_path("../.env.development.local", __dir__)
+  if File.exist?(local_env)
+    File.foreach(local_env) do |line|
+      key, value = line.strip.split("=", 2)
+      ENV[key] ||= value.delete_prefix('"').delete_suffix('"') if value && key.match?(/\A[A-Z][A-Z0-9_]*\z/)
+    end
+  end
+end
 
 module Backend
   class Application < Rails::Application
