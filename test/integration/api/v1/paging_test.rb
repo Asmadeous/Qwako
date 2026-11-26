@@ -105,7 +105,7 @@ class Api::V1::PagingTest < ActionDispatch::IntegrationTest
     assert_response :not_found
   end
 
-  test "the journal pages 12 posts at a time" do
+  test "the blog pages 12 posts at a time" do
     now = Time.current
     Post.insert_all(14.times.map { |i|
       { title: "Post #{i}", slug: "post-#{i}", published_at: now - i.days, created_at: now, updated_at: now }

@@ -1,17 +1,17 @@
-import { IMG } from './images';
+import { useHomePhotos } from './images';
 import { useSectionProgress, photoProps } from './motion';
 
 const SLIDES = [
   {
     title: ['A study in', 'place, light', 'and calm.'],
     text: 'Every home is chosen for its setting, its natural light and the quiet way it fits into the day.',
-    image: IMG.evening,
+    photo: 3,
     dark: true,
   },
   {
     title: ['Rooms that', 'hold the', 'evening light.'],
     text: 'Wide windows and warm materials let each day end slowly, with soft light settling into every room.',
-    image: IMG.dusk,
+    photo: 4,
     dark: false,
   },
 ];
@@ -19,6 +19,7 @@ const SLIDES = [
 const Study = () => {
   const [ref, p] = useSectionProgress();
   const active = p < 0.5 ? 0 : 1;
+  const { pick } = useHomePhotos();
 
   return (
     <section ref={ref} className="relative h-[220vh] bg-sand text-ink">
@@ -56,7 +57,9 @@ const Study = () => {
           );
           const image = (
             <div className="overflow-hidden rounded-2xl">
-              <img {...photoProps(s.image, 1600, '(min-width: 768px) 50vw, 100vw')} alt="" className="h-full w-full object-cover" />
+              {pick(s.photo) && (
+                <img {...photoProps(pick(s.photo).url, 1600, '(min-width: 768px) 50vw, 100vw')} alt="" className="h-full w-full object-cover" />
+              )}
             </div>
           );
           return (

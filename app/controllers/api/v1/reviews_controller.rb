@@ -1,8 +1,18 @@
 module Api
   module V1
-    # A guest reviews their own stay once it has ended.
+    # The newest guest reviews of the published homes, for the home page; and a
+    # guest reviews their own stay once it has ended.
     class ReviewsController < ApplicationController
-      rate_limit to: 10, within: 10.minutes, with: -> { render_rate_limited }
+      LATEST = 6
+
+      allow_unauthenticated_access only: :index
+      rate_limit to: 10, within: 10.minutes, only: :create, with: -> { render_rate_limited }
+
+      def index
+        reviews = Review.visible.joins(:listing).merge(Listing.published.kept)
+          .includes(:author, :listing).order(created_at: :desc, id: :desc).limit(LATEST)
+        render json: { reviews: reviews.map { |review| review_json(review).merge(listing_title: review.listing.title) } }
+      end
 
       def create
         booking = Current.user.bookings.find(params[:booking_id])

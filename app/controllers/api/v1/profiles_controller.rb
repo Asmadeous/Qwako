@@ -36,7 +36,7 @@ module Api
             c.messages.map { |m| { conversation: c.subject, from: m.sender.name, body: m.body, files: m.files.map { |f| f.filename.to_s }, sent_at: m.created_at } }
           }
         }
-        send_data JSON.pretty_generate(data), filename: "tg-bnb-my-data.json", type: :json, disposition: :attachment
+        send_data JSON.pretty_generate(data), filename: "tg-homes-my-data.json", type: :json, disposition: :attachment
       end
 
       # Closes the account. Refused while a stay is still to come, and for the last admin.

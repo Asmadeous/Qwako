@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import { IMG } from './images';
+import { useHomePhotos } from './images';
 import { ease, lerp, photo, range, useSectionProgress, photoProps } from './motion';
 
 // Scattered start positions (centre x/y and size in vw/vh, rotation in deg).
@@ -19,7 +19,8 @@ const Collage = () => {
   const [slide, setSlide] = useState(0);
   const t = ease(range(p, 0.05, 0.7));
   const done = p > 0.72;
-  const images = IMG.collage;
+  const { pool, pick } = useHomePhotos();
+  const images = pool.map((item) => item.url);
 
   return (
     <section ref={ref} className="relative h-[320vh] bg-sand text-ink">
@@ -33,7 +34,7 @@ const Collage = () => {
           to travel
         </h2>
 
-        {START.map((s, i) => {
+        {images.length > 0 && START.map((s, i) => {
           const main = i === 0;
           const out = 1 + 0.9 * t;
           const x = main ? lerp(s.x, 50, t) : 50 + (s.x - 50) * out;
@@ -67,7 +68,7 @@ const Collage = () => {
                   />
                 ))
               ) : (
-                <img src={photo(images[i], 640)} loading="lazy" decoding="async" alt="" className="h-full w-full object-cover" />
+                <img src={photo(pick(i).url, 640)} loading="lazy" decoding="async" alt="" className="h-full w-full object-cover" />
               )}
             </div>
           );

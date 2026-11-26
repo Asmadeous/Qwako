@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { Search, SlidersHorizontal } from 'lucide-react';
 
+import { Select } from '@/components/ui/select';
+
 import {
   DEFAULT_FILTERS,
   amenitiesIn,
@@ -15,6 +17,17 @@ import {
 
 const control =
   'h-11 w-full min-w-0 rounded-full md:w-auto border border-ink/25 bg-paper px-4 text-sm text-ink transition-colors hover:border-ink/50 focus:border-ink focus:outline-none';
+
+// The dropdowns sit on the page background, so they get a visible border.
+const dropdown = 'rounded-full border-ink/25 px-4 md:w-auto md:min-w-[10rem]';
+const choices = (items) => items.map((c) => ({ value: c, label: c }));
+const GUESTS = [
+  { value: '0', label: 'Any guests' },
+  ...[1, 2, 3, 4, 5, 6, 7, 8].map((n) => ({
+    value: String(n),
+    label: `${n} ${n === 1 ? 'guest' : 'guests'}`,
+  })),
+];
 
 const chip = (active) =>
   `h-10 shrink-0 whitespace-nowrap rounded-full border px-4 text-sm transition-colors active:scale-[0.98] ${
@@ -62,63 +75,41 @@ const Filters = ({ places, filters, setFilters, resultCount }) => {
 
         <div className="grid grid-cols-2 gap-2 md:contents">
           {manyCountries ? (
-            <select
+            <Select
               aria-label="Country"
-              className={control}
+              className={dropdown}
               value={filters.region}
-              onChange={(e) =>
-                set({ region: e.target.value, county: 'all', budget: 'any' })
-              }
-            >
-              <option value="all">Everywhere</option>
-              {countries.map((c) => (
-                <option key={c} value={c}>
-                  {c}
-                </option>
-              ))}
-            </select>
+              onValueChange={(v) => set({ region: v, county: 'all', budget: 'any' })}
+              options={[{ value: 'all', label: 'Everywhere' }, ...choices(countries)]}
+            />
           ) : (
-            <select
+            <Select
               aria-label="County"
-              className={control}
+              className={dropdown}
               value={filters.county}
-              onChange={(e) => set({ county: e.target.value })}
-            >
-              <option value="all">All of {countries[0] ?? 'Kenya'}</option>
-              {counties.map((c) => (
-                <option key={c} value={c}>
-                  {c}
-                </option>
-              ))}
-            </select>
+              onValueChange={(v) => set({ county: v })}
+              options={[
+                { value: 'all', label: `All of ${countries[0] ?? 'Kenya'}` },
+                ...choices(counties),
+              ]}
+            />
           )}
 
-          <select
+          <Select
             aria-label="Guests"
-            className={control}
-            value={filters.guests}
-            onChange={(e) => set({ guests: Number(e.target.value) })}
-          >
-            <option value={0}>Any guests</option>
-            {[2, 4, 6, 8].map((n) => (
-              <option key={n} value={n}>
-                {n}+ guests
-              </option>
-            ))}
-          </select>
+            className={dropdown}
+            value={String(filters.guests)}
+            onValueChange={(v) => set({ guests: Number(v) })}
+            options={GUESTS}
+          />
 
-          <select
+          <Select
             aria-label="Sort by"
-            className={control}
+            className={dropdown}
             value={filters.sort}
-            onChange={(e) => set({ sort: e.target.value })}
-          >
-            {SORTS.map((s) => (
-              <option key={s.id} value={s.id}>
-                {s.label}
-              </option>
-            ))}
-          </select>
+            onValueChange={(v) => set({ sort: v })}
+            options={SORTS.map((o) => ({ value: o.id, label: o.label }))}
+          />
 
           <button
             type="button"
@@ -144,37 +135,28 @@ const Filters = ({ places, filters, setFilters, resultCount }) => {
           className="grid gap-5 rounded-2xl border border-ink/15 bg-paper p-5 md:grid-cols-[auto_auto_1fr]"
         >
           {manyCountries && counties.length > 1 && (
-            <label className="grid gap-1.5 text-sm font-medium">
-              County
-              <select
-                className={control}
+            <div className="grid content-start gap-1.5 text-sm font-medium">
+              <label htmlFor="filter-county">County</label>
+              <Select
+                id="filter-county"
+                className="min-w-[12rem] border-ink/25 font-normal"
                 value={filters.county}
-                onChange={(e) => set({ county: e.target.value })}
-              >
-                <option value="all">Any county</option>
-                {counties.map((c) => (
-                  <option key={c} value={c}>
-                    {c}
-                  </option>
-                ))}
-              </select>
-            </label>
+                onValueChange={(v) => set({ county: v })}
+                options={[{ value: 'all', label: 'Any county' }, ...choices(counties)]}
+              />
+            </div>
           )}
           {budgets && (
-            <label className="grid gap-1.5 text-sm font-medium">
-              Price per night
-              <select
-                className={control}
+            <div className="grid content-start gap-1.5 text-sm font-medium">
+              <label htmlFor="filter-budget">Price per night</label>
+              <Select
+                id="filter-budget"
+                className="min-w-[12rem] border-ink/25 font-normal"
                 value={filters.budget}
-                onChange={(e) => set({ budget: e.target.value })}
-              >
-                {budgets.map((b) => (
-                  <option key={b.id} value={b.id}>
-                    {b.label}
-                  </option>
-                ))}
-              </select>
-            </label>
+                onValueChange={(v) => set({ budget: v })}
+                options={budgets.map((b) => ({ value: b.id, label: b.label }))}
+              />
+            </div>
           )}
           {amenities.length > 0 && (
             <fieldset className="grid gap-1.5">

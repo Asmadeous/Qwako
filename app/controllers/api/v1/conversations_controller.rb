@@ -47,7 +47,7 @@ module Api
               Conversation.new(guest: Current.user, listing:, subject: "Question about #{listing.title}", last_message_at: Time.current)
           else
             Current.user.conversations.where(booking_id: nil, listing_id: nil).first ||
-              Conversation.new(guest: Current.user, subject: "Question for TG Homes", last_message_at: Time.current)
+              Conversation.new(guest: Current.user, subject: "Question for TG-Homes", last_message_at: Time.current)
           end
         end
     end

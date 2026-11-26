@@ -53,6 +53,10 @@ class Listing < ApplicationRecord
     if: -> { min_nights.is_a?(Integer) && max_nights.is_a?(Integer) }
   validates :check_in_instructions, :wifi_details, length: { maximum: 5000 }
   validates :licence_number, length: { maximum: 60 }
+  validates :latitude, numericality: { in: -90..90 }, allow_nil: true
+  validates :longitude, numericality: { in: -180..180 }, allow_nil: true
+  validates :latitude, presence: { message: "and longitude go together" }, if: :longitude?
+  validates :longitude, presence: { message: "and latitude go together" }, if: :latitude?
   validate :has_photos, :has_valid_videos
 
   scope :kept, -> { where(deleted_at: nil) }
@@ -73,6 +77,17 @@ class Listing < ApplicationRecord
   def deleted? = deleted_at.present?
 
   def cancellation_policy_text = CANCELLATION_POLICIES.fetch(cancellation_policy)
+
+  # The exact map pin, for the owner and confirmed guests.
+  def pin
+    { latitude: latitude.to_f, longitude: longitude.to_f } if latitude? && longitude?
+  end
+
+  # Where the home roughly is, for everyone else: the pin rounded to two
+  # decimal places, which is within about a kilometre of it.
+  def map_area
+    { latitude: latitude.round(2).to_f, longitude: longitude.round(2).to_f } if latitude? && longitude?
+  end
 
   # Nights guests can't book over the next year: [from, to) ranges, to exclusive.
   def unavailable_ranges(from: Time.zone.today, to: Time.zone.today + 1.year)

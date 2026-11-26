@@ -1,5 +1,5 @@
 <p>Hello <%= @user.name %>,</p>
-<p>Welcome to TG Homes, and thank you for joining us. We're glad you're here.</p>
+<p>Welcome to TG-Homes, and thank you for joining us. We're glad you're here.</p>
 <% if @confirm_url %>
 <p>One step first: confirm this is your email address so you can sign in. The link works for 3 days.</p>
 <p><a href="<%= @confirm_url %>">Confirm my email</a></p>
@@ -12,7 +12,7 @@
   <li>see your bookings, receipts and check-in details in one place</li>
 </ul>
 <p><a href="<%= @homes_url %>">Browse the homes</a> or <a href="<%= @account_url %>">open your account</a>.</p>
-<p>Warm regards,<br>TG Homes</p>
+<p>Warm regards,<br>TG-Homes</p>
 <% if @confirm_url %>
 <p style="color:#666;font-size:13px">If you didn't make an account, ignore this email.</p>
 <% end %>

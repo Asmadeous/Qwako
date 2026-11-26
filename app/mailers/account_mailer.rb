@@ -6,19 +6,19 @@ class AccountMailer < ApplicationMailer
     @confirm_url = confirm_url
     @homes_url = "#{Notify.app_url}/homes"
     @account_url = "#{Notify.app_url}/account"
-    mail to: user.email, subject: "Welcome to TG Homes"
+    mail to: user.email, subject: "Welcome to TG-Homes"
   end
 
   def verify_email(user, url)
     @user = user
     @url = url
-    mail to: user.email, subject: "Confirm your email | TG Homes"
+    mail to: user.email, subject: "Confirm your email | TG-Homes"
   end
 
   def invitation(user, url, inviter)
     @user = user
     @url = url
     @inviter = inviter
-    mail to: user.email, subject: "#{inviter.name} added you to the TG Homes team"
+    mail to: user.email, subject: "#{inviter.name} added you to the TG-Homes team"
   end
 end

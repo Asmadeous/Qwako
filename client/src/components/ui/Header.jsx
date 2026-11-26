@@ -41,8 +41,15 @@ export const Header = () => {
       }`}
     >
       <div className="mx-auto flex max-w-screen-xl items-center justify-between gap-4 px-5 py-2 md:px-8">
-        <Link to="/" className="inline-flex min-h-11 items-center whitespace-nowrap text-base font-extrabold tracking-tight">
-          TG Homes
+        <Link to="/" className="inline-flex min-h-11 items-center">
+          {/* The brand kit's side-by-side logo; the white one over the hero photo. */}
+          <img
+            src={overPhoto ? '/brand/tg-homes-horizontal-white.svg' : '/brand/tg-homes-horizontal-light.svg'}
+            alt="TG-Homes"
+            width="179"
+            height="40"
+            className="h-10 w-auto"
+          />
         </Link>
 
         <nav className="flex items-center gap-5 md:gap-7" aria-label="Main">
@@ -50,7 +57,7 @@ export const Header = () => {
             Homes
           </NavLink>
           <NavLink to="/blog" className={navClass}>
-            Journal
+            Blog
           </NavLink>
           {user ? (
             <Link to="/account" className="flex min-h-11 items-center gap-2 text-sm font-medium hover:underline">

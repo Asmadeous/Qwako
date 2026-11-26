@@ -1,11 +1,12 @@
-import { IMG } from './images';
+import { useHomePhotos } from './images';
 import { ease, lerp, range, useSectionProgress, photoProps } from './motion';
 
-const WORD = 'TG Homes';
+const WORD = 'TG-Homes';
 
 const Marquee = () => {
   const [ref, p] = useSectionProgress();
   const t = ease(range(p, 0.12, 0.85));
+  const image = useHomePhotos().pick(2);
 
   return (
     <section ref={ref} className="relative h-[260vh] bg-sand text-ink">
@@ -32,7 +33,7 @@ const Marquee = () => {
             borderRadius: `${lerp(4, 0, t)}px`,
           }}
         >
-          <img {...photoProps(IMG.marquee, 2400)} alt="" className="h-full w-full object-cover" />
+          {image && <img {...photoProps(image.url, 2400)} alt="" className="h-full w-full object-cover" />}
         </div>
 
         <span

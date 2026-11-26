@@ -88,7 +88,7 @@ module Notify
     preview = message.summary.truncate(140)
     if message.sender.team?
       guest = conversation.guest
-      tell(guest, kind: "message", title: "New message from TG Homes", body: preview,
+      tell(guest, kind: "message", title: "New message from TG-Homes", body: preview,
            url: "/account/messages/#{conversation.id}", email: guest.email_messages?)
     else
       team.each do |admin|

@@ -8,9 +8,13 @@ export const lerp = (a, b, t) => a + (b - a) * t;
 export const range = (p, start, end) => clamp((p - start) / (end - start));
 export const ease = (t) => 1 - Math.pow(1 - t, 3);
 
-// Real photos are paths on this site; anything else is an Unsplash id.
-export const photo = (id, w = 2000) =>
-  id.startsWith('/') ? id : `https://images.unsplash.com/photo-${id}?w=${w}&q=80&auto=format&fit=crop`;
+// A home's photo at about width `w`: Unsplash links are resized, paths on this
+// site and other links are used as they are; a bare id is an Unsplash photo.
+export const photo = (id, w = 2000) => {
+  if (id.includes('images.unsplash.com')) return id.replace(/([?&])w=\d+/, `$1w=${w}`);
+  if (id.startsWith('/') || /^https?:\/\//.test(id)) return id;
+  return `https://images.unsplash.com/photo-${id}?w=${w}&q=80&auto=format&fit=crop`;
+};
 
 // Spread onto an <img>: <img {...photoProps(id, 2400)} />. Photos below the
 // first screen load lazily; pass { eager: true } for the hero.

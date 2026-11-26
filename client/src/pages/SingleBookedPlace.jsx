@@ -7,6 +7,7 @@ import { CalendarClock, ChevronLeft, Clock, MessageSquare, Receipt, Users } from
 import AccountNav from '../components/ui/AccountNav';
 import AddressLink from '../components/ui/AddressLink';
 import BookingDates from '../components/ui/BookingDates';
+import { PinMap } from '@/components/ui/HomeMap';
 import PlaceGallery from '../components/ui/PlaceGallery';
 import PriceBreakdown from '../components/ui/PriceBreakdown';
 import Spinner from '../components/ui/Spinner';
@@ -255,6 +256,14 @@ const SingleBookedPlace = () => {
                   <div>
                     <h3 className="font-bold tracking-tight text-2xl">Wifi</h3>
                     <p className="mt-2 whitespace-pre-line text-ink/85">{details.wifi_details}</p>
+                  </div>
+                )}
+                {details.location && (
+                  <div className="md:col-span-2">
+                    <h3 className="font-bold tracking-tight text-2xl">Finding the home</h3>
+                    <div className="mt-3">
+                      <PinMap location={details.location} />
+                    </div>
                   </div>
                 )}
               </section>

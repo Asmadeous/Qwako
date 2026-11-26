@@ -1,14 +1,14 @@
-// TG Homes service worker: shows push notifications and opens the right page
+// TG-Homes service worker: shows push notifications and opens the right page
 // when one is tapped.
 self.addEventListener('push', (event) => {
   let data = {};
   try {
     data = event.data ? event.data.json() : {};
   } catch {
-    data = { title: 'TG Homes', body: event.data?.text() ?? '' };
+    data = { title: 'TG-Homes', body: event.data?.text() ?? '' };
   }
   event.waitUntil(
-    self.registration.showNotification(data.title || 'TG Homes', {
+    self.registration.showNotification(data.title || 'TG-Homes', {
       body: data.body || '',
       icon: '/favicon.svg',
       badge: '/favicon.svg',

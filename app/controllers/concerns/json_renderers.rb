@@ -16,12 +16,18 @@ module JsonRenderers
         photos: listing.current_photos.map(&:url),
         videos: listing.current_videos.map(&:url),
         amenities: listing.amenities.sort_by(&:name).map { |amenity| amenity_json(amenity) },
-        category: listing.category && category_json(listing.category)
+        category: listing.category && category_json(listing.category),
+        map_area: listing.map_area
       )
     end
 
     def admin_listing_json(listing)
-      listing_json(listing).merge(listing.slice(*PRIVATE_LISTING_FIELDS))
+      listing_json(listing).merge(private_listing_details(listing))
+    end
+
+    # Check-in instructions, wifi and the exact map pin.
+    def private_listing_details(listing)
+      listing.slice(*PRIVATE_LISTING_FIELDS).merge(location: listing.pin)
     end
 
     def amenity_json(amenity)
@@ -49,7 +55,7 @@ module JsonRenderers
         review: booking.review && review_json(booking.review),
         conversation_id: booking.conversation&.id
       )
-      json[:private_details] = booking.listing.slice(*PRIVATE_LISTING_FIELDS) if booking.details_revealed?
+      json[:private_details] = private_listing_details(booking.listing) if booking.details_revealed?
       json
     end
 

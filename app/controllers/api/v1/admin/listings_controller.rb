@@ -71,7 +71,7 @@ module Api
               :title, :address, :description, :house_rules, :max_guests, :nightly_price_cents,
               :cleaning_charge_cents, :status, :featured, :category_id, :property_type, :bedrooms, :beds, :bathrooms,
               :check_in_time, :check_out_time, :min_nights, :max_nights, :booking_type, :cancellation_policy,
-              :check_in_instructions, :wifi_details, :licence_number, photo_urls: [], video_urls: [], amenity_keys: []
+              :check_in_instructions, :wifi_details, :licence_number, :latitude, :longitude, photo_urls: [], video_urls: [], amenity_keys: []
             )
           end
       end

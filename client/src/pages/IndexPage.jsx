@@ -6,7 +6,7 @@ import { toast } from 'react-toastify';
 import { usePlaces } from '../../hooks';
 import PlaceCard, { PlaceCardSkeleton } from '@/components/ui/PlaceCard';
 import Filters from '@/components/ui/Filters';
-import { DEFAULT_FILTERS, applyFilters, areaLabel } from '@/utils/listingFilters';
+import { BUDGETS, DEFAULT_FILTERS, applyFilters, areaLabel } from '@/utils/listingFilters';
 import { Button } from '@/components/ui/button';
 import DatePickerWithRange from '@/components/ui/DatePickerWithRange';
 import { api } from '@/utils/axios';
@@ -20,19 +20,48 @@ const datesFrom = (params) => {
   return isValid(from) && isValid(to) && to > from ? { from, to } : { from: undefined, to: undefined };
 };
 
+// Guests from the home page search (?guests=), 1 to 8; 0 means any.
+const guestsFrom = (params) => {
+  const n = Number(params.get('guests'));
+  return Number.isInteger(n) && n >= 1 && n <= 8 ? n : 0;
+};
+
+// Price band from the home page search (?budget=), one of the shilling bands.
+const budgetFrom = (params) => {
+  const id = params.get('budget');
+  return BUDGETS.KES.some((band) => band.id === id) ? id : 'any';
+};
+
 const IndexPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { places, loading, error } = usePlaces();
-  const [filters, setFilters] = useState(DEFAULT_FILTERS);
   const [searchParams, setSearchParams] = useSearchParams();
+  const [filters, setFilters] = useState(() => ({ ...DEFAULT_FILTERS, guests: guestsFrom(searchParams), budget: budgetFrom(searchParams) }));
   const [dates, setDates] = useState(() => datesFrom(searchParams));
   const [freeIds, setFreeIds] = useState(null);
   const [checking, setChecking] = useState(false);
   const [shown, setShown] = useState(PAGE_SIZE);
   const datesChosen = Boolean(dates.from && dates.to);
 
-  // Dates live in the address so a search can be shared; the server says which homes are free.
+  // Dates and guests live in the address so a search can be shared and the
+  // booking form starts with them; the server says which homes are free.
+  const searchQuery = (withDates) => {
+    const query = new URLSearchParams();
+    if (withDates && datesChosen) {
+      query.set('check_in', toISODate(dates.from));
+      query.set('check_out', toISODate(dates.to));
+    }
+    if (filters.guests > 0) query.set('guests', String(filters.guests));
+    if (filters.budget !== 'any') query.set('budget', filters.budget);
+    return query;
+  };
+
+  useEffect(() => {
+    setSearchParams(searchQuery(true), { replace: true });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [datesChosen, dates.from, dates.to, filters.guests, filters.budget]);
+
   useEffect(() => {
     if (!datesChosen) {
       setFreeIds(null);
@@ -40,7 +69,6 @@ const IndexPage = () => {
     }
     const check_in = toISODate(dates.from);
     const check_out = toISODate(dates.to);
-    setSearchParams({ check_in, check_out }, { replace: true });
     setChecking(true);
     api
       .get('/listings', { params: { check_in, check_out } })
@@ -59,7 +87,6 @@ const IndexPage = () => {
 
   const clearDates = () => {
     setDates({ from: undefined, to: undefined });
-    setSearchParams({}, { replace: true });
   };
 
   // Shown once when an old listing link redirected here.
@@ -117,7 +144,7 @@ const IndexPage = () => {
                 <PlaceCard
                   place={place}
                   key={place.id}
-                  query={datesChosen ? `?check_in=${toISODate(dates.from)}&check_out=${toISODate(dates.to)}` : ''}
+                  query={searchQuery(true).size ? `?${searchQuery(true)}` : ''}
                 />
               ))}
             </div>

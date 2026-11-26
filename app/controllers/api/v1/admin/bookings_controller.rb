@@ -238,7 +238,7 @@ module Api
               can_edit_guests: booking.status.in?(Booking::ACTIVE_STATUSES),
               can_delete: owner && deletable?(booking),
               can_record_payment: owner && (booking.confirmed? || booking.completed?) && booking.net_paid_cents < booking.total_cents,
-              private_details: booking.listing.slice(*JsonRenderers::PRIVATE_LISTING_FIELDS),
+              private_details: private_listing_details(booking.listing),
               refund_due: owner && booking.refund_due?,
               payments: owner ? booking.payments.sort_by(&:created_at).map { |payment| payment_json(payment) } : []
             )

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_11_23_000005) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_26_000001) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gist"
   enable_extension "citext"
@@ -199,12 +199,16 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_23_000005) do
     t.string "licence_number", default: "", null: false
     t.decimal "rating_average", precision: 3, scale: 2
     t.integer "review_count", default: 0, null: false
+    t.decimal "latitude", precision: 9, scale: 6
+    t.decimal "longitude", precision: 9, scale: 6
     t.index ["category_id"], name: "index_listings_on_category_id"
     t.index ["deleted_at"], name: "index_listings_on_deleted_at"
     t.index ["slug"], name: "index_listings_on_slug", unique: true
     t.index ["status"], name: "index_listings_on_status"
+    t.check_constraint "(latitude IS NULL) = (longitude IS NULL)", name: "listings_location_pair"
     t.check_constraint "cleaning_charge_cents >= 0", name: "listings_cleaning_non_negative"
     t.check_constraint "currency::text = ANY (ARRAY['KES'::character varying, 'GBP'::character varying]::text[])", name: "listings_currency_valid"
+    t.check_constraint "latitude >= '-90'::integer::numeric AND latitude <= 90::numeric AND longitude >= '-180'::integer::numeric AND longitude <= 180::numeric", name: "listings_location_range"
     t.check_constraint "max_guests > 0", name: "listings_max_guests_positive"
     t.check_constraint "min_nights >= 1 AND max_nights >= min_nights", name: "listings_nights_range"
     t.check_constraint "nightly_price_cents > 0", name: "listings_price_positive"

@@ -47,7 +47,7 @@ export const NewsletterConfirmPage = () => (
     path="/newsletter_subscription/confirm"
     working="Confirming your sign-up..."
     done="You're signed up."
-    doneText="We'll email you TG Homes news and offers. Every email has a link to unsubscribe."
+    doneText="We'll email you TG-Homes news and offers. Every email has a link to unsubscribe."
   />
 );
 
@@ -56,6 +56,6 @@ export const NewsletterUnsubscribePage = () => (
     path="/newsletter_subscription/unsubscribe"
     working="Unsubscribing..."
     done="You're unsubscribed."
-    doneText="You won't get the TG Homes newsletter any more."
+    doneText="You won't get the TG-Homes newsletter any more."
   />
 );

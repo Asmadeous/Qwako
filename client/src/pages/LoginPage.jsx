@@ -98,7 +98,7 @@ const LoginPage = () => {
       intro="Welcome back. Sign in to book a home or see your bookings."
       footer={
         <>
-          New to TG Homes?{' '}
+          New to TG-Homes?{' '}
           <Link className={authLinkClass} to="/register" state={location.state}>
             Create an account
           </Link>

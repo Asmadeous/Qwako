@@ -6,7 +6,7 @@ class BookingMailerTest < ActionMailer::TestCase
                               check_out: 32.days.from_now.to_date, guests_count: 1, status: "confirmed")
     mail = BookingMailer.receipt(booking)
     assert_match "Thank you for booking", mail.subject
-    assert_includes mail.html_part.body.to_s, "Thank you for booking with TG Homes"
+    assert_includes mail.html_part.body.to_s, "Thank you for booking with TG-Homes"
     assert_includes mail.text_part.body.to_s, "Thank you again for choosing to stay with us."
   end
 end

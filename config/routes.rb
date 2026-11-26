@@ -14,6 +14,7 @@ Rails.application.routes.draw do
         get :reviews, on: :member
       end
       resources :posts, only: %i[index show]
+      resources :reviews, only: :index
       resources :saved_listings, only: %i[index create destroy], param: :listing_id
       resources :transactions, only: :index
       resources :bookings, only: %i[index show create] do

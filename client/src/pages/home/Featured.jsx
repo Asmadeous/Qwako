@@ -57,9 +57,12 @@ const Featured = () => {
                 <Link to={`/place/${stays[active].id}`} className="mt-2 block text-3xl font-bold tracking-tight hover:underline md:text-5xl">
                   {stays[active].title}
                 </Link>
-                <span className="mt-2 block text-sm font-medium text-white/80">
-                  {stays[active].address},{' '}
-                  {formatPrice(stays[active].nightly_price_cents, stays[active].currency)} a night
+                <span className="mt-2 block text-sm font-medium text-white/80">{stays[active].address}</span>
+                <span className="tabular mt-3 block">
+                  <span className="text-2xl font-bold md:text-3xl">
+                    {formatPrice(stays[active].nightly_price_cents, stays[active].currency)}
+                  </span>{' '}
+                  <span className="text-sm text-white/80">a night</span>
                 </span>
               </div>
               <div className="text-right">

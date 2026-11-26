@@ -16,8 +16,8 @@ export const BlogPage = () => {
 
   return (
     <div className="mx-auto w-full max-w-screen-xl px-5 pt-28 pb-24 md:px-8">
-      <h1 className="text-5xl font-bold tracking-tight md:text-7xl">Journal</h1>
-      <p className="mt-3 max-w-xl text-ink/70">Stories from the homes, the places around them, and news from TG Homes.</p>
+      <h1 className="text-5xl font-bold tracking-tight md:text-7xl">Blog</h1>
+      <p className="mt-3 max-w-xl text-ink/70">Stories from the homes, the places around them, and news from TG-Homes.</p>
       <div className="mt-10">
         {loading && !data && <ListSkeleton rows={3} />}
         {error && <ErrorNote onRetry={reload}>{error}</ErrorNote>}
@@ -59,15 +59,15 @@ export const BlogPostPage = () => {
     <article className="mx-auto w-full max-w-3xl px-5 pt-28 pb-24">
       <Link to="/blog" className="-ml-1 inline-flex min-h-11 items-center gap-1 text-sm text-ink/70 hover:text-ink">
         <ChevronLeft aria-hidden className="size-4" />
-        Journal
+        Blog
       </Link>
       {loading && !data && <ListSkeleton rows={4} />}
       {error && status === 404 && (
         <div className="mt-6">
           <h1 className="text-4xl font-bold tracking-tight">This post isn't here.</h1>
-          <p className="mt-3 text-ink/70">It may have been taken down. Other stories are in the journal.</p>
+          <p className="mt-3 text-ink/70">It may have been taken down. Other posts are on the blog.</p>
           <Link to="/blog" className={`${buttonVariants()} mt-6`}>
-            Read the journal
+            Read the blog
           </Link>
         </div>
       )}

@@ -7,7 +7,7 @@ class BookingMailer < ApplicationMailer
     @listing = booking.listing
     @payments = booking.payments.select(&:succeeded?)
     @url = "#{Notify.app_url}/account/bookings/#{booking.id}"
-    mail to: booking.guest.email, subject: "Thank you for booking: #{@listing.title} is confirmed | TG Homes"
+    mail to: booking.guest.email, subject: "Thank you for booking: #{@listing.title} is confirmed | TG-Homes"
   end
 
   private

@@ -1,4 +1,4 @@
-import { IMG } from './images';
+import { areaOf, useHomePhotos } from './images';
 import { ease, lerp, range, reveal, useInView, useSectionProgress, photoProps } from './motion';
 
 const Grand = () => {
@@ -6,6 +6,7 @@ const Grand = () => {
   const [ref, p] = useSectionProgress();
   const t = ease(range(p, 0.05, 0.75));
   const r = (d) => reveal(inView, d);
+  const image = useHomePhotos().pick(5);
 
   return (
     <>
@@ -13,7 +14,7 @@ const Grand = () => {
         <div className="pointer-events-none absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-sand to-white" />
         <div ref={headRef} className="relative">
           <span className={`${r(0).className} block text-sm font-medium`} style={r(0).style}>
-            Tatu City
+            {areaOf(image?.home)}
           </span>
           <h2 className={`${r(150).className} mt-4 font-bold tracking-tight text-[13vw] leading-[0.95] md:text-[6.5vw]`} style={r(150).style}>
             Small spaces,
@@ -34,7 +35,7 @@ const Grand = () => {
               borderRadius: `${lerp(16, 0, t)}px`,
             }}
           >
-            <img {...photoProps(IMG.smallRoom, 2400)} alt="The furnished living room" className="h-full w-full object-cover" />
+            {image && <img {...photoProps(image.url, 2400)} alt={image.alt} className="h-full w-full object-cover" />}
             <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" style={{ opacity: t }} />
             <h3
               className="absolute bottom-[8vh] left-5 text-[13vw] font-bold leading-[0.95] tracking-tight text-white md:left-8 md:text-[6vw]"

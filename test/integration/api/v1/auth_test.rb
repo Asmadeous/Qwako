@@ -32,7 +32,7 @@ class Api::V1::AuthTest < ActionDispatch::IntegrationTest
     # The one email is the welcome, with the confirmation link in it.
     perform_enqueued_jobs
     mail = ActionMailer::Base.deliveries.last
-    assert_equal "Welcome to TG Homes", mail.subject
+    assert_equal "Welcome to TG-Homes", mail.subject
     assert_match %r{/verify-email\?token=}, mail.text_part.body.to_s
   end
 

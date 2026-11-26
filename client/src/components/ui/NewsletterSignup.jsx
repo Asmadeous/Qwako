@@ -1,10 +1,12 @@
 import { useState } from 'react';
 
 import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 import { api, errorMessageFrom } from '@/utils/axios';
 
 // Footer sign-up. A confirmation email is sent before anything else.
-const NewsletterSignup = () => {
+// `dark` is for the dark footer: light text and a sand button.
+const NewsletterSignup = ({ dark = false }) => {
   const [email, setEmail] = useState('');
   const [state, setState] = useState({ status: 'idle', message: '' });
 
@@ -36,11 +38,23 @@ const NewsletterSignup = () => {
           autoComplete="email"
           className="h-11 min-w-0 flex-1 rounded-xl border border-ink/25 bg-paper px-3 text-sm focus:border-ink focus:outline-none"
         />
-        <Button type="submit" disabled={state.status === 'sending'} aria-busy={state.status === 'sending'}>
+        <Button
+          type="submit"
+          disabled={state.status === 'sending'}
+          aria-busy={state.status === 'sending'}
+          className={cn(dark && 'bg-sand text-ink hover:bg-sand/90 focus-visible:ring-sand focus-visible:ring-offset-ink')}
+        >
           {state.status === 'sending' ? 'Signing up...' : 'Sign up'}
         </Button>
       </div>
-      <p aria-live="polite" className={state.status === 'error' ? 'text-sm font-semibold text-red-800' : 'text-sm text-ink/70'}>
+      <p
+        aria-live="polite"
+        className={
+          state.status === 'error'
+            ? cn('text-sm font-semibold', dark ? 'text-red-300' : 'text-red-800')
+            : cn('text-sm', dark ? 'text-sand/60' : 'text-ink/70')
+        }
+      >
         {state.message || 'A few emails a year. Unsubscribe any time.'}
       </p>
     </form>

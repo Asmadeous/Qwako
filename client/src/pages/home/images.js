@@ -1,23 +1,25 @@
-// Photos of the real apartment, served from client/public/listings
-const P = '/listings/grace-d8-09/';
+import { usePlaces } from '../../../hooks';
+import { photoDescription } from '@/utils/images';
 
-export const IMG = {
-  hero: `${P}01-exterior.jpg`,
-  collage: [
-    `${P}03-living-room.jpg`,
-    `${P}04-kitchen.jpg`,
-    `${P}06-main-bedroom.jpg`,
-    `${P}09-balcony.jpg`,
-    `${P}07-second-bedroom.jpg`,
-    `${P}05-breakfast-bar.jpg`,
-  ],
-  aboutInline: `${P}02-view-park.jpg`,
-  marquee: `${P}01-exterior.jpg`,
-  evening: `${P}09-balcony.jpg`,
-  dusk: `${P}02-view-park.jpg`,
-  smallRoom: `${P}03-living-room.jpg`,
-  living: `${P}03-living-room.jpg`,
-  bedroom: `${P}06-main-bedroom.jpg`,
-  secondRoom: `${P}07-second-bedroom.jpg`,
-  stepInside: `${P}02-view-park.jpg`,
+// The town a home is in: the first part of its address ("Tatu City, Ruiru, ..." -> "Tatu City").
+export const areaOf = (home) => home?.address?.split(',')[0]?.trim() ?? '';
+
+// Every photo of the published homes, taken in turn from each home (the first
+// photo of each home, then the second of each, and so on). New homes and new
+// photos show on the home page by themselves; drafts never do.
+export const useHomePhotos = () => {
+  const { places, loading } = usePlaces();
+  const homes = places.filter((home) => home.photos?.length);
+  const longest = Math.max(0, ...homes.map((home) => home.photos.length));
+  const pool = [];
+  for (let i = 0; i < longest; i += 1) {
+    homes.forEach((home) => {
+      const url = home.photos[i];
+      if (url) pool.push({ url, home, alt: photoDescription(url) || home.title });
+    });
+  }
+  // A photo for a fixed spot on the page; wraps round when there are few.
+  const pick = (i) => (pool.length ? pool[i % pool.length] : null);
+  const areas = [...new Set(homes.map(areaOf).filter(Boolean))];
+  return { homes, pool, pick, areas, loading };
 };

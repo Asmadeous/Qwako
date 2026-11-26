@@ -210,12 +210,8 @@ export const DashboardHeader = () => {
   return (
     <header className="sticky top-0 z-30 bg-sand/90 backdrop-blur">
       <div className="mx-auto flex h-20 max-w-[1440px] items-center gap-3 px-5 md:px-8">
-        <Link to="/account" className="flex min-h-11 shrink-0 flex-col items-center justify-center leading-none" aria-label="TG Homes dashboard">
-          <svg aria-hidden viewBox="0 0 28 28" className="size-7 text-ink">
-            <path d="M3 4h22v6H17v15h-6V10H3z" fill="currentColor" />
-            <path d="M17 18h8v7h-8z" fill="currentColor" opacity=".35" />
-          </svg>
-          <span className="mt-1 text-[8px] font-semibold uppercase tracking-[0.3em] text-ink/70">TG Homes</span>
+        <Link to="/account" className="flex min-h-11 shrink-0 items-center" aria-label="TG-Homes dashboard">
+          <img src="/brand/tg-homes-horizontal-light.svg" alt="" width="179" height="40" className="h-10 w-auto" />
         </Link>
         <span className="ml-2 hidden rounded-full bg-paper px-3 py-1.5 text-xs font-medium text-ink/60 lg:inline">
           {isOwner(user) ? 'Owner dashboard' : team ? 'Team dashboard' : 'Your account'}
@@ -234,13 +230,6 @@ export const DashboardHeader = () => {
           <button type="button" aria-label="Search" onClick={() => setSearchOpen(true)} className={cn(iconButton, 'md:hidden')}>
             <Search aria-hidden strokeWidth={1.75} className="size-5" />
           </button>
-          <Link
-            to={team ? '/account/inbox' : '/account/messages'}
-            aria-label="Messages"
-            className={iconButton}
-          >
-            <MessageSquare aria-hidden strokeWidth={1.75} className="size-5" />
-          </Link>
           <Link
             to="/account/notifications"
             aria-label={unread ? `Notifications, ${unread} new` : 'Notifications'}
@@ -330,8 +319,9 @@ const VerifyBanner = ({ email }) => {
   );
 };
 
-// Frame for every /account page: a row of pill tabs under the top bar
-// (scrolls sideways when it doesn't fit). Pages render their own <AccountNav /> heading.
+// Frame for every /account page: one row of pill tabs under the top bar. When
+// it doesn't fit it scrolls sideways: swipe on a phone, mouse wheel or the thin
+// scrollbar on a computer. Pages render their own <AccountNav /> heading.
 const DashboardLayout = () => {
   const { user } = useAuth();
   const links = linksFor(user);
@@ -347,13 +337,30 @@ const DashboardLayout = () => {
     }
   }, [pathname]);
 
+  // A mouse wheel only scrolls up and down, so turn it into sideways scrolling
+  // while the row has more tabs to show in that direction.
+  useEffect(() => {
+    const nav = navRef.current;
+    if (!nav) return undefined;
+    const onWheel = (e) => {
+      if (Math.abs(e.deltaY) <= Math.abs(e.deltaX)) return;
+      const max = nav.scrollWidth - nav.clientWidth;
+      const next = nav.scrollLeft + e.deltaY;
+      if (max <= 0 || (e.deltaY < 0 && nav.scrollLeft <= 0) || (e.deltaY > 0 && nav.scrollLeft >= max)) return;
+      e.preventDefault();
+      nav.scrollLeft = Math.max(0, Math.min(max, next));
+    };
+    nav.addEventListener('wheel', onWheel, { passive: false });
+    return () => nav.removeEventListener('wheel', onWheel);
+  }, []);
+
   return (
     <div className="grow pb-24 pt-1 md:px-4">
       <div className="mx-4 mb-8 flex">
         <nav
           ref={navRef}
           aria-label="Dashboard"
-          className="flex max-w-full gap-0.5 overflow-x-auto rounded-full bg-paper p-1.5 shadow-[0_1px_2px_rgb(0_0_0/0.04)] [scrollbar-width:none]"
+          className="flex max-w-full gap-0.5 overflow-x-auto rounded-full bg-paper p-1.5 shadow-[0_1px_2px_rgb(0_0_0/0.04)] [scrollbar-width:thin] [scrollbar-color:rgb(var(--ink)/0.25)_transparent]"
         >
           {links.map(({ to, label, icon: Icon, end }) => (
             <NavLink

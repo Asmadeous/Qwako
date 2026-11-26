@@ -157,7 +157,7 @@ const ConversationThread = ({ id, base, owner = false, backTo, backLabel, action
               {m.files?.length > 0 && <MessageFiles files={m.files} mine={mine(m)} />}
               {m.body && <p className="whitespace-pre-line text-pretty">{m.body}</p>}
               <p className={cn('mt-1.5 text-xs', mine(m) ? 'text-sand/70' : 'text-ink/55')}>
-                {mine(m) ? 'You' : m.from_owner ? `${m.sender_name}, TG Homes` : m.sender_name}, {formatDateTime(m.created_at)}
+                {mine(m) ? 'You' : m.from_owner ? `${m.sender_name}, TG-Homes` : m.sender_name}, {formatDateTime(m.created_at)}
               </p>
             </div>
           </li>

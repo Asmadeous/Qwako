@@ -1,5 +1,5 @@
 <p>Hello <%= @booking.guest.name %>,</p>
-<p>Thank you for booking with TG Homes. Your stay at <strong><%= @listing.title %></strong> is confirmed, and we look forward to welcoming you.</p>
+<p>Thank you for booking with TG-Homes. Your stay at <strong><%= @listing.title %></strong> is confirmed, and we look forward to welcoming you.</p>
 <table cellpadding="4" style="border-collapse:collapse">
   <tr><td>Check-in</td><td><%= l(@booking.check_in, format: :stay) %> from <%= @listing.check_in_time %></td></tr>
   <tr><td>Check-out</td><td><%= l(@booking.check_out, format: :stay) %> by <%= @listing.check_out_time %></td></tr>
@@ -17,4 +17,4 @@
 <p>Cancellation: <%= @listing.cancellation_policy_text %></p>
 <p>Check-in instructions and wifi details are on your booking page: <a href="<%= @url %>">view your booking and receipt</a>.</p>
 <p>If you have questions before you arrive, message us from your booking page and we'll get back to you.</p>
-<p>Thank you again for choosing to stay with us.<br>Warm regards,<br>TG Homes</p>
+<p>Thank you again for choosing to stay with us.<br>Warm regards,<br>TG-Homes</p>

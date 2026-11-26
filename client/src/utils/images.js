@@ -23,3 +23,14 @@ export const listingPhotoProps = (url, { sizes, width = 640, maxW = 1600, eager 
   loading: eager ? 'eager' : 'lazy',
   decoding: 'async',
 });
+
+// What a photo shows, read from a plain-words file name such as
+// "03-living-room.jpg" -> "Living room". Empty for camera or upload names
+// ("IMG_1234.jpg") that say nothing about the picture.
+export const photoDescription = (url) => {
+  const file = (url ?? '').split(/[?#]/)[0].split('/').pop() ?? '';
+  const name = decodeURIComponent(file).replace(/\.[a-z0-9]+$/i, '').replace(/^\d+[-_ ]*/, '');
+  if (!/^[a-z]{3,}([-_ ][a-z]+)*$/i.test(name)) return '';
+  const words = name.replace(/[-_]+/g, ' ');
+  return words.charAt(0).toUpperCase() + words.slice(1);
+};

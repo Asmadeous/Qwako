@@ -22,7 +22,7 @@ export const BlogAdminPage = () => {
   return (
     <div className="pb-16">
       <AccountNav
-        description="Posts appear on the public Journal page once published."
+        description="Posts appear on the public Blog page once published."
         actions={
           <Link to="/account/blog/new" className={buttonVariants()}>
             <Plus aria-hidden className="size-4" />
@@ -135,7 +135,7 @@ export const BlogPostFormPage = () => {
 
   return (
     <div className="pb-16">
-      <AccountNav description={form.published ? 'This post is live on the Journal page.' : 'Drafts are only visible here.'} />
+      <AccountNav description={form.published ? 'This post is live on the Blog page.' : 'Drafts are only visible here.'} />
       <form onSubmit={(e) => { e.preventDefault(); save(); }} className="mx-4 grid max-w-3xl gap-5">
         <label className="grid gap-1.5">
           <span className="text-sm font-medium">Title</span>

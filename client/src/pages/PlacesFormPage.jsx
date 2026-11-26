@@ -18,6 +18,7 @@ import VideosUploader from '@/components/ui/VideosUploader';
 import Spinner from '@/components/ui/Spinner';
 import { Button } from '@/components/ui/button';
 import ConfirmDialog from '@/components/ui/ConfirmDialog';
+import { LocationPicker } from '@/components/ui/HomeMap';
 import { POLICIES, PROPERTY_TYPES } from '@/utils/format';
 
 // Form fields whose server errors are reported under other names.
@@ -27,6 +28,7 @@ const ERROR_KEYS = {
   cleaning: ['cleaning_charge_cents'],
   amenities: ['amenity_keys', 'amenities'],
   category_id: ['category_id', 'category'],
+  location: ['latitude', 'longitude'],
 };
 
 const EMPTY = {
@@ -53,6 +55,7 @@ const EMPTY = {
   check_in_instructions: '',
   wifi_details: '',
   licence_number: '',
+  location: null,
 };
 
 const DETAIL_KEYS = [
@@ -72,6 +75,7 @@ const fromListing = (listing) => ({
   status: listing.status,
   amenities: listing.amenities.map((a) => a.key),
   category_id: listing.category?.id ?? null,
+  location: listing.location ?? null,
   ...Object.fromEntries(DETAIL_KEYS.map((key) => [key, listing[key] ?? EMPTY[key]])),
 });
 
@@ -150,6 +154,8 @@ const PlacesFormPage = () => {
       category_id: form.category_id,
       photo_urls: photos,
       video_urls: videos,
+      latitude: form.location?.latitude ?? null,
+      longitude: form.location?.longitude ?? null,
       ...Object.fromEntries(DETAIL_KEYS.map((key) => [key, NUMBER_KEYS.includes(key) ? Number(form[key]) : form[key]])),
     };
     try {
@@ -285,6 +291,19 @@ const PlacesFormPage = () => {
               }}
             />
           </>,
+        )}
+
+        {section(
+          'Location',
+          'The exact spot of the gate. Guests see it, with directions, once their booking is confirmed; before that they see only the area around it.',
+          <LocationPicker
+            value={form.location}
+            error={errors.latitude || errors.longitude}
+            onChange={(location) => {
+              clearErrors(ERROR_KEYS.location);
+              setForm((current) => ({ ...current, location }));
+            }}
+          />,
         )}
 
         {section(

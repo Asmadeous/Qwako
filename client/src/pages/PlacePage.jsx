@@ -5,6 +5,7 @@ import { BedDouble, Bath, ChevronLeft, Clock, DoorOpen, MessageSquare, Play, Use
 import { api } from '@/utils/axios';
 import { formatPrice } from '@/utils/currency';
 import AddressLink from '@/components/ui/AddressLink';
+import { AreaMap } from '@/components/ui/HomeMap';
 import BookingWidget from '@/components/ui/BookingWidget';
 import PlaceGallery from '@/components/ui/PlaceGallery';
 import PerksWidget from '@/components/ui/PerksWidget';
@@ -193,6 +194,15 @@ const PlacePage = () => {
               <p className="mt-4 max-w-[65ch] whitespace-pre-line leading-relaxed text-ink/85">
                 {place.house_rules}
               </p>
+            </section>
+          )}
+          {place.map_area && (
+            <section id="location" className="scroll-mt-24 border-t border-ink/15 py-8">
+              <h2 className="font-bold tracking-tight text-3xl">Where you'll be</h2>
+              <p className="mt-2 text-ink/75">{place.address}</p>
+              <div className="mt-4">
+                <AreaMap area={place.map_area} />
+              </div>
             </section>
           )}
           <section className="border-t border-ink/15 py-8">

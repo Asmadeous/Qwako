@@ -11,6 +11,6 @@ class NewsletterMailer < ApplicationMailer
 
   def confirm(email)
     @confirm_url = "#{Notify.app_url}/newsletter/confirm?#{{ token: Newsletter.token_for(email, :confirm) }.to_query}"
-    mail to: email, subject: "Confirm your newsletter sign-up | TG Homes"
+    mail to: email, subject: "Confirm your newsletter sign-up | TG-Homes"
   end
 end

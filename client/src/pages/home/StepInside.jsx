@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 
-import { IMG } from './images';
+import { useHomePhotos } from './images';
 import { reveal, useInView, photoProps } from './motion';
 
 const KEYS = [
@@ -12,15 +12,16 @@ const KEYS = [
 const StepInside = () => {
   const [ref, inView] = useInView(0.3);
   const r = (d) => reveal(inView, d);
+  const image = useHomePhotos().pick(6);
 
   return (
     <section ref={ref} className="relative h-[100svh] min-h-[560px] overflow-hidden text-white">
-      <img {...photoProps(IMG.stepInside, 2400)} alt="View over the park from the balcony" className="absolute inset-0 h-full w-full object-cover" />
+      {image && <img {...photoProps(image.url, 2400)} alt={image.alt} className="absolute inset-0 h-full w-full object-cover" />}
       <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/30" />
 
       <div className="relative flex h-full flex-col px-5 pt-14 pb-8 md:px-8">
         <div className="flex flex-wrap items-center justify-between gap-4">
-          <span className="text-sm font-medium text-white/80">Explore TG Homes</span>
+          <span className="text-sm font-medium text-white/80">Explore TG-Homes</span>
           <ul className="flex flex-wrap items-center gap-4 text-sm font-medium">
             {KEYS.map((k) => (
               <li key={k.label} className="flex items-center gap-2">
