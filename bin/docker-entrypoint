@@ -5,7 +5,8 @@ if [ "${@: -2:1}" == "./bin/rails" ] && [ "${@: -1:1}" == "server" ]; then
   ./bin/rails db:prepare
   # Free plan has no shell: load the seeds until the newest seeded home exists.
   # Seeds only add what is missing, so existing homes and passwords are kept.
-  ./bin/rails runner 'load Rails.root.join("db/seeds.rb") unless Listing.exists?(slug: "githii-farm-house")'
+  # SEED_SAMPLE_REVIEWS (demo site only) loads them on every start for the sample reviews.
+  ./bin/rails runner 'load Rails.root.join("db/seeds.rb") if ENV["SEED_SAMPLE_REVIEWS"].present? || !Listing.exists?(slug: "githii-farm-house")'
 fi
 
 exec "${@}"

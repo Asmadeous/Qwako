@@ -67,9 +67,11 @@ listings.each do |attrs|
   listing.save!
 end
 
-# Sample reviews of the two homes, so the review sections can be seen locally.
-# Never seeded in production: there, only guests who stayed write reviews.
-unless Rails.env.production?
+# Sample reviews of the two homes, so the review sections can be seen. Seeded
+# outside production, and in production only while SEED_SAMPLE_REVIEWS is set
+# (the demo site). The reviewers' emails end in @tgbnb.test, so the sample
+# reviews can be found and removed before the site takes real guests.
+if !Rails.env.production? || ENV["SEED_SAMPLE_REVIEWS"].present?
   SAMPLE_REVIEWS = {
     "grace-apartments-d8-09-tatu-city" => [
       [ "Wanjiru Kamau", 5, "Spotless two-bedroom with everything we needed. The kitchen is properly equipped and the balcony over the park was our favourite spot in the evenings." ],
