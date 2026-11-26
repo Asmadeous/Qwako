@@ -19,7 +19,9 @@ const BUDGET_CHOICES = BUDGETS.KES.map((band) => ({ value: band.id, label: band.
 // The slogan over a home's cover photo, with a search for dates and guests
 // that opens the homes page showing only the homes free for that stay.
 const Hero = () => {
-  const cover = useHomePhotos().pick(0);
+  const { pick, loading } = useHomePhotos();
+  const cover = pick(0);
+  const [coverReady, setCoverReady] = useState(false);
   const navigate = useNavigate();
   const [dates, setDates] = useState({ from: undefined, to: undefined });
   const [guests, setGuests] = useState(2);
@@ -38,11 +40,17 @@ const Hero = () => {
   };
 
   return (
-    <section id="top" className="relative flex min-h-[100svh] flex-col overflow-hidden bg-ink text-white">
+    <section
+      id="top"
+      // Keeps the loading screen up until the cover photo has arrived.
+      data-intro-hold={loading || (cover && !coverReady) ? '' : undefined}
+      className="relative flex min-h-[100svh] flex-col overflow-hidden bg-ink text-white">
       {cover && (
         <img
           {...photoProps(cover.url, 2400, '100vw', { eager: true })}
           alt={cover.alt}
+          onLoad={() => setCoverReady(true)}
+          onError={() => setCoverReady(true)}
           className="absolute inset-0 h-full w-full animate-[heroZoom_2.4s_ease-out_both] object-cover"
         />
       )}

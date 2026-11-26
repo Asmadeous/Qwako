@@ -46,6 +46,7 @@ export const Header = () => {
           <img
             src={overPhoto ? '/brand/tg-homes-horizontal-white.svg' : '/brand/tg-homes-horizontal-light.svg'}
             alt="TG-Homes"
+            data-site-logo
             width="179"
             height="40"
             className="h-10 w-auto"

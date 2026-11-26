@@ -67,4 +67,50 @@ listings.each do |attrs|
   listing.save!
 end
 
+# Sample reviews of the two homes, so the review sections can be seen locally.
+# Never seeded in production: there, only guests who stayed write reviews.
+unless Rails.env.production?
+  SAMPLE_REVIEWS = {
+    "grace-apartments-d8-09-tatu-city" => [
+      [ "Wanjiru Kamau", 5, "Spotless two-bedroom with everything we needed. The kitchen is properly equipped and the balcony over the park was our favourite spot in the evenings." ],
+      [ "Brian Otieno", 5, "Quiet, secure and very clean. Having two bathrooms made it easy for the four of us." ],
+      [ "Achieng Odhiambo", 4, "Comfortable beds and reliable internet, which mattered as I was working. The check-in instructions were clear." ]
+    ],
+    "githii-farm-house" => [
+      [ "David Mwangi", 5, "Perfect for a family get-together. Fresh eggs and milk for breakfast, and the fireplace made the cold evenings cosy." ],
+      [ "Fatuma Hassan", 5, "Four bedrooms, each with its own bathroom and hot shower. Peaceful, green and a real break from the city." ],
+      [ "James Kiprop", 4, "Lovely, quiet place. Pack warm clothes because the nights get cold, but the electric blankets help." ]
+    ]
+  }.freeze
+
+  today = Time.zone.today
+  SAMPLE_REVIEWS.each do |slug, reviews|
+    listing = Listing.find_by(slug:)
+    next unless listing
+
+    reviews.each_with_index do |(name, rating, comment), i|
+      reviewer = User.find_or_initialize_by(email: "#{name.parameterize}@tgbnb.test")
+      reviewer.password = SecureRandom.hex(16) if reviewer.new_record?
+      reviewer.update!(name:, role: "guest", email_verified_at: reviewer.email_verified_at || Time.current)
+      next if Review.exists?(listing:, author: reviewer)
+
+      # A finished stay in the past, which normal booking rules would refuse.
+      nights = 2 + (i % 2)
+      check_in = today - (20 + (25 * i))
+      now = Time.current
+      booking_id = Booking.insert_all([ {
+        listing_id: listing.id, guest_id: reviewer.id, check_in:, check_out: check_in + nights,
+        guests_count: [ 2, listing.max_guests ].min, nights:, currency: listing.currency,
+        nightly_price_cents: listing.nightly_price_cents, cleaning_charge_cents: listing.cleaning_charge_cents,
+        total_cents: (listing.nightly_price_cents * nights) + listing.cleaning_charge_cents.to_i,
+        status: "completed", created_at: now, updated_at: now
+      } ], returning: :id).rows.first.first
+
+      written = (check_in + nights + 1).in_time_zone
+      Review.new(booking_id:, listing:, author: reviewer, rating:, comment:, created_at: written, updated_at: written)
+        .save!(validate: false)
+    end
+  end
+end
+
 puts "Seeded #{Amenity.count} amenities, #{Category.count} categories, #{Listing.kept.count} listings, #{User.admin.count} admin(s)."

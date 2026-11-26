@@ -47,6 +47,7 @@ import { BlogPage, BlogPostPage } from './pages/BlogPages';
 import { BlogAdminPage, BlogPostFormPage } from './pages/BlogAdminPages';
 import { NewsletterConfirmPage, NewsletterUnsubscribePage } from './pages/NewsletterLinkPages';
 import CookieNotice from './components/ui/CookieNotice';
+import SiteIntro from './components/ui/SiteIntro';
 import { NotificationsProvider } from './providers/NotificationsProvider';
 
 // Toast icons in the site's colours instead of the library's green and red.
@@ -59,6 +60,7 @@ const toastIcon = ({ type }) => {
 function App() {
   return (
     <>
+      <SiteIntro />
       <UserProvider>
         <PlaceProvider>
           <SavedProvider>

@@ -211,7 +211,7 @@ export const DashboardHeader = () => {
     <header className="sticky top-0 z-30 bg-sand/90 backdrop-blur">
       <div className="mx-auto flex h-20 max-w-[1440px] items-center gap-3 px-5 md:px-8">
         <Link to="/account" className="flex min-h-11 shrink-0 items-center" aria-label="TG-Homes dashboard">
-          <img src="/brand/tg-homes-horizontal-light.svg" alt="" width="179" height="40" className="h-10 w-auto" />
+          <img data-site-logo src="/brand/tg-homes-horizontal-light.svg" alt="" width="179" height="40" className="h-10 w-auto" />
         </Link>
         <span className="ml-2 hidden rounded-full bg-paper px-3 py-1.5 text-xs font-medium text-ink/60 lg:inline">
           {isOwner(user) ? 'Owner dashboard' : team ? 'Team dashboard' : 'Your account'}
